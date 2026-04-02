@@ -71,7 +71,7 @@ open ios/Runner.xcworkspace
 1. Sol panelden **Runner** projesini seçin
 2. **Signing & Capabilities** sekmesine gidin
 3. **Team** seçin (Apple Developer hesabınız)
-4. **Bundle Identifier** kontrol edin: `com.manasteknoloji.esport`
+4. **Bundle Identifier** kontrol edin: `barisswimming`
 5. **Automatically manage signing** işaretli olmalı
 
 #### Build Ayarları
