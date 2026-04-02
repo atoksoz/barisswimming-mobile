@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:nfc_manager/nfc_manager.dart';
+import 'package:nfc_manager/nfc_manager_android.dart';
+import 'package:nfc_manager/nfc_manager_ios.dart';
 
 class NfcReaderService {
   static Future<bool> isAvailable() async {
@@ -51,31 +53,24 @@ class NfcReaderService {
   }
 
   static List<int>? _getTagIdentifier(NfcTag tag) {
-    final data = tag.data;
+    final androidTag = NfcTagAndroid.from(tag);
+    if (androidTag != null) {
+      return androidTag.id.toList(growable: false);
+    }
 
-    final nfca = data['nfca'] as Map<String, dynamic>?;
-    if (nfca != null) {
-      return (nfca['identifier'] as List<dynamic>?)?.cast<int>();
+    final miFare = MiFareIos.from(tag);
+    if (miFare != null) {
+      return miFare.identifier.toList(growable: false);
     }
-    final nfcb = data['nfcb'] as Map<String, dynamic>?;
-    if (nfcb != null) {
-      return (nfcb['identifier'] as List<dynamic>?)?.cast<int>();
-    }
-    final isodep = data['isodep'] as Map<String, dynamic>?;
-    if (isodep != null) {
-      return (isodep['identifier'] as List<dynamic>?)?.cast<int>();
-    }
-    final mifare = data['mifare'] as Map<String, dynamic>?;
-    if (mifare != null) {
-      return (mifare['identifier'] as List<dynamic>?)?.cast<int>();
-    }
-    final iso7816 = data['iso7816'] as Map<String, dynamic>?;
+
+    final iso7816 = Iso7816Ios.from(tag);
     if (iso7816 != null) {
-      return (iso7816['identifier'] as List<dynamic>?)?.cast<int>();
+      return iso7816.identifier.toList(growable: false);
     }
-    final iso15693 = data['iso15693'] as Map<String, dynamic>?;
+
+    final iso15693 = Iso15693Ios.from(tag);
     if (iso15693 != null) {
-      return (iso15693['identifier'] as List<dynamic>?)?.cast<int>();
+      return iso15693.identifier.toList(growable: false);
     }
 
     return null;
