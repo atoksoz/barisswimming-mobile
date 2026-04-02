@@ -34,7 +34,7 @@
 		</data>
 		<key>Modules/mobile_scanner.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		zFqYFJsMTQcqO7FJtCpAZ9X4NAs=
+		notbU7BFIQrmINM09j2COInDGHE=
 		</data>
 		<key>Modules/mobile_scanner.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -46,7 +46,7 @@
 		</data>
 		<key>Modules/mobile_scanner.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		toFi5hlsJTQPb+vre8xK7zaKPww=
+		vWEXxY9HCHvabsUGsjWf0scnWBE=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -109,7 +109,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			iKUQjTd3bFKBftYvo9nU85PDcDEvndx4QCCDYGFPrvU=
+			LEe/drXYWRFsvjuYQyai7vMbbSRf6S58TMHVTDP9HI4=
 			</data>
 		</dict>
 		<key>Modules/mobile_scanner.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
@@ -130,7 +130,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			pZ+RKgb6KUdshT9SrLYdcEvJ3P29IlTutJubpDzIjX0=
+			RvykNjJKNpouFXZNLBWB9EcgweEphCiZTxEeFkK2KbI=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
