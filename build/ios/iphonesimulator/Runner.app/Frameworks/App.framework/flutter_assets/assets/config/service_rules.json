@@ -1,0 +1,14 @@
+{
+  "title": "Hemen Rezarvasyon Kullanım Kuralları",
+  "rules": [
+    "Randevular yalnızca üye kişiler için geçerlidir.",
+    "Randevular yalnızca önceden alınarak geçerlilik kazanır. ",
+    "Her hizmet için ayrılan süre, belirtilen süre kadardır.",
+    "Randevulara geç kalınması durumunda hizmet süresi uzatılmaz.",
+    "Hizmet sırasında uygun kıyafet (temiz spor ayakkabı, t-shirt vb.) giyilmesi zorunludur.",
+    "Danışmanlık (antrenör, diyetisyen vb.) hizmetleri kişiye özeldir, bir başkasıyla paylaşılmaz.",
+    "Hizmet esnasında tesis kurallarına ve personel uyarılarına uyulması zorunludur.",
+    "Sağlık problemi olan üyeler ilgili uzmanla paylaşmalı ve gerekli bilgilendirmeyi önceden yapmalıdır.",
+    "Tüm hizmetlerde tesis güvenliği ve hijyen kurallarına uyulması üyelerin sorumluluğundadır."
+  ]
+}

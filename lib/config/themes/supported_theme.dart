@@ -1,0 +1,1 @@
+enum SupportedTheme { ORANGE, GREEN }
