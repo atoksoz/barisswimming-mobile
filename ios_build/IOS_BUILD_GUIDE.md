@@ -1,4 +1,4 @@
-# iOS Build Rehberi - E Sport Life
+# iOS Build Rehberi - Barış Swimming
 
 Bu rehber, uygulamayı iOS için build etmek ve App Store'a yüklemek için gerekli tüm adımları içerir.
 
@@ -108,7 +108,7 @@ Her yeni build için build number'ı artırın!
 ### Info.plist Ayarları
 
 `ios/Runner/Info.plist` dosyasında kontrol edilmesi gerekenler:
-- ✅ CFBundleDisplayName: "E Sport Life"
+- ✅ CFBundleDisplayName: "Barış Swimming"
 - ✅ UISupportedInterfaceOrientations (iPad desteği var)
 - ✅ NSContactsUsageDescription (Rehber izni açıklaması)
 

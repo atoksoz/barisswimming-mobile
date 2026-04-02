@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# iOS Build Script for E Sport Life
+# iOS Build Script for Barış Swimming
 # Bu script iOS build için gerekli adımları otomatik olarak yürütür
 # Script ios_build klasöründen çalıştırılmalıdır
 
