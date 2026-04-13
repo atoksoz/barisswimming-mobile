@@ -4,15 +4,23 @@ import 'package:e_sport_life/core/utils/shared-preferences/announcement_utils.da
     as utils;
 import 'package:e_sport_life/data/model/announcement_model.dart';
 
+class _LatestAnnouncementSentinel {
+  const _LatestAnnouncementSentinel();
+}
+
+const _latestAnnouncementUnset = _LatestAnnouncementSentinel();
+
 class AnnouncementState {
   final List<AnnouncementModel> announcements;
   final bool hasNewAnnouncement;
   final bool isLoading;
+  final AnnouncementModel? latestAnnouncement;
 
   AnnouncementState({
     required this.announcements,
     required this.hasNewAnnouncement,
     required this.isLoading,
+    this.latestAnnouncement,
   });
 
   factory AnnouncementState.initial() {
@@ -20,6 +28,7 @@ class AnnouncementState {
       announcements: [],
       hasNewAnnouncement: false,
       isLoading: false,
+      latestAnnouncement: null,
     );
   }
 
@@ -27,11 +36,15 @@ class AnnouncementState {
     List<AnnouncementModel>? announcements,
     bool? hasNewAnnouncement,
     bool? isLoading,
+    Object? latestAnnouncement = _latestAnnouncementUnset,
   }) {
     return AnnouncementState(
       announcements: announcements ?? this.announcements,
       hasNewAnnouncement: hasNewAnnouncement ?? this.hasNewAnnouncement,
       isLoading: isLoading ?? this.isLoading,
+      latestAnnouncement: identical(latestAnnouncement, _latestAnnouncementUnset)
+          ? this.latestAnnouncement
+          : latestAnnouncement as AnnouncementModel?,
     );
   }
 }
@@ -62,9 +75,13 @@ class AnnouncementCubit extends Cubit<AnnouncementState> {
         emit(state.copyWith(
           hasNewAnnouncement: hasNew,
           isLoading: false,
+          latestAnnouncement: latestAnnouncement,
         ));
       } else {
-        emit(state.copyWith(isLoading: false));
+        emit(state.copyWith(
+          isLoading: false,
+          latestAnnouncement: null,
+        ));
       }
     } catch (e) {
       print('Error checking latest announcement: $e');

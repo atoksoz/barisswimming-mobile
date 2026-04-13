@@ -3,6 +3,7 @@ import 'package:e_sport_life/config/external-applications-config/external_applic
 import 'package:e_sport_life/config/themes/bloc_theme.dart';
 import 'package:e_sport_life/core/l10n/app_labels.dart';
 import 'package:e_sport_life/core/services/jwt_storage_service.dart';
+import 'package:e_sport_life/core/utils/announcement_description_preview_util.dart';
 import 'package:e_sport_life/core/utils/shared-preferences/announcement_utils.dart'
     as utils;
 import 'package:e_sport_life/core/widgets/announcement_detail_dialog_widget.dart';
@@ -133,9 +134,9 @@ class _AnnouncementTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        announcement.description.length > 100
-                            ? '${announcement.description.substring(0, 100)}...'
-                            : announcement.description,
+                        AnnouncementDescriptionPreviewUtil.preview(
+                          announcement.description,
+                        ),
                         style: theme.textCaption(
                             color: theme.defaultGray500Color),
                         maxLines: 1,

@@ -1,5 +1,13 @@
 {
   "app_display_name": "Barış Swimming",
   "welcome_message": "Hoş geldiniz!",
-  "developer" : "Manasteknoloji"
+  "developer" : "Manasteknoloji",
+  "use_static_content": true,
+  "security_code_header_mode": "curved",
+  "security_code_header_image": "assets/images/application_images/verification_screen_bg.png",
+  "security_code_wave_start_offset_bottom": 8,
+  "security_code_wave_control1_offset_bottom": 45,
+  "security_code_wave_mid_offset_bottom": 24,
+  "security_code_wave_control2_offset_bottom": 2,
+  "security_code_wave_end_offset_bottom": 16
 }

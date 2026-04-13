@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:e_sport_life/config/external-applications-config/external_applications_config_cubit.dart';
 import 'package:e_sport_life/config/themes/bloc_theme.dart';
-import 'package:e_sport_life/core/constants/employee_profession.dart';
 import 'package:e_sport_life/core/constants/url/randevu_al_url_constants.dart';
 import 'package:e_sport_life/core/l10n/app_labels.dart';
 import 'package:e_sport_life/core/services/jwt_storage_service.dart';
@@ -14,6 +13,7 @@ import 'package:e_sport_life/core/widgets/star_rating_widget.dart';
 import 'package:e_sport_life/core/widgets/top_appbar_widget.dart';
 import 'package:e_sport_life/data/model/trainer_model.dart';
 import 'package:e_sport_life/screen/panel/common/trainer-detail/trainer_detail_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,6 +44,21 @@ class _TrainerListScreenState extends State<TrainerListScreen> {
       final token = await JwtStorageService.getToken() as String;
       final response = await RequestUtil.get(url, token: token);
       final json = jsonDecode(response!.body) as Map<String, dynamic>;
+
+      if (kDebugMode) {
+        debugPrint('[TrainerList] URL: $url');
+        final out = json['output'];
+        if (out is List && out.isNotEmpty) {
+          final first = out.first;
+          if (first is Map<String, dynamic>) {
+            debugPrint('[TrainerList] first trainer keys: ${first.keys.toList()}');
+            debugPrint('[TrainerList] first trainer JSON:');
+            debugPrint(const JsonEncoder.withIndent('  ').convert(first));
+          }
+        } else {
+          debugPrint('[TrainerList] output is empty or not a list');
+        }
+      }
 
       return (json["output"] as List)
           .map((item) => TrainerModel.fromJson(item))
@@ -88,7 +103,6 @@ class _TrainerListScreenState extends State<TrainerListScreen> {
       itemCount: trainers.length,
       itemBuilder: (context, index) {
         final data = trainers[index];
-        final dutyLabel = EmployeeProfession.getLabels(data.duty);
         return InkWell(
           onTap: () {
             Navigator.push(
@@ -98,6 +112,7 @@ class _TrainerListScreenState extends State<TrainerListScreen> {
                   trainerId: data.id,
                   name: data.name,
                   duty: data.duty,
+                  profession: data.profession,
                   explanation: data.explanation,
                   image: data.image,
                   facebookUrl: data.facebook,
@@ -137,12 +152,12 @@ class _TrainerListScreenState extends State<TrainerListScreen> {
                                 child: Align(
                                   alignment: Alignment.bottomLeft,
                                   child: Text(
-                                    data.name.toUpperCase(),
+                                    data.name,
                                     textAlign: TextAlign.left,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: false,
                                     style: theme.textBodyBold(
-                                        color: theme.defaultGray700Color),
+                                        color: theme.default900Color),
                                   ),
                                 ),
                               ),
@@ -156,7 +171,7 @@ class _TrainerListScreenState extends State<TrainerListScreen> {
                                 child: Align(
                                   alignment: Alignment.topLeft,
                                   child: Text(
-                                    dutyLabel,
+                                    data.skillsLabel,
                                     textAlign: TextAlign.left,
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,

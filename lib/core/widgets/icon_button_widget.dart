@@ -12,7 +12,9 @@ Widget iconButtonWidget(
     double? iconHeight,
     bool? centerText,
     Color? iconColor,
-    String? badge}) {
+    String? badge,
+    TextDecoration? badgeTextDecoration}) {
+  final theme = BlocTheme.theme;
   final shouldCenterText = centerText ?? false;
   final w = iconWidth ?? 65;
   final h = iconHeight ?? 50;
@@ -22,7 +24,7 @@ Widget iconButtonWidget(
     iconWidget = Icon(
       icon,
       size: h,
-      color: iconColor ?? BlocTheme.theme.default900Color,
+      color: iconColor ?? theme.default900Color,
     );
   } else {
     iconWidget = SvgPicture.asset(
@@ -41,9 +43,9 @@ Widget iconButtonWidget(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: BlocTheme.theme.panelCardBackground,
+          color: theme.panelCardBackground,
           border: Border.all(
-            color: BlocTheme.theme.defaultGray50Color,
+            color: theme.defaultGray50Color,
           ),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
@@ -69,13 +71,16 @@ Widget iconButtonWidget(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 5, vertical: 2),
                         decoration: BoxDecoration(
-                          color: BlocTheme.theme.default700Color,
+                          color: theme.default700Color,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
                           badge,
-                          style: BlocTheme.theme.textMini(
-                              color: BlocTheme.theme.defaultWhiteColor),
+                          style: theme.textMini(color: theme.defaultWhiteColor).copyWith(
+                                decoration: badgeTextDecoration,
+                                decorationColor: theme.defaultWhiteColor,
+                                color: theme.defaultWhiteColor,
+                              ),
                         ),
                       ),
                     ),
@@ -95,9 +100,9 @@ Widget iconButtonWidget(
                               text,
                               textAlign: TextAlign.center,
                               softWrap: true,
-                              style: BlocTheme.theme
+                              style: theme
                                   .textSmallSemiBold(
-                                      color: BlocTheme.theme.default900Color)
+                                      color: theme.default900Color)
                                   .copyWith(letterSpacing: 0),
                             ),
                           ),
@@ -114,9 +119,9 @@ Widget iconButtonWidget(
                           text,
                           textAlign: TextAlign.center,
                           softWrap: true,
-                          style: BlocTheme.theme
+                          style: theme
                               .textSmallSemiBold(
-                                  color: BlocTheme.theme.default900Color)
+                                  color: theme.default900Color)
                               .copyWith(letterSpacing: 0),
                         ),
                       ),

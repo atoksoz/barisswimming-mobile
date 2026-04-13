@@ -4,6 +4,11 @@ class FacilityDetailsModel {
   final Map<String, String> information;
   final Map<String, String> features;
   final String description;
+  final String? phone;
+  final String? email;
+  final String? whatsapp;
+  final String? address;
+  final String? mapUrl;
 
   FacilityDetailsModel({
     required this.name,
@@ -11,7 +16,20 @@ class FacilityDetailsModel {
     required this.information,
     required this.features,
     required this.description,
+    this.phone,
+    this.email,
+    this.whatsapp,
+    this.address,
+    this.mapUrl,
   });
+
+  bool get hasContact =>
+      (phone != null && phone!.trim().isNotEmpty) ||
+      (email != null && email!.trim().isNotEmpty) ||
+      (whatsapp != null && whatsapp!.trim().isNotEmpty) ||
+      (address != null && address!.trim().isNotEmpty);
+
+  bool get hasMapUrl => mapUrl != null && mapUrl!.trim().isNotEmpty;
 
   factory FacilityDetailsModel.fromJson(Map<String, dynamic> json) {
     // Parse images - could be a list of strings or list of objects
@@ -79,6 +97,11 @@ class FacilityDetailsModel {
       information: infoMap,
       features: featuresMap,
       description: json['description']?.toString() ?? '',
+      phone: json['phone']?.toString(),
+      email: json['email']?.toString(),
+      whatsapp: json['whatsapp']?.toString(),
+      address: json['address']?.toString(),
+      mapUrl: json['map_url']?.toString(),
     );
   }
 
@@ -89,6 +112,11 @@ class FacilityDetailsModel {
       'information': information,
       'features': features,
       'description': description,
+      'phone': phone,
+      'email': email,
+      'whatsapp': whatsapp,
+      'address': address,
+      'map_url': mapUrl,
     };
   }
 }

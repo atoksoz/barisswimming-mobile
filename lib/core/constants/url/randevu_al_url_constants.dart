@@ -225,6 +225,19 @@ class RandevuAlUrlConstants {
   static String getTodaySummaryUrl(String baseUrl) =>
       '${_selfService(baseUrl)}today-summary';
 
+  // ─── Member Self-Service ───
+
+  static String getMyTodayLessonCountUrl(String baseUrl) =>
+      '${_selfService(baseUrl)}today-lesson-count';
+
+  static String getMyScheduleUrl(String baseUrl) =>
+      '${_selfService(baseUrl)}my-schedule';
+
+  // ─── Müzik Okulu Dashboard (birleşik) ───
+
+  static String getMyMuzikOkulumHomeDashboardUrl(String baseUrl) =>
+      '${_selfService(baseUrl)}muzik-okulum/home-dashboard';
+
   // ─── Employee Professions ───
 
   static String getEmployeeProfessionsUrl(String baseUrl) =>

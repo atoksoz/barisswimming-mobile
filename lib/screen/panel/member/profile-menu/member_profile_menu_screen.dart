@@ -11,7 +11,7 @@ import 'package:e_sport_life/screen/panel/common/facility-details/facility_detai
 import 'package:e_sport_life/screen/panel/common/trainer-detail/trainer_list_screen.dart';
 import 'package:e_sport_life/screen/panel/member/profile/member_profile_screen.dart';
 import 'package:e_sport_life/screen/payment-screen/payment_history_screen.dart';
-import 'package:e_sport_life/screen/suggestion-complaint-screen/suggestion_complaint_screen.dart';
+import 'package:e_sport_life/screen/panel/common/suggestion-complaint/suggestion_complaint_screen.dart';
 import 'package:flutter/material.dart';
 
 class MemberProfileMenuScreen extends StatelessWidget {

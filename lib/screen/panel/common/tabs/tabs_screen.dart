@@ -3,9 +3,14 @@ import 'package:e_sport_life/config/mobile-app-settings/mobile_app_settings_cubi
 import 'package:e_sport_life/config/themes/bloc_theme.dart';
 import 'package:e_sport_life/config/user-config/user_config.dart';
 import 'package:e_sport_life/config/user-config/user_config_cubit.dart';
+import 'package:e_sport_life/core/enums/application_type.dart';
 import 'package:e_sport_life/core/enums/mobile_user_type.dart';
 import 'package:e_sport_life/core/l10n/app_labels.dart';
 import 'package:e_sport_life/screen/explore.dart';
+import 'package:e_sport_life/screen/panel/member/muzik-okulum/muzik_okulum_home_screen.dart';
+import 'package:e_sport_life/screen/panel/member/muzik-okulum/muzik_okulum_profile_menu_screen.dart';
+import 'package:e_sport_life/screen/panel/member/swimming-course/swimming_course_home_screen.dart';
+import 'package:e_sport_life/screen/panel/member/swimming-course/swimming_course_profile_menu_screen.dart';
 import 'package:e_sport_life/screen/gymexxtra-screen/gymexxtra_shop_screen.dart';
 import 'package:e_sport_life/screen/order-screen/order_history_screen.dart';
 import 'package:e_sport_life/screen/panel/common/dynamic_qr_screen.dart';
@@ -70,6 +75,41 @@ class _TabsState extends State<Tabs> {
       GButton(icon: Icons.qr_code_2, text: labels.qrCode),
       if (showMagaza)
         GButton(icon: Icons.shopping_cart, text: labels.shop),
+      GButton(icon: Icons.person, text: labels.profile),
+    ];
+  }
+
+  // ─── SCHOOL-STYLE MEMBER (müzik okulu / yüzme kursu) ───
+
+  List<Widget> _buildSchoolStyleMemberWidgetOptions(ApplicationType appType) {
+    if (appType.isSwimmingCourse) {
+      return [
+        SwimmingCourseHomeScreen(),
+        MemberQrScreen(),
+        SwimmingCourseProfileMenuScreen(),
+      ];
+    }
+    return [
+      MuzikOkulumHomeScreen(),
+      MemberQrScreen(),
+      MuzikOkulumProfileMenuScreen(),
+    ];
+  }
+
+  List<Widget> _buildMusicSchoolMemberHeaderOptions() {
+    final labels = AppLabels.current;
+    return [
+      Text('', style: BlocTheme.theme.textTitleSemiBold()),
+      Text(labels.qrCode, style: BlocTheme.theme.textTitleSemiBold()),
+      Text(labels.profile, style: BlocTheme.theme.textTitleSemiBold()),
+    ];
+  }
+
+  List<GButton> _buildMusicSchoolMemberTabs() {
+    final labels = AppLabels.current;
+    return [
+      GButton(icon: Icons.home, text: labels.home),
+      GButton(icon: Icons.qr_code_2, text: labels.qrCode),
       GButton(icon: Icons.person, text: labels.profile),
     ];
   }
@@ -177,6 +217,8 @@ class _TabsState extends State<Tabs> {
             late final List<Widget> headerOptions;
             late final List<GButton> tabs;
 
+            final appType = userConfig?.applicationType ?? ApplicationType.openGym;
+
             switch (userType) {
               case MobileUserType.trainer:
                 widgetOptions = _buildTrainerWidgetOptions();
@@ -191,9 +233,16 @@ class _TabsState extends State<Tabs> {
                 headerOptions = _buildAdminHeaderOptions();
                 tabs = _buildAdminTabs();
               case MobileUserType.member:
-                widgetOptions = _buildMemberWidgetOptions(showMagaza);
-                headerOptions = _buildMemberHeaderOptions(showMagaza);
-                tabs = _buildMemberTabs(showMagaza);
+                if (appType.usesSchoolStyleMemberPanel) {
+                  widgetOptions =
+                      _buildSchoolStyleMemberWidgetOptions(appType);
+                  headerOptions = _buildMusicSchoolMemberHeaderOptions();
+                  tabs = _buildMusicSchoolMemberTabs();
+                } else {
+                  widgetOptions = _buildMemberWidgetOptions(showMagaza);
+                  headerOptions = _buildMemberHeaderOptions(showMagaza);
+                  tabs = _buildMemberTabs(showMagaza);
+                }
             }
 
             if (_selectedIndex >= widgetOptions.length) {
@@ -234,8 +283,9 @@ class _TabsState extends State<Tabs> {
                       ),
                       title: headerOptions[_selectedIndex],
                     ),
-              body: Center(
-                child: widgetOptions.elementAt(_selectedIndex),
+              body: IndexedStack(
+                index: _selectedIndex,
+                children: widgetOptions,
               ),
               bottomNavigationBar: Padding(
                 padding: const EdgeInsets.only(bottom: 20, top: 20),

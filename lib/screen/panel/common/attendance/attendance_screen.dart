@@ -805,7 +805,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               ),
               if (_isLoading)
                 Container(
-                  color: Colors.black54,
+                  color: BlocTheme.theme.defaultBlackColor.withOpacity(0.54),
                   child: const Center(child: CircularProgressIndicator()),
                 ),
             ],

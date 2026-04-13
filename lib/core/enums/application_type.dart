@@ -35,4 +35,8 @@ enum ApplicationType {
   bool get isMusicSchool => this == muzikOkulum;
 
   bool get isSwimmingCourse => this == swimmingCourse;
+
+  /// Müzik okulu ve yüzme kursu: üç sekmeli üye paneli (Ana sayfa, QR, Profil).
+  bool get usesSchoolStyleMemberPanel =>
+      isMusicSchool || isSwimmingCourse;
 }

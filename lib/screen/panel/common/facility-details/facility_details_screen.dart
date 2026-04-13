@@ -11,6 +11,7 @@ import 'package:e_sport_life/core/widgets/top_appbar_widget.dart';
 import 'package:e_sport_life/data/model/facility_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/widgets/image_gallery_popup_widget.dart';
 
@@ -25,6 +26,7 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
   static const double _galleryHeight = 270.0;
   static const double _borderRadius = 20.0;
   static const double _sectionIconSize = 24.0;
+  static const String _noDataPlaceholder = '----';
 
   late Future<FacilityDetailsModel?> _facilityDetailsFuture;
 
@@ -97,9 +99,7 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
                         20, 20, 20, 10),
                     child: Text(
                       facility.name,
-                      style: theme
-                          .textBodyLarge(color: theme.defaultBlackColor)
-                          .copyWith(fontSize: 20),
+                      style: theme.textSubtitle(color: theme.defaultBlackColor),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -116,8 +116,12 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
                   _buildFeaturesTable(facility.features, theme),
                   const SizedBox(height: 10),
                 ],
+                if (facility.hasContact) ...[
+                  _buildDivider(theme),
+                  _buildContactSection(facility, theme, labels),
+                ],
                 if (facility.description.isNotEmpty) ...[
-                  const SizedBox(height: 10),
+                  _buildDivider(theme),
                   _buildSectionHeader(
                     theme: theme,
                     icon: Icons.description,
@@ -364,9 +368,8 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
                         ),
                         child: Text(
                           '+$extraCount ${labels.photo}',
-                          style: theme
-                              .textCaption(color: theme.defaultWhiteColor)
-                              .copyWith(fontWeight: FontWeight.bold),
+                          style: theme.textCaptionSemiBold(
+                              color: theme.defaultWhiteColor),
                         ),
                       ),
                     ),
@@ -422,9 +425,8 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
                       entry.key,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: theme
-                          .textSmall(color: theme.defaultBlackColor)
-                          .copyWith(fontWeight: FontWeight.w600),
+                      style: theme.textSmallSemiBold(
+                          color: theme.defaultBlackColor),
                     ),
                   ),
                 ),
@@ -434,7 +436,7 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
                     padding: const EdgeInsetsDirectional.fromSTEB(
                         12, 10, 12, 10),
                     child: Text(
-                      entry.value.isEmpty ? '----' : entry.value,
+                      entry.value.isEmpty ? _noDataPlaceholder : entry.value,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textCaption(
@@ -507,7 +509,7 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
                   Expanded(
                     flex: 3,
                     child: Text(
-                      entry.value.isEmpty ? '----' : entry.value,
+                      entry.value.isEmpty ? _noDataPlaceholder : entry.value,
                       textAlign: TextAlign.end,
                       style: theme
                           .textBody(color: theme.defaultBlackColor)
@@ -521,5 +523,201 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
         }).toList(),
       ),
     );
+  }
+
+  // ─── İletişim Bölümü ───
+
+  Widget _buildContactSection(
+    FacilityDetailsModel facility,
+    dynamic theme,
+    AppLabels labels,
+  ) {
+    final hasPhone = facility.phone != null && facility.phone!.trim().isNotEmpty;
+    final hasEmail = facility.email != null && facility.email!.trim().isNotEmpty;
+    final hasWhatsApp =
+        facility.whatsapp != null && facility.whatsapp!.trim().isNotEmpty;
+    final hasAddress =
+        facility.address != null && facility.address!.trim().isNotEmpty;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(20, 10, 20, 0),
+          child: Text(
+            labels.contactInfo,
+            style: theme.textBodyBold(color: theme.default900Color),
+          ),
+        ),
+        const SizedBox(height: 14),
+        Container(
+          margin: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+          decoration: BoxDecoration(
+            color: theme.defaultWhiteColor,
+            borderRadius: BorderRadius.circular(theme.panelCardRadius),
+            border: Border.all(
+              color: theme.defaultGray200Color,
+              width: 1,
+            ),
+          ),
+          child: Column(
+            children: [
+              if (hasPhone)
+                _buildContactTile(
+                  theme: theme,
+                  icon: Icons.phone_outlined,
+                  iconColor: theme.panelSuccessColor,
+                  label: labels.phoneLabel,
+                  value: facility.phone!.trim(),
+                  onTap: () => _launchUrl('tel:${facility.phone!.trim()}'),
+                  showDivider: hasEmail || hasWhatsApp || hasAddress,
+                ),
+              if (hasEmail)
+                _buildContactTile(
+                  theme: theme,
+                  icon: Icons.email_outlined,
+                  iconColor: theme.primaryColor,
+                  label: labels.emailLabel,
+                  value: facility.email!.trim(),
+                  onTap: () => _launchUrl('mailto:${facility.email!.trim()}'),
+                  showDivider: hasWhatsApp || hasAddress,
+                ),
+              if (hasWhatsApp)
+                _buildContactTile(
+                  theme: theme,
+                  icon: Icons.chat_outlined,
+                  iconColor: theme.whatsAppGreenColor,
+                  label: labels.whatsappLabel,
+                  value: facility.whatsapp!.trim(),
+                  onTap: () {
+                    final number = facility.whatsapp!
+                        .trim()
+                        .replaceAll(RegExp(r'[^0-9]'), '');
+                    _launchUrl('https://wa.me/$number');
+                  },
+                  showDivider: hasAddress,
+                ),
+              if (hasAddress)
+                _buildContactTile(
+                  theme: theme,
+                  icon: Icons.location_on_outlined,
+                  iconColor: theme.panelDangerColor,
+                  label: labels.addressLabel,
+                  value: facility.address!.trim(),
+                  onTap: facility.hasMapUrl
+                      ? () => _launchUrl(facility.mapUrl!)
+                      : null,
+                  trailing: facility.hasMapUrl ? labels.openInMaps : null,
+                  showDivider: false,
+                ),
+            ],
+          ),
+        ),
+        if (!hasAddress && facility.hasMapUrl)
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 10, 20, 0),
+            child: SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => _launchUrl(facility.mapUrl!),
+                icon: Icon(Icons.map_outlined, size: 18, color: theme.primaryColor),
+                label: Text(
+                  labels.openInMaps,
+                  style: theme.textSmall(color: theme.primaryColor),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: theme.defaultGray200Color),
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(theme.panelCardRadius),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+              ),
+            ),
+          ),
+        const SizedBox(height: 4),
+      ],
+    );
+  }
+
+  Widget _buildContactTile({
+    required dynamic theme,
+    required IconData icon,
+    required Color iconColor,
+    required String label,
+    required String value,
+    VoidCallback? onTap,
+    String? trailing,
+    bool showDivider = true,
+  }) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: onTap,
+          borderRadius: showDivider
+              ? BorderRadius.zero
+              : BorderRadius.vertical(
+                  bottom: Radius.circular(theme.panelCardRadius)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: iconColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(icon, size: 20, color: iconColor),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        label,
+                        style: theme.textCaption(
+                            color: theme.defaultGray500Color),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        value,
+                        style: theme.textBody(color: theme.default900Color),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                if (trailing != null) ...[
+                  const SizedBox(width: 8),
+                  Text(
+                    trailing,
+                    style: theme.textCaption(color: theme.primaryColor),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+        if (showDivider)
+          Divider(
+            height: 1,
+            thickness: 1,
+            color: theme.default900Color,
+            indent: 70,
+          ),
+      ],
+    );
+  }
+
+  Future<void> _launchUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 }

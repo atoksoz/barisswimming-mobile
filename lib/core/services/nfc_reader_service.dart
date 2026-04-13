@@ -52,26 +52,19 @@ class NfcReaderService {
     }
   }
 
-  static List<int>? _getTagIdentifier(NfcTag tag) {
-    final androidTag = NfcTagAndroid.from(tag);
-    if (androidTag != null) {
-      return androidTag.id.toList(growable: false);
+  static Uint8List? _getTagIdentifier(NfcTag tag) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return NfcTagAndroid.from(tag)?.id;
     }
 
-    final miFare = MiFareIos.from(tag);
-    if (miFare != null) {
-      return miFare.identifier.toList(growable: false);
-    }
+    final mifare = MiFareIos.from(tag);
+    if (mifare != null) return mifare.identifier;
 
     final iso7816 = Iso7816Ios.from(tag);
-    if (iso7816 != null) {
-      return iso7816.identifier.toList(growable: false);
-    }
+    if (iso7816 != null) return iso7816.identifier;
 
     final iso15693 = Iso15693Ios.from(tag);
-    if (iso15693 != null) {
-      return iso15693.identifier.toList(growable: false);
-    }
+    if (iso15693 != null) return iso15693.identifier;
 
     return null;
   }

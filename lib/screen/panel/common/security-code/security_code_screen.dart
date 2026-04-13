@@ -13,7 +13,6 @@ import 'package:e_sport_life/config/user-config/user_config_cubit.dart';
 import 'package:e_sport_life/contants/application_constant.dart';
 import 'package:e_sport_life/core/constants/url/api_hamam_spa_url_constants.dart';
 import 'package:e_sport_life/core/constants/url/system_api_url_constants.dart';
-import 'package:e_sport_life/core/enums/application_type.dart';
 import 'package:e_sport_life/core/enums/mobile_user_type.dart';
 import 'package:e_sport_life/core/l10n/app_labels.dart';
 import 'package:e_sport_life/core/utils/shared-preferences/locale_cache_utils.dart';
@@ -53,26 +52,32 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
       var result = extractOutputIfFound(response!.body);
       if (result != null) {
         var d = result;
-
         var data = json.decode(result["data"]);
-        ApplicationConstant.setApplicationId(d["application_id"].toString());
-        ApplicationConstant.setFirmId(d["firm_id"].toString());
-        ApplicationConstant.setHamamSpaApiUrl(data["hamamspa_api_url"]);
-        ApplicationConstant.setKantincimApiUrl(data["kantincim"]);
-        ApplicationConstant.setGymTrainingApiUrl(data["gym_training"]);
-        ApplicationConstant.setRandevuAlApiUrl(data["online_resarvation"]);
-        ApplicationConstant.setDigitalSignageApiUrl(data["digital_signage"]);
-        ApplicationConstant.setHost(data["host"]);
-        ApplicationConstant.setMemberId(data["member_id"].toString());
-        ApplicationConstant.setName(data["name"].toString());
-        ApplicationConstant.setPhone(data["phone"].toString());
-        ApplicationConstant.setBirthday(data["birthday"].toString());
-        ApplicationConstant.setGender(data["gender"].toString());
-        ApplicationConstant.setToken(data["token"].toString());
-        ApplicationConstant.setImageUrl(data["image_url"].toString());
+        ApplicationConstant.setApplicationId(
+            d["application_id"]?.toString() ?? '');
+        ApplicationConstant.setFirmId(d["firm_id"]?.toString() ?? '');
+        ApplicationConstant.setHamamSpaApiUrl(
+            data["hamamspa_api_url"]?.toString() ?? '');
+        ApplicationConstant.setKantincimApiUrl(
+            data["kantincim"]?.toString() ?? '');
+        ApplicationConstant.setGymTrainingApiUrl(
+            data["gym_training"]?.toString() ?? '');
+        ApplicationConstant.setRandevuAlApiUrl(
+            data["online_resarvation"]?.toString() ?? '');
+        ApplicationConstant.setDigitalSignageApiUrl(
+            data["digital_signage"]?.toString() ?? '');
+        ApplicationConstant.setHost(data["host"]?.toString() ?? '');
+        ApplicationConstant.setMemberId(data["member_id"]?.toString() ?? '');
+        ApplicationConstant.setName(data["name"]?.toString() ?? '');
+        ApplicationConstant.setPhone(data["phone"]?.toString() ?? '');
+        ApplicationConstant.setBirthday(data["birthday"]?.toString() ?? '');
+        ApplicationConstant.setGender(data["gender"]?.toString() ?? '');
+        ApplicationConstant.setToken(data["token"]?.toString() ?? '');
+        ApplicationConstant.setImageUrl(data["image_url"]?.toString() ?? '');
         ApplicationConstant.setThumbImageUrl(
-            data["thumb_image_url"].toString());
-        ApplicationConstant.setSecurityKey(d["security_code"].toString());
+            data["thumb_image_url"]?.toString() ?? '');
+        ApplicationConstant.setSecurityKey(
+            d["security_code"]?.toString() ?? '');
 
         var jsonData = data;
         JwtStorageService.saveToken(data["token"]);
@@ -93,7 +98,8 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
         AppLabels.init(config.applicationType, locale: savedLocale);
 
         if (config.userType != MobileUserType.member) {
-          await _fetchAndLoadAbilities(context, data["token"], data["hamamspa_api_url"]);
+          await _fetchAndLoadAbilities(
+              context, data["token"], data["hamamspa_api_url"]);
         }
 
         return true;
@@ -160,8 +166,7 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
             });
 
             return AlertDialog(
-              backgroundColor:
-                  Theme.of(context).scaffoldBackgroundColor,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16)),
               title: Text(AppLabels.current.kvkkTitle),
@@ -183,9 +188,7 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
                     controller: controller,
                     child: Text(
                       _kvkkContent,
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
+                      style: BlocTheme.theme.textSmallNormal(),
                     ),
                   ),
                 ),
@@ -239,10 +242,8 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
               child: Text(
                 AppLabels.current.kvkkRead,
                 textAlign: TextAlign.right,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: BlocTheme.theme.defaultGray900Color,
-                ),
+                style: BlocTheme.theme.textSmallNormal(
+                    color: BlocTheme.theme.defaultGray900Color),
               ),
             ),
           ),
@@ -263,9 +264,9 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
                 borderRadius: BorderRadius.circular(6),
               ),
               child: _kvkkAccepted
-                  ? const Icon(
+                  ? Icon(
                       Icons.check,
-                      color: Colors.white,
+                      color: BlocTheme.theme.defaultWhiteColor,
                       size: 18,
                     )
                   : null,
@@ -291,8 +292,7 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
     }
 
     try {
-      final kvkkString =
-          await rootBundle.loadString('assets/config/kvkk.json');
+      final kvkkString = await rootBundle.loadString('assets/config/kvkk.json');
       final kvkkJson = json.decode(kvkkString);
       setState(() {
         _kvkkContent = kvkkJson['content'] ?? '';
@@ -313,8 +313,9 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
 
   @override
   Widget build(BuildContext context) {
-final size = MediaQuery.of(context).size;
-final isTablet = size.shortestSide >= 600;
+    final size = MediaQuery.of(context).size;
+    final isTablet = size.shortestSide >= 600;
+    final topPadding = MediaQuery.of(context).padding.top;
 
     return Scaffold(
       appBar: null,
@@ -332,375 +333,334 @@ final isTablet = size.shortestSide >= 600;
                     ),
                     decoration: BoxDecoration(
                       color: BlocTheme.theme.defaultBackgroundColor,
-                      image: DecorationImage(
-                        fit: BoxFit.contain,
-                        alignment: AlignmentDirectional(0, -1),
-                        image: Image.asset(
-                          'assets/images/application_images/verification_screen_bg.png',
-                        ).image,
-                      ),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                          SizedBox(height: MediaQuery.of(context).padding.top),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Container(
-                                width: MediaQuery.sizeOf(context).width,
-                                height:
-                                    (isTablet == true ? MediaQuery.sizeOf(context).height * 0.754 : MediaQuery.sizeOf(context).height * 0.454),
-                                decoration: BoxDecoration(),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Container(
-                                width: MediaQuery.sizeOf(context).width,
-                                                decoration: const BoxDecoration(),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Align(
-                                      alignment: AlignmentDirectional(1, 1),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Expanded(
-                                            child: Align(
-                                              alignment:
-                                                  AlignmentDirectional(-1, -1),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(20, 10, 0, 0),
-                                                child: Text(
-                                                  configState.welcomeMessage,
-                                                  maxLines: 1,
-                                                  style: TextStyle(
-                                                      fontFamily: BlocTheme.theme.fontFamily,
-                                                      letterSpacing: 0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: BlocTheme.theme
-                                                          .defaultGrayColor,
-                                                      fontSize: 24),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Row(
+                        _buildHeaderBackground(
+                            size, isTablet, topPadding, configState),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Container(
+                              width: MediaQuery.sizeOf(context).width,
+                              decoration: const BoxDecoration(),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Align(
+                                    alignment: AlignmentDirectional(1, 1),
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Expanded(
                                           child: Align(
                                             alignment:
-                                                AlignmentDirectional(-1, 0),
+                                                AlignmentDirectional(-1, -1),
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(20, 10, 0, 0),
                                               child: Text(
-                                                configState.appDisplayName,
+                                                configState.welcomeMessage,
                                                 maxLines: 1,
-                                                style: TextStyle(
-                                                    fontFamily: BlocTheme.theme.fontFamily,
-                                                    letterSpacing: 0,
-                                                    fontWeight: FontWeight.w800,
-                                                    fontSize: 42,
-                                                    color: BlocTheme
-                                                        .theme.default500Color),
+                                                style: BlocTheme.theme
+                                                    .textTitleSemiBold(
+                                                        color: BlocTheme.theme
+                                                            .defaultGrayColor),
                                               ),
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ],
+                                  ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Expanded(
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(-1, 0),
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    20, 10, 0, 0),
+                                            child: Text(
+                                              configState.appDisplayName,
+                                              maxLines: 1,
+                                              style: BlocTheme.theme
+                                                  .textDisplay(
+                                                      color: BlocTheme.theme
+                                                          .default500Color),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (_isValidating == false)
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                child: Align(
+                                  alignment: AlignmentDirectional(-1, 0),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        20, 0, 0, 0),
+                                    child: Text(
+                                      AppLabels.current.enterVerificationCode,
+                                      style: BlocTheme.theme.textSubtitle(
+                                          color:
+                                              BlocTheme.theme.default500Color),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          if (_isValidating == false)
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Expanded(
-                                  child: Align(
-                                    alignment: AlignmentDirectional(-1, 0),
+                        if (_isValidating == false)
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      10, 20, 10, 0),
+                                  child: TextFormField(
+                                    controller: myController,
+                                    focusNode: myFocusNode,
+                                    autofocus: false,
+                                    obscureText: _passwordVisibility,
+                                    decoration: InputDecoration(
+                                      labelText: AppLabels
+                                          .current.verificationCodeHint,
+                                      labelStyle:
+                                          BlocTheme.theme.inputLabelStyle(),
+                                      alignLabelWithHint: true,
+                                      hintStyle:
+                                          BlocTheme.theme.inputHintStyle(),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: BlocTheme
+                                              .theme.defaultGray700Color,
+                                          width: 1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: BlocTheme
+                                              .theme.defaultGray700Color,
+                                          width: 1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: BlocTheme
+                                              .theme.defaultRed700Color,
+                                          width: 1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: BlocTheme
+                                              .theme.defaultRed700Color,
+                                          width: 1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                      prefixIcon: Icon(
+                                        Icons.lock_outlined,
+                                        color: BlocTheme.theme.default500Color,
+                                      ),
+                                      suffixIcon: InkWell(
+                                        onTap: () => setState(
+                                          () => _passwordVisibility =
+                                              !_passwordVisibility,
+                                        ),
+                                        focusNode:
+                                            FocusNode(skipTraversal: true),
+                                        child: Icon(
+                                          _passwordVisibility
+                                              ? Icons.visibility_outlined
+                                              : Icons.visibility_off_outlined,
+                                          color: BlocTheme
+                                              .theme.defaultGray900Color,
+                                          size: 22,
+                                        ),
+                                      ),
+                                    ),
+                                    style: BlocTheme.theme
+                                        .inputTextStyle()
+                                        .copyWith(letterSpacing: 5),
+                                    maxLength: 6,
+                                    maxLengthEnforcement:
+                                        MaxLengthEnforcement.enforced,
+                                    keyboardType: TextInputType.number,
+                                    cursorColor:
+                                        BlocTheme.theme.defaultGray900Color,
+                                    onChanged: (text) {
+                                      setState(() {
+                                        _submit = (text.characters.length == 6
+                                            ? true
+                                            : false);
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        _buildKvkkConsentRow(),
+                        _submit == true && _isValidating == false
+                            ? Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Expanded(
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          20, 0, 0, 0),
-                                      child: Text(
-                                        AppLabels.current.enterVerificationCode,
-                                        style: TextStyle(
-                                            fontFamily: BlocTheme.theme.fontFamily,
-                                            letterSpacing: 0,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: BlocTheme
-                                                .theme.default500Color),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          if (_isValidating == false)
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        10, 20, 10, 0),
-                                    child: TextFormField(
-                                      controller: myController,
-                                      focusNode: myFocusNode,
-                                      autofocus: false,
-                                      obscureText: _passwordVisibility,
-                                      decoration: InputDecoration(
-                                        labelText:
-                                            AppLabels.current.verificationCodeHint,
-                                        labelStyle: TextStyle(
-                                            fontFamily: BlocTheme.theme.fontFamily,
-                                            letterSpacing: 0,
-                                            color: BlocTheme
-                                                .theme.defaultGray900Color),
-                                        alignLabelWithHint: true,
-                                        hintStyle: TextStyle(
-                                            fontFamily: BlocTheme.theme.fontFamily,
-                                            letterSpacing: 2,
-                                            fontWeight: FontWeight.normal,
-                                            color: BlocTheme
-                                                .theme.defaultGray700Color),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: BlocTheme
-                                                .theme.defaultGray700Color,
-                                            width: 1,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: BlocTheme
-                                                .theme.defaultGray700Color,
-                                            width: 1,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: BlocTheme.theme.defaultRed700Color,
-                                            width: 1,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                        ),
-                                        focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: BlocTheme.theme.defaultRed700Color,
-                                            width: 1,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                        ),
-                                        prefixIcon: Icon(
-                                          Icons.lock_outlined,
-                                          color:
-                                              BlocTheme.theme.default500Color,
-                                        ),
-                                        suffixIcon: InkWell(
-                                          onTap: () => setState(
-                                            () => _passwordVisibility =
-                                                !_passwordVisibility,
-                                          ),
-                                          focusNode:
-                                              FocusNode(skipTraversal: true),
-                                          child: Icon(
-                                            _passwordVisibility
-                                                ? Icons.visibility_outlined
-                                                : Icons.visibility_off_outlined,
-                                            color: BlocTheme
-                                                .theme.defaultGray900Color,
-                                            size: 22,
-                                          ),
-                                        ),
-                                      ),
-                                      style: TextStyle(
-                                          fontFamily: BlocTheme.theme.fontFamily,
-                                          letterSpacing: 5,
-                                          color: BlocTheme
-                                              .theme.defaultGray900Color),
-                                      maxLength: 6,
-                                      maxLengthEnforcement:
-                                          MaxLengthEnforcement.enforced,
-                                      keyboardType: TextInputType.number,
-                                      cursorColor:
-                                          BlocTheme.theme.defaultGray900Color,
-                                      onChanged: (text) {
-                                        setState(() {
-                                          _submit = (text.characters.length == 6
-                                              ? true
-                                              : false);
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          _buildKvkkConsentRow(),
-                          _submit == true && _isValidating == false
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            10, 10, 10, 0),
-                                        child: ElevatedButton(
-                                          onPressed: _submit == false
-                                              ? null
-                                              : () async {
-                                                  if (!_kvkkAccepted) {
-                                                    ScaffoldMessenger.of(context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                            AppLabels.current.kvkkApprovalRequired),
-                                                      ),
-                                                    );
-                                                    return;
-                                                  }
+                                          10, 10, 10, 0),
+                                      child: ElevatedButton(
+                                        onPressed: _submit == false
+                                            ? null
+                                            : () async {
+                                                if (!_kvkkAccepted) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(AppLabels
+                                                          .current
+                                                          .kvkkApprovalRequired),
+                                                    ),
+                                                  );
+                                                  return;
+                                                }
 
-                                                  setState(() {
-                                                    _isValidating = true;
-                                                  });
-                                                  await Future.delayed(
-                                                      const Duration(seconds: 2));
-                                                  _result =
-                                                      await InternetConnectionUtil
-                                                          .checkInternetConnection();
-                                                  if (_result == true) {
-                                                    try {
-                                                      _result = await useToken(
-                                                          context, myController.text);
-                                                      if (_result == true) {
-                                                        await _registerDevice();
-                                                        _isValidating = false;
-                                                        Navigator.push(
+                                                setState(() {
+                                                  _isValidating = true;
+                                                });
+                                                await Future.delayed(
+                                                    const Duration(seconds: 2));
+                                                _result =
+                                                    await InternetConnectionUtil
+                                                        .checkInternetConnection();
+                                                if (_result == true) {
+                                                  try {
+                                                    _result = await useToken(
+                                                        context,
+                                                        myController.text);
+                                                    if (_result == true) {
+                                                      await _registerDevice();
+                                                      _isValidating = false;
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const Tabs(
+                                                                  index: 0),
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      await warningDialog(
                                                           context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                const Tabs(index: 0),
-                                                          ),
-                                                        );
-                                                      } else {
-                                                        await warningDialog(context,
-                                                            message:
-                                                                AppLabels.current.verificationCodeError);
-                                                        setState(() {
-                                                          _submit = false;
-                                                          _isValidating = false;
-                                                        });
-                                                        myController.text = '';
-                                                      }
-                                                    } on TimeoutException {
-                                                      await warningDialog(context,
-                                                          message:
-                                                              AppLabels.current.serverUnreachable);
-                                                      setState(() {
-                                                        _submit = false;
-                                                        _isValidating = false;
-                                                      });
-                                                      myController.text = '';
-                                                    } on SocketException {
-                                                      await warningDialog(context,
-                                                          message:
-                                                              AppLabels.current.serverUnreachable);
+                                                          message: AppLabels
+                                                              .current
+                                                              .verificationCodeError);
                                                       setState(() {
                                                         _submit = false;
                                                         _isValidating = false;
                                                       });
                                                       myController.text = '';
                                                     }
-                                                  } else {
+                                                  } on TimeoutException {
+                                                    await warningDialog(context,
+                                                        message: AppLabels
+                                                            .current
+                                                            .serverUnreachable);
                                                     setState(() {
                                                       _submit = false;
                                                       _isValidating = false;
                                                     });
-                                                    await showNoInternetDialog(
-                                                        context);
+                                                    myController.text = '';
+                                                  } on SocketException {
+                                                    await warningDialog(context,
+                                                        message: AppLabels
+                                                            .current
+                                                            .serverUnreachable);
+                                                    setState(() {
+                                                      _submit = false;
+                                                      _isValidating = false;
+                                                    });
                                                     myController.text = '';
                                                   }
-                                                },
-                                          child: Text(
-                                            AppLabels.current.login,
-                                            style: TextStyle(
-                                              color: BlocTheme.theme
-                                                  .defaultGray900Color,
-                                              fontSize: 18,
-                                              fontFamily: BlocTheme.theme.fontFamily,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            foregroundColor: BlocTheme.theme.defaultBlackColor,
-                                            backgroundColor:
-                                                BlocTheme.theme.default500Color,
-                                            textStyle: TextStyle(
-                                                fontFamily: BlocTheme.theme.fontFamily,
-                                                letterSpacing: 0,
-                                                fontSize: 18,
-                                                color: BlocTheme
-                                                    .theme.defaultGray900Color,
-                                                fontWeight: FontWeight.bold),
-                                            elevation: 3,
-                                            minimumSize: Size(
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.9,
-                                                50),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(25),
-                                            ),
+                                                } else {
+                                                  setState(() {
+                                                    _submit = false;
+                                                    _isValidating = false;
+                                                  });
+                                                  await showNoInternetDialog(
+                                                      context);
+                                                  myController.text = '';
+                                                }
+                                              },
+                                        child: Text(
+                                          AppLabels.current.login,
+                                          style: BlocTheme.theme.textLabelBold(
+                                              color: BlocTheme
+                                                  .theme.defaultGray900Color),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          foregroundColor:
+                                              BlocTheme.theme.defaultBlackColor,
+                                          backgroundColor:
+                                              BlocTheme.theme.default500Color,
+                                          textStyle: BlocTheme.theme
+                                              .textLabelBold(
+                                                  color: BlocTheme.theme
+                                                      .defaultGray900Color),
+                                          elevation: 3,
+                                          minimumSize: Size(
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.9,
+                                              50),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(25),
                                           ),
                                         ),
                                       ),
-                                    )
-                                  ],
-                                )
-                              : Row(),
-                          if (_isValidating) SizedBox(height: 50),
-                          if (_isValidating)
-                            CircularProgressIndicator(
-                                color: BlocTheme.theme.default500Color),
-                          if (_isValidating) SizedBox(height: 50),
-                          if (_isValidating)
-                            Text(AppLabels.current.codeValidating,
-                                maxLines: 1,
-                                style: TextStyle(
-                                    fontFamily: BlocTheme.theme.fontFamily,
-                                    letterSpacing: 0,
-                                    fontWeight: FontWeight.w600,
-                                    color: BlocTheme.theme.defaultGrayColor,
-                                    fontSize: 18)),
-                          // Bottom padding to ensure button is accessible on all devices
-                          SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
-                        ],
-                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            : Row(),
+                        if (_isValidating) SizedBox(height: 50),
+                        if (_isValidating)
+                          CircularProgressIndicator(
+                              color: BlocTheme.theme.default500Color),
+                        if (_isValidating) SizedBox(height: 50),
+                        if (_isValidating)
+                          Text(AppLabels.current.codeValidating,
+                              maxLines: 1,
+                              style: BlocTheme.theme.textLabel(
+                                  color: BlocTheme.theme.defaultGrayColor)),
+                        // Bottom padding to ensure button is accessible on all devices
+                        SizedBox(
+                            height: MediaQuery.of(context).padding.bottom + 20),
+                      ],
                     ),
-                  );
+                  ),
+                );
               },
             );
           },
@@ -748,4 +708,86 @@ final isTablet = size.shortestSide >= 600;
       // Non-blocking: device registration failure shouldn't prevent app usage
     }
   }
+
+  Widget _buildHeaderBackground(
+      Size size, bool isTablet, double topPadding, AppConfigState configState) {
+    final imageHeight =
+        (isTablet ? size.height * 0.754 : size.height * 0.454) + topPadding;
+    final headerMode = configState.securityCodeHeaderMode.toLowerCase();
+    final useCurved = headerMode == 'curved';
+
+    final headerImage = Image.asset(
+      configState.securityCodeHeaderImage,
+      fit: BoxFit.cover,
+      alignment: Alignment.topCenter,
+      errorBuilder: (_, __, ___) => Image.asset(
+        'assets/images/application_images/verification_screen_bg.png',
+        fit: BoxFit.cover,
+        alignment: Alignment.topCenter,
+      ),
+    );
+
+    return SizedBox(
+      width: size.width,
+      height: imageHeight,
+      child: useCurved
+          ? ClipPath(
+              clipper: _BottomWaveClipper(
+                waveStartOffsetBottom:
+                    configState.securityCodeWaveStartOffsetBottom,
+                waveControl1OffsetBottom:
+                    configState.securityCodeWaveControl1OffsetBottom,
+                waveMidOffsetBottom:
+                    configState.securityCodeWaveMidOffsetBottom,
+                waveControl2OffsetBottom:
+                    configState.securityCodeWaveControl2OffsetBottom,
+                waveEndOffsetBottom:
+                    configState.securityCodeWaveEndOffsetBottom,
+              ),
+              child: headerImage,
+            )
+          : headerImage,
+    );
+  }
+}
+
+class _BottomWaveClipper extends CustomClipper<Path> {
+  final double waveStartOffsetBottom;
+  final double waveControl1OffsetBottom;
+  final double waveMidOffsetBottom;
+  final double waveControl2OffsetBottom;
+  final double waveEndOffsetBottom;
+
+  const _BottomWaveClipper({
+    required this.waveStartOffsetBottom,
+    required this.waveControl1OffsetBottom,
+    required this.waveMidOffsetBottom,
+    required this.waveControl2OffsetBottom,
+    required this.waveEndOffsetBottom,
+  });
+
+  @override
+  Path getClip(Size size) {
+    final path = Path()
+      ..lineTo(0, size.height - waveStartOffsetBottom)
+      ..quadraticBezierTo(
+        size.width * 0.25,
+        size.height - waveControl1OffsetBottom,
+        size.width * 0.5,
+        size.height - waveMidOffsetBottom,
+      )
+      ..quadraticBezierTo(
+        size.width * 0.78,
+        size.height - waveControl2OffsetBottom,
+        size.width,
+        size.height - waveEndOffsetBottom,
+      )
+      ..lineTo(size.width, 0)
+      ..close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }

@@ -24,6 +24,8 @@ class TrainerDetailScreen extends StatefulWidget {
   final String trainerId;
   final String name;
   final String duty;
+  /// Virgüllü meslek anahtarları; `duty` boşken yetenek satırı için kullanılır.
+  final String profession;
   final String explanation;
   final String image;
   final String? facebookUrl;
@@ -38,6 +40,7 @@ class TrainerDetailScreen extends StatefulWidget {
     required this.trainerId,
     required this.name,
     required this.duty,
+    this.profession = '',
     required this.explanation,
     required this.image,
     this.facebookUrl,
@@ -99,7 +102,9 @@ class _TrainerDetailScreenState extends State<TrainerDetailScreen> {
     return userConfig?.userType == MobileUserType.member;
   }
 
-  String get _dutyLabel => EmployeeProfession.getLabels(widget.duty);
+  String get _dutyLabel => EmployeeProfession.getLabels(
+        widget.profession.trim().isNotEmpty ? widget.profession : widget.duty,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -140,8 +145,7 @@ class _TrainerDetailScreenState extends State<TrainerDetailScreen> {
                   ),
                   Text(
                     _dutyLabel,
-                    style: theme.textSmall(color: theme.defaultGray900Color)
-                        .copyWith(fontWeight: FontWeight.w600),
+                    style: theme.textSmallSemiBold(color: theme.defaultGray900Color),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(

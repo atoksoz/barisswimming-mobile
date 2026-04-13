@@ -15,7 +15,8 @@ import 'package:e_sport_life/core/services/jwt_storage_service.dart';
 import 'package:e_sport_life/core/utils/request_util.dart';
 import 'package:e_sport_life/data/model/category_model.dart';
 import 'package:e_sport_life/data/model/open_order_model.dart';
-import 'package:e_sport_life/screen/panel/common/announcement/announcements_list_screen.dart';
+import 'package:e_sport_life/core/widgets/announcement_icon_widget.dart';
+import 'package:e_sport_life/core/widgets/quick_access_section_widget.dart';
 import 'package:e_sport_life/screen/closet-screen/closet_summary_screen.dart';
 import 'package:e_sport_life/screen/diet-screen/diet_screen.dart';
 import 'package:e_sport_life/screen/group-lesson-screen/group_lesson_screen.dart';
@@ -438,66 +439,7 @@ class _ExploreState extends State<Explore> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Announcement ikonu
-                        BlocBuilder<AnnouncementCubit, AnnouncementState>(
-                          builder: (context, announcementState) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AnnouncementsListScreen(),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 55,
-                                height: 55,
-                                decoration: BoxDecoration(
-                                  color: BlocTheme.theme.default300Color,
-                                  shape: BoxShape.circle,
-                                ),
-                                clipBehavior: Clip.antiAlias,
-                                child: Stack(
-                                  clipBehavior: Clip.none,
-                                  children: [
-                                    Center(
-                                      child: SvgPicture.asset(
-                                        BlocTheme.theme.annoucementSvgPath,
-                                        width: 24,
-                                        height: 24,
-                                        fit: BoxFit.contain,
-                                        /*colorFilter: ColorFilter.mode(
-                                          Colors.white,
-                                          BlendMode.srcIn,
-                                        ),*/
-                                      ),
-                                    ),
-                                    if (announcementState.hasNewAnnouncement)
-                                      Positioned(
-                                        right: 0,
-                                        top: 0,
-                                        child: Container(
-                                          width: 11,
-                                          height: 11,
-                                          decoration: BoxDecoration(
-                                            color: BlocTheme
-                                                .theme.defaultRed700Color,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: Colors.white,
-                                              width: 1.5,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                        AnnouncementIconWidget(),
                         const SizedBox(width: 12),
                         // Profil fotoğrafı
                         GestureDetector(
@@ -1045,47 +987,8 @@ class _ExploreState extends State<Explore> {
                           ],
                         ),
                       // Hızlı Erişim Bölümü
-                      Row(
+                      QuickAccessSectionWidget(
                         children: [
-                          Container(
-                            margin: const EdgeInsetsDirectional.fromSTEB(
-                                20, 0, 20, 0),
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                      offset: const Offset(1, 2),
-                                      blurRadius: 8,
-                                      spreadRadius: 0,
-                                      color:
-                                          const Color.fromRGBO(0, 0, 0, 0.15))
-                                ],
-                                color: Colors.white,
-                                border: Border.all(
-                                    color: BlocTheme.theme.defaultGray300Color,
-                                    width: 1),
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(20))),
-                            width: MediaQuery.sizeOf(context).width - 40,
-                            child: Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Hızlı Erişim Başlığı
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10, top: 0, bottom: 10),
-                                    child: Text(
-                                      "Hızlı Erişim",
-                                      style: TextStyle(
-                                        color: BlocTheme.theme.default900Color,
-                                        fontFamily: "Inter",
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  // İlk 3 kutucuk (Egzersiz, Ölçüm, Personal Training)
                                   Row(
                                     children: [
                                       iconButtonWidget(
@@ -1210,10 +1113,6 @@ class _ExploreState extends State<Explore> {
                                     ],
                                   ),
                                   const SizedBox(height: 10),
-                                ],
-                              ),
-                            ),
-                          ),
                         ],
                       ),
 

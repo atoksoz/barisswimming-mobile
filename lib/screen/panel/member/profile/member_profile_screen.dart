@@ -419,7 +419,7 @@ class _MemberProfileState extends State<MemberProfile> {
         body: Container(
           margin: const EdgeInsets.only(left: 10.0, right: 10.0, top: 20),
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: BlocTheme.theme.defaultWhiteColor,
               boxShadow: [
                 BoxShadow(
                   blurRadius: 2,
@@ -548,49 +548,10 @@ class _MemberProfileState extends State<MemberProfile> {
                                   inputFormatters: [
                                     UpperCaseTextFormatter(),
                                   ],
-                              decoration: InputDecoration(
+                              decoration: BlocTheme.theme.inputDecoration(
                                 labelText: AppLabels.current.fullName,
-                                labelStyle: TextStyle(
-                                    fontFamily: BlocTheme.theme.fontFamily,
-                                    letterSpacing: 0,
-                                    color: BlocTheme.theme.defaultBlackColor),
-                                alignLabelWithHint: true,
-                                hintStyle: TextStyle(
-                                    fontFamily: BlocTheme.theme.fontFamily,
-                                    letterSpacing: 2,
-                                    fontWeight: FontWeight.normal,
-                                    color: BlocTheme.theme.defaultGray500Color),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: BlocTheme.theme.defaultBlackColor,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: BlocTheme.theme.defaultBlackColor,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                        color: BlocTheme.theme.defaultRed700Color,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: BlocTheme.theme.defaultRed700Color,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
                               ),
-                              style: TextStyle(
-                                  fontFamily: BlocTheme.theme.fontFamily, letterSpacing: 0),
+                              style: BlocTheme.theme.inputTextStyle(),
                               maxLength: 100,
                               maxLengthEnforcement:
                                   MaxLengthEnforcement.enforced,
@@ -622,58 +583,17 @@ class _MemberProfileState extends State<MemberProfile> {
                               ],
                               controller: _phoneController,
                               autofocus: false,
-                              decoration: InputDecoration(
+                              decoration: BlocTheme.theme.inputDecoration(
                                 labelText: AppLabels.current.phoneNumber,
-                                labelStyle: TextStyle(
-                                    fontFamily: BlocTheme.theme.fontFamily,
-                                    letterSpacing: 0,
-                                    color: BlocTheme.theme.defaultBlackColor),
-                                alignLabelWithHint: true,
-                                hintStyle: TextStyle(
-                                    fontFamily: BlocTheme.theme.fontFamily,
-                                    letterSpacing: 2,
-                                    fontWeight: FontWeight.normal,
-                                    color: BlocTheme.theme.defaultGray500Color),
-                                filled: true,
-                                fillColor: Colors.grey[200],
+                                readOnly: true,
                                 prefixIcon: Icon(
                                   Icons.lock_outline,
-                                  color: Colors.grey[600],
+                                  color: BlocTheme.theme.defaultGray500Color,
                                   size: 20,
                                 ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.grey[400]!,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.grey[400]!,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: BlocTheme.theme.defaultRed700Color,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: BlocTheme.theme.defaultRed700Color,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
                               ),
-                              style: TextStyle(
-                                  fontFamily: BlocTheme.theme.fontFamily, 
-                                  letterSpacing: 0,
-                                  color: Colors.grey[700]),
+                              style: BlocTheme.theme.inputTextStyle().copyWith(
+                                  color: BlocTheme.theme.defaultGray700Color),
                               maxLength: 100,
                               maxLengthEnforcement:
                                   MaxLengthEnforcement.enforced,
@@ -701,58 +621,17 @@ class _MemberProfileState extends State<MemberProfile> {
                                   readOnly: true,
                                   controller: _emailController,
                                   autofocus: false,
-                                  decoration: InputDecoration(
+                                  decoration: BlocTheme.theme.inputDecoration(
                                     labelText: AppLabels.current.email,
-                                    labelStyle: TextStyle(
-                                        fontFamily: BlocTheme.theme.fontFamily,
-                                        letterSpacing: 0,
-                                        color: BlocTheme.theme.defaultBlackColor),
-                                    alignLabelWithHint: true,
-                                    hintStyle: TextStyle(
-                                        fontFamily: BlocTheme.theme.fontFamily,
-                                        letterSpacing: 2,
-                                        fontWeight: FontWeight.normal,
-                                        color: BlocTheme.theme.defaultGray500Color),
-                                    filled: true,
-                                    fillColor: Colors.grey[200],
+                                    readOnly: true,
                                     prefixIcon: Icon(
                                       Icons.lock_outline,
-                                      color: Colors.grey[600],
+                                      color: BlocTheme.theme.defaultGray500Color,
                                       size: 20,
                                     ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.grey[400]!,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.grey[400]!,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: BlocTheme.theme.defaultRed700Color,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(25),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: BlocTheme.theme.defaultRed700Color,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
                                   ),
-                                  style: TextStyle(
-                                      fontFamily: BlocTheme.theme.fontFamily, 
-                                      letterSpacing: 0,
-                                      color: Colors.grey[700]),
+                                  style: BlocTheme.theme.inputTextStyle().copyWith(
+                                      color: BlocTheme.theme.defaultGray700Color),
                                   maxLength: 100,
                                   maxLengthEnforcement:
                                       MaxLengthEnforcement.enforced,
@@ -776,11 +655,7 @@ class _MemberProfileState extends State<MemberProfile> {
                                 child: LayoutBuilder(
                                   builder: (context, constraints) {
                                     // Text genişliğini ölç
-                                    final textStyle = TextStyle(
-                                      fontFamily: BlocTheme.theme.fontFamily,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    );
+                                    final textStyle = BlocTheme.theme.textBody();
                                     final textSpan = TextSpan(
                                       text:                                             AppLabels.current.confirmEmail,
                                               style: textStyle,
@@ -817,10 +692,7 @@ class _MemberProfileState extends State<MemberProfile> {
                                               ),
                                             Text(
                                               AppLabels.current.confirmEmail,
-                                              style: TextStyle(
-                                                fontFamily: BlocTheme.theme.fontFamily,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
+                                              style: BlocTheme.theme.textBody(
                                                 color: _isSendingEmailVerification
                                                     ? BlocTheme.theme.default500Color.withOpacity(0.6)
                                                     : BlocTheme.theme.default500Color,
@@ -857,48 +729,11 @@ class _MemberProfileState extends State<MemberProfile> {
                                 child: canEdit
                                     ? DropdownButtonFormField<int>(
                                         value: _selectedGender,
-                                        decoration: InputDecoration(
+                                        decoration: BlocTheme.theme.inputDecoration(
                                           labelText: AppLabels.current.gender,
-                                          labelStyle: TextStyle(
-                                              fontFamily: BlocTheme.theme.fontFamily,
-                                              letterSpacing: 0,
-                                              color: BlocTheme.theme.defaultBlackColor),
-                                          alignLabelWithHint: true,
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: BlocTheme.theme.defaultBlackColor,
-                                              width: 1,
-                                            ),
-                                            borderRadius: BorderRadius.circular(6),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: BlocTheme.theme.defaultBlackColor,
-                                              width: 1,
-                                            ),
-                                            borderRadius: BorderRadius.circular(6),
-                                          ),
-                                          errorBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: BlocTheme.theme.defaultRed700Color,
-                                              width: 1,
-                                            ),
-                                            borderRadius: BorderRadius.circular(25),
-                                          ),
-                                          focusedErrorBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: BlocTheme.theme.defaultRed700Color,
-                                              width: 1,
-                                            ),
-                                            borderRadius: BorderRadius.circular(6),
-                                          ),
                                         ),
-                                        dropdownColor: Colors.white,
-                                        style: TextStyle(
-                                          fontFamily: BlocTheme.theme.fontFamily,
-                                          letterSpacing: 0,
-                                          color: BlocTheme.theme.defaultBlackColor,
-                                        ),
+                                        dropdownColor: BlocTheme.theme.defaultWhiteColor,
+                                        style: BlocTheme.theme.inputTextStyle(),
                                         icon: Icon(
                                           Icons.arrow_drop_down,
                                           color: BlocTheme.theme.defaultBlackColor,
@@ -909,20 +744,16 @@ class _MemberProfileState extends State<MemberProfile> {
                                             value: 0,
                                             child: Text(
                                               AppLabels.current.male,
-                                              style: TextStyle(
-                                                fontFamily: BlocTheme.theme.fontFamily,
-                                                color: BlocTheme.theme.defaultBlackColor,
-                                              ),
+                                              style: BlocTheme.theme.textBody(
+                                                  color: BlocTheme.theme.defaultBlackColor),
                                             ),
                                           ),
                                           DropdownMenuItem<int>(
                                             value: 1,
                                             child: Text(
                                               AppLabels.current.female,
-                                              style: TextStyle(
-                                                fontFamily: BlocTheme.theme.fontFamily,
-                                                color: BlocTheme.theme.defaultBlackColor,
-                                              ),
+                                              style: BlocTheme.theme.textBody(
+                                                  color: BlocTheme.theme.defaultBlackColor),
                                             ),
                                           ),
                                         ],
@@ -937,51 +768,10 @@ class _MemberProfileState extends State<MemberProfile> {
                               readOnly: true,
                                         controller: _genderController,
                               autofocus: false,
-                                        decoration: InputDecoration(
+                                        decoration: BlocTheme.theme.inputDecoration(
                                           labelText: AppLabels.current.gender,
-                                          labelStyle: TextStyle(
-                                              fontFamily: BlocTheme.theme.fontFamily,
-                                              letterSpacing: 0,
-                                              color: BlocTheme.theme.defaultBlackColor),
-                                          alignLabelWithHint: true,
-                                          hintStyle: TextStyle(
-                                              fontFamily: BlocTheme.theme.fontFamily,
-                                              letterSpacing: 2,
-                                              fontWeight: FontWeight.normal,
-                                              color: BlocTheme.theme.defaultGray500Color),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: BlocTheme.theme.defaultBlackColor,
-                                              width: 1,
-                                            ),
-                                            borderRadius: BorderRadius.circular(6),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: BlocTheme.theme.defaultBlackColor,
-                                              width: 1,
-                                            ),
-                                            borderRadius: BorderRadius.circular(6),
-                                          ),
-                                          errorBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: BlocTheme.theme.defaultRed700Color,
-                                              width: 1,
-                                            ),
-                                            borderRadius: BorderRadius.circular(25),
-                                          ),
-                                          focusedErrorBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: BlocTheme.theme.defaultRed700Color,
-                                              width: 1,
-                                            ),
-                                            borderRadius: BorderRadius.circular(6),
-                                          ),
                                         ),
-                                        style: TextStyle(
-                                            fontFamily: BlocTheme.theme.fontFamily, 
-                                            letterSpacing: 0,
-                                            color: BlocTheme.theme.defaultBlackColor),
+                                        style: BlocTheme.theme.inputTextStyle(),
                                       ),
                               );
                             },
@@ -1073,48 +863,28 @@ class _MemberProfileState extends State<MemberProfile> {
                                       color: BlocTheme.theme.defaultBlackColor,
                                     ),
                                 labelText: AppLabels.current.birthDate,
-                                labelStyle: TextStyle(
-                                    fontFamily: BlocTheme.theme.fontFamily,
-                                    letterSpacing: 0,
-                                    color: BlocTheme.theme.defaultBlackColor),
-                                alignLabelWithHint: true,
                                     hintText: AppLabels.current.birthDateFormat,
-                                hintStyle: TextStyle(
-                                    fontFamily: BlocTheme.theme.fontFamily,
-                                    letterSpacing: 2,
-                                    fontWeight: FontWeight.normal,
-                                    color: BlocTheme.theme.defaultGray500Color),
+                                labelStyle: BlocTheme.theme.inputLabelStyle(),
+                                alignLabelWithHint: true,
+                                hintStyle: BlocTheme.theme.inputHintStyle(),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: BlocTheme.theme.defaultBlackColor,
-                                    width: 1,
-                                  ),
+                                  borderSide: BorderSide(color: BlocTheme.theme.defaultBlackColor, width: 1),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: BlocTheme.theme.defaultBlackColor,
-                                    width: 1,
-                                  ),
+                                  borderSide: BorderSide(color: BlocTheme.theme.defaultBlackColor, width: 1),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                        color: BlocTheme.theme.defaultRed700Color,
-                                    width: 1,
-                                  ),
+                                  borderSide: BorderSide(color: BlocTheme.theme.defaultRed700Color, width: 1),
                                   borderRadius: BorderRadius.circular(25),
                                 ),
                                 focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: BlocTheme.theme.defaultRed700Color,
-                                    width: 1,
-                                  ),
+                                  borderSide: BorderSide(color: BlocTheme.theme.defaultRed700Color, width: 1),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                               ),
-                              style: TextStyle(
-                                  fontFamily: BlocTheme.theme.fontFamily, letterSpacing: 0),
+                              style: BlocTheme.theme.inputTextStyle(),
                                   maxLength: 10,
                               maxLengthEnforcement:
                                   MaxLengthEnforcement.enforced,
@@ -1140,50 +910,10 @@ class _MemberProfileState extends State<MemberProfile> {
                               readOnly: true,
                               controller: _passwordController,
                               autofocus: false,
-                              decoration: InputDecoration(
+                              decoration: BlocTheme.theme.inputDecoration(
                                 labelText: AppLabels.current.lockerPassword,
-                                labelStyle: TextStyle(
-                                    fontFamily: BlocTheme.theme.fontFamily,
-                                    letterSpacing: 0,
-                                    color: BlocTheme.theme.defaultBlackColor),
-                                alignLabelWithHint: true,
-                                hintStyle: TextStyle(
-                                    fontFamily: BlocTheme.theme.fontFamily,
-                                    letterSpacing: 2,
-                                    fontWeight: FontWeight.normal,
-                                    color: BlocTheme.theme.defaultGray500Color),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: BlocTheme.theme.defaultBlackColor,
-                                    //FlutterFlowTheme.of(context).primaryText,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: BlocTheme.theme.defaultBlackColor,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: BlocTheme.theme.defaultRed700Color,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: BlocTheme.theme.defaultRed700Color,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
                               ),
-                              style: TextStyle(
-                                  fontFamily: BlocTheme.theme.fontFamily, letterSpacing: 0),
+                              style: BlocTheme.theme.inputTextStyle(),
                               maxLength: 6,
                               maxLengthEnforcement:
                                   MaxLengthEnforcement.enforced,
@@ -1243,7 +973,7 @@ class _MemberProfileState extends State<MemberProfile> {
                                     },
                               style: ElevatedButton.styleFrom(
                                       backgroundColor: BlocTheme.theme.default500Color,
-                                      foregroundColor: Colors.white,
+                                      foregroundColor: BlocTheme.theme.defaultWhiteColor,
                                       padding: EdgeInsets.symmetric(vertical: 12),
                                 shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
@@ -1260,30 +990,22 @@ class _MemberProfileState extends State<MemberProfile> {
                                                 child: CircularProgressIndicator(
                                                   strokeWidth: 2,
                                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                                    Colors.white,
+                                                    BlocTheme.theme.defaultWhiteColor,
                               ),
                             ),
                           ),
                                               SizedBox(width: 8),
                                               Text(
                                                 AppLabels.current.saving,
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontFamily: BlocTheme.theme.fontFamily,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
+                                                style: BlocTheme.theme.textBody(
+                                                    color: BlocTheme.theme.defaultWhiteColor),
                                               ),
                                             ],
                                           )
                                         : Text(
                                             AppLabels.current.save,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontFamily: BlocTheme.theme.fontFamily,
-                                              color: BlocTheme.theme.defaultBlackColor,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                            style: BlocTheme.theme.textBody(
+                                                color: BlocTheme.theme.defaultBlackColor),
                                           ),
                                   ),
                                 ),
@@ -1299,8 +1021,8 @@ class _MemberProfileState extends State<MemberProfile> {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                    foregroundColor: Colors.white,
+                                    backgroundColor: BlocTheme.theme.defaultRed700Color,
+                                    foregroundColor: BlocTheme.theme.defaultWhiteColor,
                                     padding: EdgeInsets.symmetric(vertical: 12),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
@@ -1308,11 +1030,8 @@ class _MemberProfileState extends State<MemberProfile> {
                                   ),
                                   child: Text(
                                     AppLabels.current.logout,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: BlocTheme.theme.fontFamily,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    style: BlocTheme.theme.textBody(
+                                        color: BlocTheme.theme.defaultWhiteColor),
                                   ),
                                 ),
                               ),

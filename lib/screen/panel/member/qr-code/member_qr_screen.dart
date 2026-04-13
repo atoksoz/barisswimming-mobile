@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:e_sport_life/config/external-applications-config/external_applications_config_cubit.dart';
 import 'package:e_sport_life/config/mobile-app-settings/mobile_app_settings_cubit.dart';
+import 'package:e_sport_life/config/user-config/user_config_cubit.dart';
 import 'package:e_sport_life/config/themes/bloc_theme.dart';
 import 'package:e_sport_life/core/constants/url/hamam_spa_url_constants.dart';
 import 'package:e_sport_life/core/l10n/app_labels.dart';
@@ -31,6 +32,13 @@ class MemberQrScreen extends StatelessWidget {
   static const Duration _timeLimitTimeout = Duration(seconds: 3);
 
   static Future<bool> _memberPreChecks(BuildContext context) async {
+    final appType = context.read<UserConfigCubit>().state?.applicationType;
+    if (appType?.usesSchoolStyleMemberPanel == true) {
+      // Müzik okulu / yüzme kursu: internet + security code [DynamicQrScreen] içinde.
+      // Aktif paket, borç, giriş saati vb. gym iş kuralları uygulanmaz.
+      return true;
+    }
+
     final labels = AppLabels.current;
     final mobileAppSettings = context.read<MobileAppSettingsCubit>().state;
     final externalConfig =

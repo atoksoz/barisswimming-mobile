@@ -135,6 +135,10 @@ abstract class BaseTheme {
   Color get panelWarningColor => HexColor.fromHex("#F59E0B");
   Color get panelWarningDarkColor => HexColor.fromHex("#D97706");
   Color get panelDangerColor => defaultRed700Color;
+  Color get panelPaidColor => default500Color;
+  Color get panelDebtColor => defaultRed700Color;
+  Color get whatsAppGreenColor => const Color(0xFF25D366);
+  Color get panelScaffoldBackgroundColor => const Color.fromARGB(1, 249, 250, 251);
 
   // ─── Renk Paleti (Çalışan renk seçimi vb.) ───
   List<Color> get employeeColorPalette => const [
@@ -181,6 +185,9 @@ abstract class BaseTheme {
   EdgeInsets get panelCardInnerPadding => const EdgeInsets.all(12);
   double get panelCardSpacing => 15;
   double get panelSectionSpacing => 20;
+
+  /// Anasayfa kaydırma alanında üst üçlü / slider / özet / hızlı erişim blokları arası dikey boşluk.
+  double get panelHomeBlockGap => 10;
 
   BoxDecoration get panelCardDecoration => BoxDecoration(
         color: defaultWhiteColor,

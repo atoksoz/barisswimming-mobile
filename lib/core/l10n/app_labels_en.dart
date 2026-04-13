@@ -160,6 +160,15 @@ class GymLabelsEn implements AppLabels {
   // Facility
   @override String get facilityInfo => 'Facility Information';
   @override String get photo => 'Photo';
+  @override String get contactInfo => 'Contact Information';
+  @override String get phoneLabel => 'Phone';
+  @override String get emailLabel => 'Email';
+  @override String get whatsappLabel => 'WhatsApp';
+  @override String get addressLabel => 'Address';
+  @override String get openInMaps => 'Open in Maps';
+  @override String get sendWhatsApp => 'Send WhatsApp';
+  @override String get callPhone => 'Call';
+  @override String get sendEmail => 'Send Email';
 
   // Profile Menu
   @override String get myProfile => 'My Profile';
@@ -167,11 +176,12 @@ class GymLabelsEn implements AppLabels {
   @override String get pastEntryHistory => 'Past Entry History';
   @override String get facilityDetails => 'Facility Details';
   @override String get trainerRoster => 'Trainer Roster';
-  @override String get suggestionComplaint => 'Suggestions & Complaints';
+  @override String get suggestionComplaint => 'Suggestions';
   @override String get groupLessonRules => 'Group Lesson Rules';
   @override String get quickReservationRules => 'Quick Reservation Rules';
   @override String get facilityRules => 'Facility Rules';
   @override String get membershipRules => 'Membership Rules';
+  @override String get institutionRules => 'Institution Rules';
   @override String get about => 'About';
 
   // Quick Access Grid
@@ -254,16 +264,19 @@ class GymLabelsEn implements AppLabels {
   @override String get emptyElectronicCloset => 'Empty Electronic Locker';
   @override String get closetPassword => 'Locker Password';
 
-  // Suggestion / Complaint
-  @override String get suggestionComplaintHistory => 'Suggestion & Complaint History';
-  @override String get createSuggestionComplaint => 'Create Suggestion & Complaint';
+  // Suggestion
+  @override String get suggestionComplaintHistory => 'Suggestion History';
+  @override String get createSuggestionComplaint => 'Create Suggestion';
   @override String get title => 'Title';
   @override String get topicTitle => 'Enter Topic Title...';
-  @override String get suggestionAndComplaint => 'Suggestion & Complaint';
-  @override String get writeSuggestionComplaint => 'Write Your Suggestion & Complaint...';
+  @override String get suggestionAndComplaint => 'Your Suggestion';
+  @override String get writeSuggestionComplaint => 'Write Your Suggestion...';
   @override String get sentSuccess => 'Sent successfully';
   @override String get sendFailed => 'Sending failed, please try again later.';
   @override String get fillAllFields => 'Please fill in all fields';
+  @override String get viewSuggestionComplaint => 'View Suggestion';
+  @override String get submitting => 'Submitting...';
+  @override String get currencySuffix => ' ₺';
 
   // Invitation
   @override String get inviteFriendTitle => 'Invite a Friend';
@@ -333,6 +346,7 @@ class GymLabelsEn implements AppLabels {
   @override String get female => 'FEMALE';
   @override String get birthDate => 'Birth Date';
   @override String get birthDateFormat => 'DD/MM/YYYY';
+  @override String get birthDateFormatDash => birthDateFormat;
   @override String get notificationsEnabled => 'I Want to Receive Notifications';
   @override String get selectFromGallery => 'Select from Gallery';
   @override String get takeFromCamera => 'Take from Camera';
@@ -449,6 +463,234 @@ class GymLabelsEn implements AppLabels {
   // App Update
   @override String get newVersionAvailable => 'A new version is available. Would you like to update the app?';
 
+  // Music School / General Panel
+  @override String get todayMyLessons => 'Today\'s\nLessons';
+  @override String get todayMyPayments => 'Today\'s\nPayments';
+  @override String get myActivePackages => 'Active\nPackages';
+  @override String get todaySummaryTitle => 'Today\'s\nSummary';
+  @override String get homeSummarySectionTitle => 'Overview';
+  @override String get homeSummaryActivePackagesLabel => 'Active Packages';
+  @override String get homeSummaryRemainingRightsLabel => 'Total Remaining Credits';
+  @override String get homeSummaryThisWeekLessonsLabel => 'Lesson Count';
+  @override String get homeSummaryThisWeekLessonsCaption =>
+      'This Week\'s Lesson Count';
+  @override String get homeSummaryOverduePaymentsLabel => 'Overdue';
+  @override String get homeSummaryOverduePaymentsCaption =>
+      'Overdue Payment Count';
+  @override String get homeSummaryNextLessonLabel =>
+      'My Next Lesson/Lessons';
+  @override String get homeSummaryNextLessonEmpty => 'No upcoming lessons';
+  @override String get homeSummaryRecentAttendanceTitle => 'Recent attendance';
+  @override String get homeSummaryShowMore => 'Show more';
+  @override String get homeSummaryShowLess => 'Show less';
+  @override String get homePackageRightsDonutTitle => 'My packages';
+  @override String get homePackageRightsDonutRemainingLegend => 'Remaining';
+  @override String get homePackageRightsDonutUsedLegend => 'Used';
+  @override String get homePackageRightsDonutEmptyStateLine =>
+      'No active packages with lesson credits';
+  @override String get homePackageNearExpiryWarning =>
+      'Your package is ending soon';
+  @override String get nearExpiryPackagesListTitle =>
+      'Packages ending soon';
+  @override String get homeRemindersSectionTitle => 'Reminders';
+  @override String get homeRemindersEmptyState =>
+      'No upcoming payments or announcements.';
+  @override String get homeRemindersSeeAll => 'See all';
+  @override String get homeReminderPaymentDueToday => 'Today';
+  @override String get homeReminderPaymentDueTomorrow => 'Tomorrow';
+  @override String homeReminderPaymentDueInDays(int days) => 'In $days days';
+  @override String get homeRemindersUpcomingPaymentsSubtitle =>
+      'Upcoming payments';
+  @override String get homeRemindersAnnouncementsSubtitle => 'Announcements';
+  @override String get homeStatementChartTitle => 'Statement Overview';
+  @override String get homeStatementChartSubtitle =>
+      'Last 6 months — monthly sales and collections';
+  @override String get homeStatementChartEmpty =>
+      'No chartable movements in this period';
+  @override String get homeStatementChartNoDebtLine =>
+      'You have no outstanding debt';
+  @override String get summaryHintShort =>
+      'Overview Of Packages, Collections, Attendance, Planned Payments And Today\'s Lessons.';
+  @override String get summaryRowActivePackages => 'Active packages';
+  @override String get summaryRowLessonsToday => 'Today\'s lessons';
+  @override String get summaryRowPlannedPayments => 'Planned payments (today)';
+  @override String get summaryRowPackageRegistrationsToday =>
+      'Package registrations today';
+  @override String get summaryRowCollectionsToday => 'Collections today';
+  @override String get summaryRowAttendanceToday => 'Attendance today';
+  @override String get summaryValueNone => '—';
+  @override String get summaryTransactions => 'transactions';
+  @override String get summaryAttendanceRecords => 'records';
+  @override String get summaryNoActivityToday =>
+      'No Activity To Show For Today.';
+  @override String get summaryUnitLesson => 'Lessons';
+  @override String get summaryUnitPlannedPayment => 'Planned Payments';
+  @override String get summaryUnitPackageSale => 'Package Registrations';
+  @override String get summaryUnitCollection => 'Collections';
+  @override String get summaryUnitStatementMovements =>
+      'Financial Statement Items';
+  @override String get summaryUnitAttendance => 'Attendance';
+  @override String get summaryPopupFootnotePlannedAndStatement =>
+      'Below: Today\'s Planned Payments And Sales/Collection Lines From Your Financial Statement.';
+  @override String get summaryRowBadgePlannedPayment => 'Planned Payment';
+  @override String get summaryRowBadgeStatementMovement => 'Statement';
+  @override String get summaryRowBadgeStatementSale => 'Sale';
+  @override String get summaryRowBadgeStatementCollection => 'Collection';
+  @override String get summaryRowBadgeMyLessons => 'My Lessons';
+  @override String get packageInfo => 'Package\nInfo';
+  @override String get activePackagesListTitle => 'Active Packages';
+  @override String get overduePaymentsListTitle => 'Overdue Payments';
+  @override String get nearDuePaymentsListTitle => 'Due Today & Soon';
+  @override String get myAttendance => 'Attendance';
+  @override String get financialStatement => 'Financial\nStatement';
+  @override String get lessonSchedule => 'Lesson\nSchedule';
+  @override String get guardianInfo => 'Guardian\nInfo';
+  @override String get invoiceInfo => 'Invoice\nInfo';
+  @override String get invoiceRecipientTypeIndividual => 'Individual';
+  @override String get invoiceRecipientTypeCorporate => 'Corporate';
+  @override String get invoiceRecipientTypeSoleTrader => 'Sole Trader';
+  @override String get invoiceVkn => 'Tax ID';
+  @override String get invoiceTckn => 'ID No';
+  @override String get invoiceTaxOffice => 'Tax Office';
+  @override String get invoiceCompanyTitle => 'Company Name';
+  @override String get invoiceDefaultBadge => 'Default';
+  @override String get scheduledPayments => 'Scheduled\nPayments';
+  @override String get profileMenuMyPackages => 'My Packages';
+  @override String get profileMenuLessonScheduleTitle => 'Lesson Schedule';
+  @override String get profileMenuPlannedPaymentTitle => 'Scheduled Payment';
+  @override String get profileMenuStatementTitle => 'Financial Statement';
+  @override String get profileMenuInvoiceInfoTitle => 'Billing Information';
+  @override String get profileMenuGuardianInfoTitle => 'Guardian Information';
+  @override String get debt => 'Debt';
+  @override String get credit => 'Credit';
+  @override String get balance => 'Balance';
+  @override String get dueDate => 'Due Date';
+  @override String get statusLabel => 'Status';
+  @override String get paidStatus => 'Paid';
+  @override String get unpaidStatus => 'Unpaid';
+  @override String get overdueStatus => 'Overdue';
+  @override String get saleLabel => 'Sale';
+  @override String get collectionLabel => 'Collection';
+  @override String get packagePrice => 'Package Price';
+  @override String get netPrice => 'Net Price';
+  @override String get registrationDate => 'Registration Date';
+  @override String get endDate => 'End Date';
+  @override String get unitPrice => 'Unit Price';
+  @override String get totalPrice => 'Total Price';
+  @override String get discountLabel => 'Discount';
+  @override String get packageNameLabel => 'Package Name';
+  @override String get quantity => 'Quantity';
+  @override String get activeStatus => 'Active';
+  @override String get expiredStatus => 'Expired';
+  @override String get relationship => 'Relationship';
+  @override String get location => 'Location';
+  @override String get guardianName => 'Guardian Name';
+  @override String get studentInfo => 'Student Info';
+
+  @override Map<String, String> get relationshipLabels => const {
+    'parent': 'Parent',
+    'mother': 'Mother',
+    'father': 'Father',
+    'sibling': 'Sibling',
+    'spouse': 'Spouse',
+    'grandparent': 'Grandparent',
+    'uncle_aunt': 'Uncle/Aunt',
+    'other': 'Other',
+    'anne': 'Mother',
+    'anna': 'Mother',
+    'baba': 'Father',
+    'kardeş': 'Sibling',
+    'eş': 'Spouse',
+    'ebeveyn': 'Parent',
+    'veli': 'Guardian',
+    'dede': 'Grandfather',
+    'büyükanne': 'Grandmother',
+    'büyükbaba': 'Grandfather',
+    'amca': 'Uncle',
+    'dayı': 'Uncle',
+    'teyze': 'Aunt',
+    'hala': 'Aunt',
+    'diğer': 'Other',
+  };
+
+  @override String get primaryGuardian => 'Primary Guardian';
+  @override String get note => 'Note';
+  @override String get call => 'Call';
+  @override String get guardianSecondaryPhone => 'Secondary phone';
+  @override String get guardianProfessionGroupField => 'Profession group';
+  @override String get guardianProvinceField => 'Province';
+  @override String get guardianDistrictField => 'District';
+  @override String get guardianAddressField => 'Address';
+
+  @override Map<String, String> get guardianProfessionGroupLabels => const {
+        'health_wellness': 'Health & wellness',
+        'education': 'Education',
+        'it_technology': 'IT & technology',
+        'finance_business': 'Finance & business',
+        'legal_advocacy': 'Legal',
+        'engineering_technical': 'Engineering & technical',
+        'architecture_construction': 'Architecture & construction',
+        'agriculture_food': 'Agriculture & food',
+        'manufacturing_industry': 'Manufacturing & industry',
+        'retail_service': 'Retail & service',
+        'hospitality_tourism': 'Hospitality & tourism',
+        'transport_logistics': 'Transport & logistics',
+        'energy_utilities': 'Energy & utilities',
+        'media_marketing': 'Media & marketing',
+        'hr_administration': 'HR & administration',
+        'public_sector': 'Public sector',
+        'security_defense': 'Security & defense',
+        'science_research': 'Science & research',
+        'nonprofit_ngo': 'Nonprofit & NGO',
+        'freelance_art': 'Freelance & arts',
+        'homemaker': 'Homemaker',
+        'student_retired': 'Student or retired',
+        'unemployed': 'Unemployed',
+        'other': 'Other',
+      };
+
+  @override String get lessonAttendance => 'Lesson Attendance';
+  @override String get lesson => 'Lesson';
+  @override String get teacher => 'Teacher';
+  @override String get classroom => 'Classroom';
+  @override String get date => 'Date';
+  @override String get time => 'Time';
+  @override String get attendanceStatus => 'Attendance';
+  @override String get attended => 'Attended';
+  @override String get notAttended => 'Not Attended';
+  @override String get burned => 'Burned';
+  @override String get deducted => 'Deducted';
+  @override String get notDeducted => 'Not Deducted';
+  @override String get actionLabel => 'Action';
+  @override String get changeLabel => 'Change';
+  @override String get remainAfter => 'Remaining';
+  @override String get noReservations => 'No lesson attendance records found';
+  @override String get noLogs => 'No transaction history found';
+  @override String get makeupLesson => 'Makeup lesson';
+  @override String get lessonTypeGroupShort => 'Group';
+  @override String get lessonTypeIndividualShort => 'Private';
+  @override String get cancelledLesson => 'Cancelled lesson';
+  @override String get noAttendanceRecords => 'No attendance records found';
+  @override Map<String, String> get logActionLabels => const {
+    'manual_deduction': 'Manual Deduction',
+    'burn': 'Burn',
+    'unburn': 'Unburn',
+    'attendance': 'Attendance',
+    'attendance_removed': 'Attendance Removed',
+    'attendance_deduction': 'Attendance Deduction',
+    'attendance_refund': 'Attendance Refund',
+  };
+
+  @override Map<String, String> get paymentTypeLabels => const {
+    'NAKIT': 'Cash',
+    'KREDI_KARTI': 'Credit Card',
+    'EFT_HAVALE': 'Bank Transfer',
+    'ONLINE_ODEME': 'Online Payment',
+  };
+  @override String get paymentType => 'Payment Type';
+  @override String get paidDate => 'Payment Date';
+  @override String get paidExplanation => 'Description';
+
   @override Map<String, String> get professionLabels => const {
     'fitness_trainer': 'Fitness Trainer',
     'plates_trainer': 'Pilates Trainer',
@@ -471,6 +713,8 @@ class GymLabelsEn implements AppLabels {
 
 class MusicSchoolLabelsEn extends GymLabelsEn {
   const MusicSchoolLabelsEn();
+
+  @override String get birthDateFormatDash => 'DD-MM-YYYY';
 
   @override String get member => 'Student';
   @override String get trainer => 'Teacher';

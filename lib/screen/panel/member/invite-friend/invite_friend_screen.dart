@@ -521,9 +521,8 @@ class _InviteFriendScreenState extends State<InviteFriendScreen> {
                       child: Text(
                         labels.selectFromContacts,
                         style: theme
-                            .textCaption(color: theme.default500Color)
+                            .textCaptionSemiBold(color: theme.default500Color)
                             .copyWith(
-                              fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
                               decorationColor: theme.default500Color,
                             ),

@@ -88,6 +88,61 @@ class ApiHamamSpaUrlConstants {
   }) =>
       '${apiUrl.ensureApiPath().ensureTrailingSlash()}v2/me/actions?page=$page&itemsPerPage=$itemsPerPage';
 
+  static String getMyPanelSummaryUrl(String apiUrl) =>
+      '${apiUrl.ensureApiPath().ensureTrailingSlash()}v2/me/panel-summary';
+
+  static String getMyGuardiansUrl(String apiUrl) =>
+      '${apiUrl.ensureApiPath().ensureTrailingSlash()}v2/me/guardians';
+
+  static String getMyStatementsUrl(String apiUrl) =>
+      '${apiUrl.ensureApiPath().ensureTrailingSlash()}v2/me/statements';
+
+  static String getMyPaymentPlansUrl(
+    String apiUrl, {
+    int page = 1,
+    int itemsPerPage = 20,
+  }) =>
+      '${apiUrl.ensureApiPath().ensureTrailingSlash()}v2/me/payment-plans?page=$page&itemsPerPage=$itemsPerPage';
+
+  static String getMyPackagesUrl(
+    String apiUrl, {
+    int page = 1,
+    int itemsPerPage = 20,
+  }) =>
+      '${apiUrl.ensureApiPath().ensureTrailingSlash()}v2/me/packages?page=$page&itemsPerPage=$itemsPerPage';
+
+  static String getMyPackageReservationsUrl(
+    String apiUrl,
+    int packageId, {
+    int page = 1,
+    int itemsPerPage = 20,
+  }) =>
+      '${apiUrl.ensureApiPath().ensureTrailingSlash()}v2/me/packages/$packageId/reservations?page=$page&itemsPerPage=$itemsPerPage';
+
+  static String getMyPackageLogsUrl(
+    String apiUrl,
+    int packageId, {
+    int page = 1,
+    int itemsPerPage = 20,
+  }) =>
+      '${apiUrl.ensureApiPath().ensureTrailingSlash()}v2/me/packages/$packageId/logs?page=$page&itemsPerPage=$itemsPerPage';
+
+  static String getMyInvoicesUrl(String apiUrl) =>
+      '${apiUrl.ensureApiPath().ensureTrailingSlash()}v2/me/invoices';
+
+  /// Yoklama geçmişi (randevu proxy; en güncelden desc, sayfalı).
+  static String getMyAttendanceReportUrl(
+    String apiUrl, {
+    int page = 1,
+    int itemsPerPage = 20,
+  }) =>
+      '${apiUrl.ensureApiPath().ensureTrailingSlash()}v2/me/attendance-report?page=$page&itemsPerPage=$itemsPerPage';
+
+  // ─── Müzik Okulu Dashboard (birleşik) ───
+
+  static String getMyMuzikOkulumHomeDashboardUrl(String apiUrl) =>
+      '${apiUrl.ensureApiPath().ensureTrailingSlash()}v2/me/muzik-okulum/home-dashboard';
+
   static String getDecreaseQuantityUrl(String apiUrl, int memberRegisterId) =>
       '${apiUrl.ensureApiPath().ensureTrailingSlash()}v1/member-register/$memberRegisterId/decrease-remain-quantity';
 

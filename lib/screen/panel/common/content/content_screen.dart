@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:e_sport_life/config/app-config/app_config_cubit.dart';
 import 'package:e_sport_life/config/app-content/app_content.dart';
 import 'package:e_sport_life/config/app-content/app_content_cubit.dart';
 import 'package:e_sport_life/config/themes/base_theme.dart';
@@ -40,6 +41,14 @@ class _ContentScreenState extends State<ContentScreen> {
   }
 
   Future<void> _loadContent() async {
+    final useStatic =
+        context.read<AppConfigCubit>().state.useStaticContent;
+
+    if (useStatic) {
+      await _loadFromAsset();
+      return;
+    }
+
     final cubitContent = context.read<AppContentCubit>().state;
     final item = _getContentItem(cubitContent);
 

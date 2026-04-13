@@ -1,6 +1,7 @@
 import 'package:e_sport_life/config/mobile-app-settings/mobile_app_settings_cubit.dart';
 import 'package:e_sport_life/config/themes/bloc_theme.dart';
 import 'package:e_sport_life/config/user-config/user_config_cubit.dart';
+import 'package:e_sport_life/core/enums/application_type.dart';
 import 'package:e_sport_life/core/enums/mobile_user_type.dart';
 import 'package:e_sport_life/core/l10n/app_labels.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,11 @@ class BottomNavigationBarWidget extends StatelessWidget {
       case MobileUserType.admin:
         return [NavTab.home, NavTab.members, NavTab.qr, NavTab.profile];
       case MobileUserType.member:
+        final appType = context.read<UserConfigCubit>().state?.applicationType ??
+            ApplicationType.openGym;
+        if (appType.usesSchoolStyleMemberPanel) {
+          return [NavTab.home, NavTab.qr, NavTab.profile];
+        }
         final settings = context.read<MobileAppSettingsCubit>().state;
         final showShop = settings?.showGymExxtraShop ?? false;
         return [

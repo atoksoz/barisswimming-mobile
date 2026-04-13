@@ -157,6 +157,15 @@ abstract class AppLabels {
   // ─── Tesis ───
   String get facilityInfo;
   String get photo;
+  String get contactInfo;
+  String get phoneLabel;
+  String get emailLabel;
+  String get whatsappLabel;
+  String get addressLabel;
+  String get openInMaps;
+  String get sendWhatsApp;
+  String get callPhone;
+  String get sendEmail;
 
   // ─── Profil Menü ───
   String get myProfile;
@@ -169,6 +178,7 @@ abstract class AppLabels {
   String get quickReservationRules;
   String get facilityRules;
   String get membershipRules;
+  String get institutionRules;
   String get about;
 
   // ─── Hızlı Erişim (Explore Grid) ───
@@ -251,7 +261,7 @@ abstract class AppLabels {
   String get emptyElectronicCloset;
   String get closetPassword;
 
-  // ─── Öneri / Şikayet ───
+  // ─── Öneri ───
   String get suggestionComplaintHistory;
   String get createSuggestionComplaint;
   String get title;
@@ -261,6 +271,9 @@ abstract class AppLabels {
   String get sentSuccess;
   String get sendFailed;
   String get fillAllFields;
+  String get viewSuggestionComplaint;
+  String get submitting;
+  String get currencySuffix;
 
   // ─── Davet ───
   String get inviteFriendTitle;
@@ -330,6 +343,8 @@ abstract class AppLabels {
   String get female;
   String get birthDate;
   String get birthDateFormat;
+  /// Profil doğum tarihi ipucu (tireli gün-ay-yıl); müzik okulu vb.
+  String get birthDateFormatDash;
   String get notificationsEnabled;
   String get selectFromGallery;
   String get takeFromCamera;
@@ -445,6 +460,206 @@ abstract class AppLabels {
 
   // ─── Uygulama Güncelleme ───
   String get newVersionAvailable;
+
+  // ─── Müzik Okulu / Genel Panel ───
+  String get todayMyLessons;
+  String get todayMyPayments;
+  String get myActivePackages;
+  /// Anasayfa üçüncü buton + özet ekranı başlığı
+  String get todaySummaryTitle;
+  /// Anasayfa özet kartları — bölüm başlığı
+  String get homeSummarySectionTitle;
+  String get homeSummaryActivePackagesLabel;
+  String get homeSummaryRemainingRightsLabel;
+  String get homeSummaryThisWeekLessonsLabel;
+  String get homeSummaryThisWeekLessonsCaption;
+  String get homeSummaryOverduePaymentsLabel;
+  String get homeSummaryOverduePaymentsCaption;
+  String get homeSummaryNextLessonLabel;
+  String get homeSummaryNextLessonEmpty;
+  /// Anasayfa özet — bir sonraki ders bloğunun altında son yoklamalar
+  String get homeSummaryRecentAttendanceTitle;
+  /// Özet kartı — bir sonraki ders ve altı için genişlet/daralt
+  String get homeSummaryShowMore;
+  String get homeSummaryShowLess;
+  /// Anasayfa — özet ile hızlı erişim arası donut kart başlığı
+  String get homePackageRightsDonutTitle;
+  String get homePackageRightsDonutRemainingLegend;
+  String get homePackageRightsDonutUsedLegend;
+  /// Donut kartı — toplam hak 0 iken sol metin (Explore’daki “üyelik yok” satırı)
+  String get homePackageRightsDonutEmptyStateLine;
+  /// Donut kartı — kalan hak veya bitiş tarihi eşiğinde uyarı satırı (tıklanabilir)
+  String get homePackageNearExpiryWarning;
+  /// Paket listesi — yalnızca yakında bitecek aktif paketler başlığı
+  String get nearExpiryPackagesListTitle;
+  /// Anasayfa — hatırlatıcılar (ödeme + duyuru) bölüm başlığı
+  String get homeRemindersSectionTitle;
+  /// Hatırlatıcı bölümü — ödeme/duyuru yokken kısa metin
+  String get homeRemindersEmptyState;
+  /// Hatırlatıcı — planlı ödemeler listesine git
+  String get homeRemindersSeeAll;
+  /// Hatırlatıcı — vade takvim günü bugün
+  String get homeReminderPaymentDueToday;
+  /// Hatırlatıcı — vade takvim günü yarın
+  String get homeReminderPaymentDueTomorrow;
+  /// Hatırlatıcı — vade en az 2 gün sonra ([days] takvim günü farkı)
+  String homeReminderPaymentDueInDays(int days);
+  /// Hatırlatıcı — ödemeler blok başlığı
+  String get homeRemindersUpcomingPaymentsSubtitle;
+  /// Hatırlatıcı — duyurular blok başlığı
+  String get homeRemindersAnnouncementsSubtitle;
+  /// Anasayfa — cari ekstre mini grafik başlığı (hatırlatıcı / hızlı erişim arası)
+  String get homeStatementChartTitle;
+  /// Anasayfa — cari grafik alt açıklaması (dönem + tür)
+  String get homeStatementChartSubtitle;
+  /// Anasayfa — seçilen aylarda grafiklenecek satış/tahsilat yok
+  String get homeStatementChartEmpty;
+  /// Anasayfa — cari bakiye altı; borç/alacak yokken bilgilendirme
+  String get homeStatementChartNoDebtLine;
+  /// Bugünün özeti ekranı — kısa açıklama (alt başlık / boş durum üstü)
+  String get summaryHintShort;
+  String get summaryRowActivePackages;
+  String get summaryRowLessonsToday;
+  String get summaryRowPlannedPayments;
+  String get summaryRowPackageRegistrationsToday;
+  String get summaryRowCollectionsToday;
+  String get summaryRowAttendanceToday;
+  String get summaryValueNone;
+  /// "işlem" / "transactions" — tahsilat satırında adet yanında
+  String get summaryTransactions;
+  String get summaryAttendanceRecords;
+  /// Bugün işlem yoksa popup alt başlığı
+  String get summaryNoActivityToday;
+  /// Özet satırında adet yanında (örn. "2 ders")
+  String get summaryUnitLesson;
+  String get summaryUnitPlannedPayment;
+  String get summaryUnitPackageSale;
+  String get summaryUnitCollection;
+  /// Özet alt başlığında satış+tahsilat toplamı (örn. "3 cari ekstre hareketi")
+  String get summaryUnitStatementMovements;
+  String get summaryUnitAttendance;
+  /// Popup: planlı ödeme / cari ekstre kaynak notu (alt satır)
+  String get summaryPopupFootnotePlannedAndStatement;
+  /// Liste satırı üst etiketi — planlı ödeme kalemi
+  String get summaryRowBadgePlannedPayment;
+  /// Liste satırı üst etiketi — cari ekstre (satış veya tahsilat)
+  String get summaryRowBadgeStatementMovement;
+  /// Liste satırı üst etiketi — cari satış
+  String get summaryRowBadgeStatementSale;
+  /// Liste satırı üst etiketi — cari tahsilat
+  String get summaryRowBadgeStatementCollection;
+  /// Liste satırı üst etiketi — bugünkü dersler
+  String get summaryRowBadgeMyLessons;
+  String get packageInfo;
+  /// Paket listesi — yalnızca aktif paketler (özetten giriş) başlığı
+  String get activePackagesListTitle;
+  /// Planlı ödeme listesi — yalnızca gecikenler (özetten giriş) başlığı
+  String get overduePaymentsListTitle;
+  /// Planlı ödeme listesi — bugün + yakın vade (hatırlatıcı / anasayfa penceresi)
+  String get nearDuePaymentsListTitle;
+  String get myAttendance;
+  String get financialStatement;
+  String get lessonSchedule;
+  String get guardianInfo;
+  String get invoiceInfo;
+  String get invoiceRecipientTypeIndividual;
+  String get invoiceRecipientTypeCorporate;
+  String get invoiceRecipientTypeSoleTrader;
+  String get invoiceVkn;
+  String get invoiceTckn;
+  String get invoiceTaxOffice;
+  String get invoiceCompanyTitle;
+  String get invoiceDefaultBadge;
+  String get scheduledPayments;
+  /// Üye profil menüsü kartları — tek satır (ProfileMenuCard `maxLines: 1`).
+  String get profileMenuMyPackages;
+  String get profileMenuLessonScheduleTitle;
+  String get profileMenuPlannedPaymentTitle;
+  String get profileMenuStatementTitle;
+  String get profileMenuInvoiceInfoTitle;
+  String get profileMenuGuardianInfoTitle;
+  String get debt;
+  String get credit;
+  String get balance;
+  String get dueDate;
+  /// Tablo / kart sütun başlığı (ödeme durumu vb.)
+  String get statusLabel;
+  String get paidStatus;
+  String get unpaidStatus;
+  String get overdueStatus;
+  String get activeStatus;
+  String get expiredStatus;
+  String get relationship;
+  String get location;
+  String get guardianName;
+  String get studentInfo;
+
+  // ─── Cari Ekstre ───
+  String get saleLabel;
+  String get collectionLabel;
+  String get packagePrice;
+  String get netPrice;
+  String get registrationDate;
+
+  // ─── Paket Bilgileri ───
+  String get endDate;
+  String get unitPrice;
+  String get totalPrice;
+  String get discountLabel;
+  String get packageNameLabel;
+  String get quantity;
+
+  // ─── Ödeme Türü Etiketleri ───
+  Map<String, String> get paymentTypeLabels;
+
+  String get paymentType;
+  String get paidDate;
+  String get paidExplanation;
+
+  // ─── Paket Detay (Derse Katılım & İşlem Geçmişi) ───
+  String get lessonAttendance;
+  String get lesson;
+  String get teacher;
+  String get classroom;
+  String get date;
+  String get time;
+  String get attendanceStatus;
+  String get attended;
+  String get notAttended;
+  String get burned;
+  String get deducted;
+  String get notDeducted;
+  String get actionLabel;
+  String get changeLabel;
+  String get remainAfter;
+  String get noReservations;
+  String get noLogs;
+  Map<String, String> get logActionLabels;
+
+  // ─── Üye yoklama geçmişi ───
+  String get makeupLesson;
+  String get lessonTypeGroupShort;
+  String get lessonTypeIndividualShort;
+  String get cancelledLesson;
+  String get noAttendanceRecords;
+
+  // ─── Yakınlık Derecesi Etiketleri ───
+  Map<String, String> get relationshipLabels;
+
+  // ─── Veli Kartı ───
+  String get primaryGuardian;
+  String get note;
+  String get call;
+  /// Veli listesi — api-system `secondary_phone`
+  String get guardianSecondaryPhone;
+  /// Veli listesi — api-system `profession_group` satır başlığı
+  String get guardianProfessionGroupField;
+  String get guardianProvinceField;
+  String get guardianDistrictField;
+  String get guardianAddressField;
+
+  /// `MemberGuardianProfessionGroupEnum` API anahtarları (api-system).
+  Map<String, String> get guardianProfessionGroupLabels;
 
   // ─── Meslek Etiketleri ───
   Map<String, String> get professionLabels;
@@ -665,6 +880,15 @@ class GymLabels implements AppLabels {
   // Tesis
   @override String get facilityInfo => 'Tesis Bilgileri';
   @override String get photo => 'Fotoğraf';
+  @override String get contactInfo => 'İletişim Bilgileri';
+  @override String get phoneLabel => 'Telefon';
+  @override String get emailLabel => 'E-posta';
+  @override String get whatsappLabel => 'WhatsApp';
+  @override String get addressLabel => 'Adres';
+  @override String get openInMaps => 'Haritada Aç';
+  @override String get sendWhatsApp => 'WhatsApp Gönder';
+  @override String get callPhone => 'Ara';
+  @override String get sendEmail => 'E-posta Gönder';
 
   // Profil Menü
   @override String get myProfile => 'Profilim';
@@ -672,11 +896,12 @@ class GymLabels implements AppLabels {
   @override String get pastEntryHistory => 'Geçmiş Geçiş Bilgilerim';
   @override String get facilityDetails => 'Tesis Detayları';
   @override String get trainerRoster => 'Eğitmen Kadrosu';
-  @override String get suggestionComplaint => 'Öneri Şikayet';
+  @override String get suggestionComplaint => 'Öneriler';
   @override String get groupLessonRules => 'Grup Dersi Kuralları';
   @override String get quickReservationRules => 'Hızlı Randevu Kuralları';
   @override String get facilityRules => 'Tesis Kuralları';
   @override String get membershipRules => 'Üyelik Kuralları';
+  @override String get institutionRules => 'Kurum Kuralları';
   @override String get about => 'Hakkında';
 
   // Hızlı Erişim Grid
@@ -759,16 +984,19 @@ class GymLabels implements AppLabels {
   @override String get emptyElectronicCloset => 'Boş Elektronik Dolap';
   @override String get closetPassword => 'Dolap Şifresi';
 
-  // Öneri / Şikayet
-  @override String get suggestionComplaintHistory => 'Öneri Şikayet Geçmişi';
-  @override String get createSuggestionComplaint => 'Öneri Şikayet Oluştur';
+  // Öneri
+  @override String get suggestionComplaintHistory => 'Öneri Geçmişi';
+  @override String get createSuggestionComplaint => 'Öneri Oluştur';
   @override String get title => 'Başlık';
   @override String get topicTitle => 'Konu Başlığını Yazınız...';
-  @override String get suggestionAndComplaint => 'Öneri ve Şikayet';
-  @override String get writeSuggestionComplaint => 'Öneri ve Şikayetinizi Yazınız...';
+  @override String get suggestionAndComplaint => 'Öneriniz';
+  @override String get writeSuggestionComplaint => 'Önerilerinizi Yazınız...';
   @override String get sentSuccess => 'Başarıyla gönderildi';
   @override String get sendFailed => 'Gönderim başarısız, lütfen daha sonra tekrar deneyiniz.';
   @override String get fillAllFields => 'Lütfen tüm alanları doldurunuz';
+  @override String get viewSuggestionComplaint => 'Öneri Görüntüle';
+  @override String get submitting => 'Gönderiliyor...';
+  @override String get currencySuffix => ' ₺';
 
   // Davet
   @override String get inviteFriendTitle => 'Arkadaşını Davet Et';
@@ -838,6 +1066,7 @@ class GymLabels implements AppLabels {
   @override String get female => 'KADIN';
   @override String get birthDate => 'Doğum Tarihi';
   @override String get birthDateFormat => 'GG/AA/YYYY';
+  @override String get birthDateFormatDash => birthDateFormat;
   @override String get notificationsEnabled => 'Bildirimleri Almak İstiyorum';
   @override String get selectFromGallery => 'Galeriden Seç';
   @override String get takeFromCamera => 'Kameradan Çek';
@@ -954,6 +1183,232 @@ class GymLabels implements AppLabels {
   // Uygulama Güncelleme
   @override String get newVersionAvailable => 'Yeni bir sürüm mevcut. Uygulamayı güncellemek ister misiniz?';
 
+  // Müzik Okulu / Genel Panel
+  @override String get todayMyLessons => 'Bugünkü\nDerslerim';
+  @override String get todayMyPayments => 'Bugünkü\nÖdemelerim';
+  @override String get myActivePackages => 'Aktif\nPaketlerim';
+  @override String get todaySummaryTitle => 'Bugünün\nÖzeti';
+  @override String get homeSummarySectionTitle => 'Özet';
+  @override String get homeSummaryActivePackagesLabel => 'Aktif Paket';
+  @override String get homeSummaryRemainingRightsLabel => 'Kalan Toplam Hak';
+  @override String get homeSummaryThisWeekLessonsLabel => 'Ders Sayısı';
+  @override String get homeSummaryThisWeekLessonsCaption =>
+      'Bu Haftaki Ders Sayısı';
+  @override String get homeSummaryOverduePaymentsLabel => 'G. Ödeme';
+  @override String get homeSummaryOverduePaymentsCaption =>
+      'Geciken Ödeme Sayısı';
+  @override String get homeSummaryNextLessonLabel =>
+      'Bir Sonraki Ders/Derslerim';
+  @override String get homeSummaryNextLessonEmpty => 'Yaklaşan ders yok';
+  @override String get homeSummaryRecentAttendanceTitle => 'Son Yoklamalar';
+  @override String get homeSummaryShowMore => 'Daha fazla göster';
+  @override String get homeSummaryShowLess => 'Daha az göster';
+  @override String get homePackageRightsDonutTitle => 'Paketlerim';
+  @override String get homePackageRightsDonutRemainingLegend => 'Kalan';
+  @override String get homePackageRightsDonutUsedLegend => 'Kullanılan';
+  @override String get homePackageRightsDonutEmptyStateLine =>
+      'Ders hakkı bulunan aktif paketiniz yok';
+  @override String get homePackageNearExpiryWarning =>
+      'Paketiniz bitmek üzere';
+  @override String get nearExpiryPackagesListTitle => 'Yakında bitecek paketler';
+  @override String get homeRemindersSectionTitle => 'Hatırlatıcı';
+  @override String get homeRemindersEmptyState =>
+      'Yaklaşan Ödeme veya Duyuru Bulunmuyor.';
+  @override String get homeRemindersSeeAll => 'Tümünü gör';
+  @override String get homeReminderPaymentDueToday => 'Bugün';
+  @override String get homeReminderPaymentDueTomorrow => 'Yarın';
+  @override String homeReminderPaymentDueInDays(int days) => '$days gün sonra';
+  @override String get homeRemindersUpcomingPaymentsSubtitle =>
+      'Yaklaşan Ödemeler';
+  @override String get homeRemindersAnnouncementsSubtitle => 'Duyurular';
+  @override String get homeStatementChartTitle => 'Cari Özeti';
+  @override String get homeStatementChartSubtitle =>
+      'Son 6 ay — aylık satış ve tahsilat';
+  @override String get homeStatementChartEmpty =>
+      'Bu dönemde grafiklenecek hareket yok';
+  @override String get homeStatementChartNoDebtLine =>
+      'Borcunuz bulunmamaktadır';
+  @override String get summaryHintShort =>
+      'Paket, Tahsilat, Yoklama, Planlı Ödeme Ve Bugünkü Derslerin Özeti.';
+  @override String get summaryRowActivePackages => 'Aktif paketler';
+  @override String get summaryRowLessonsToday => 'Bugünkü dersler';
+  @override String get summaryRowPlannedPayments => 'Planlı ödemeler (bugün)';
+  @override String get summaryRowPackageRegistrationsToday =>
+      'Bugünkü paket kayıtları';
+  @override String get summaryRowCollectionsToday => 'Bugünkü tahsilatlar';
+  @override String get summaryRowAttendanceToday => 'Bugünkü yoklama';
+  @override String get summaryValueNone => '—';
+  @override String get summaryTransactions => 'işlem';
+  @override String get summaryAttendanceRecords => 'kayıt';
+  @override String get summaryNoActivityToday =>
+      'Bugün Listelenecek Bir İşlem Yok.';
+  @override String get summaryUnitLesson => 'Ders';
+  @override String get summaryUnitPlannedPayment => 'Planlı Ödeme';
+  @override String get summaryUnitPackageSale => 'Paket Kaydı';
+  @override String get summaryUnitCollection => 'Tahsilat';
+  @override String get summaryUnitStatementMovements => 'Cari Ekstre Hareketi';
+  @override String get summaryUnitAttendance => 'Yoklama';
+  @override String get summaryPopupFootnotePlannedAndStatement =>
+      'Planlı Ödemeler Ve Cari Ekstreden Bugünkü Satış/Tahsilat Satırları Aşağıda Listelenir.';
+  @override String get summaryRowBadgePlannedPayment => 'Planlı Ödeme';
+  @override String get summaryRowBadgeStatementMovement => 'Cari Ekstre';
+  @override String get summaryRowBadgeStatementSale => 'Satış';
+  @override String get summaryRowBadgeStatementCollection => 'Tahsilat';
+  @override String get summaryRowBadgeMyLessons => 'Derslerim';
+  @override String get packageInfo => 'Paket\nBilgileri';
+  @override String get activePackagesListTitle => 'Aktif Paketler';
+  @override String get overduePaymentsListTitle => 'Geciken Ödemeler';
+  @override String get nearDuePaymentsListTitle => 'Yaklaşan Ödemeler';
+  @override String get myAttendance => 'Yoklamalar';
+  @override String get financialStatement => 'Cari\nEkstre';
+  @override String get lessonSchedule => 'Ders\nProgramı';
+  @override String get guardianInfo => 'Veli\nBilgisi';
+  @override String get invoiceInfo => 'Fatura\nBilgisi';
+  @override String get invoiceRecipientTypeIndividual => 'Bireysel';
+  @override String get invoiceRecipientTypeCorporate => 'Kurumsal';
+  @override String get invoiceRecipientTypeSoleTrader => 'Şahıs Şirketi';
+  @override String get invoiceVkn => 'VKN';
+  @override String get invoiceTckn => 'TCKN';
+  @override String get invoiceTaxOffice => 'Vergi Dairesi';
+  @override String get invoiceCompanyTitle => 'Firma Unvanı';
+  @override String get invoiceDefaultBadge => 'Varsayılan';
+  @override String get scheduledPayments => 'Planlı\nÖdeme';
+  @override String get profileMenuMyPackages => 'Paketlerim';
+  @override String get profileMenuLessonScheduleTitle => 'Ders programı';
+  @override String get profileMenuPlannedPaymentTitle => 'Planlı Ödeme';
+  @override String get profileMenuStatementTitle => 'Cari Ekstre';
+  @override String get profileMenuInvoiceInfoTitle => 'Fatura Bilgileri';
+  @override String get profileMenuGuardianInfoTitle => 'Veli Bilgisi';
+  @override String get debt => 'Borç';
+  @override String get credit => 'Alacak';
+  @override String get balance => 'Bakiye';
+  @override String get dueDate => 'Vade Tarihi';
+  @override String get statusLabel => 'Durum';
+  @override String get paidStatus => 'Ödendi';
+  @override String get unpaidStatus => 'Ödenmedi';
+  @override String get overdueStatus => 'Gecikmiş';
+  @override String get saleLabel => 'Satış';
+  @override String get collectionLabel => 'Tahsilat';
+  @override String get packagePrice => 'Paket Ücreti';
+  @override String get netPrice => 'Net Tutar';
+  @override String get registrationDate => 'Kayıt Tarihi';
+  @override String get endDate => 'Bitiş Tarihi';
+  @override String get unitPrice => 'Birim Fiyat';
+  @override String get totalPrice => 'Toplam Tutar';
+  @override String get discountLabel => 'İndirim';
+  @override String get packageNameLabel => 'Paket Adı';
+  @override String get quantity => 'Adet';
+  @override String get activeStatus => 'Aktif';
+  @override String get expiredStatus => 'Süresi Dolmuş';
+  @override String get relationship => 'Yakınlık Derecesi';
+  @override String get location => 'Lokasyon';
+  @override String get guardianName => 'Veli Adı';
+  @override String get studentInfo => 'Öğrenci Bilgisi';
+
+  @override Map<String, String> get relationshipLabels => const {
+    'parent': 'Ebeveyn',
+    'mother': 'Anne',
+    'father': 'Baba',
+    'sibling': 'Kardeş',
+    'spouse': 'Eş',
+    'grandparent': 'Büyükanne/Büyükbaba',
+    'uncle_aunt': 'Amca/Teyze/Dayı/Hala',
+    'other': 'Diğer',
+    'anne': 'Anne',
+    'baba': 'Baba',
+    'kardeş': 'Kardeş',
+    'eş': 'Eş',
+    'ebeveyn': 'Ebeveyn',
+    'anna': 'Anne',
+    'veli': 'Veli',
+    'dede': 'Dede',
+    'büyükanne': 'Büyükanne',
+    'büyükbaba': 'Büyükbaba',
+    'amca': 'Amca',
+    'dayı': 'Dayı',
+    'teyze': 'Teyze',
+    'hala': 'Hala',
+    'diğer': 'Diğer',
+  };
+
+  @override String get primaryGuardian => 'Birincil Veli';
+  @override String get note => 'Not';
+  @override String get call => 'Ara';
+  @override String get guardianSecondaryPhone => 'İkinci telefon';
+  @override String get guardianProfessionGroupField => 'Meslek grubu';
+  @override String get guardianProvinceField => 'İl';
+  @override String get guardianDistrictField => 'İlçe';
+  @override String get guardianAddressField => 'Adres';
+
+  @override Map<String, String> get guardianProfessionGroupLabels => const {
+        'health_wellness': 'Sağlık ve wellness',
+        'education': 'Eğitim',
+        'it_technology': 'Bilişim ve teknoloji',
+        'finance_business': 'Finans ve iş dünyası',
+        'legal_advocacy': 'Hukuk ve avukatlık',
+        'engineering_technical': 'Mühendislik ve teknik',
+        'architecture_construction': 'Mimarlık ve inşaat',
+        'agriculture_food': 'Tarım ve gıda',
+        'manufacturing_industry': 'Üretim ve sanayi',
+        'retail_service': 'Perakende ve hizmet',
+        'hospitality_tourism': 'Konaklama ve turizm',
+        'transport_logistics': 'Ulaştırma ve lojistik',
+        'energy_utilities': 'Enerji ve kamu hizmetleri',
+        'media_marketing': 'Medya ve pazarlama',
+        'hr_administration': 'İK ve idari',
+        'public_sector': 'Kamu sektörü',
+        'security_defense': 'Güvenlik ve savunma',
+        'science_research': 'Bilim ve araştırma',
+        'nonprofit_ngo': 'STK ve sivil toplum',
+        'freelance_art': 'Serbest meslek ve sanat',
+        'homemaker': 'Ev içi',
+        'student_retired': 'Öğrenci veya emekli',
+        'unemployed': 'İşsiz',
+        'other': 'Diğer',
+      };
+
+  @override String get lessonAttendance => 'Derse Katılım';
+  @override String get lesson => 'Ders';
+  @override String get teacher => 'Öğretmen';
+  @override String get classroom => 'Sınıf';
+  @override String get date => 'Tarih';
+  @override String get time => 'Saat';
+  @override String get attendanceStatus => 'Yoklama';
+  @override String get attended => 'Geldi';
+  @override String get notAttended => 'Gelmedi';
+  @override String get burned => 'Yakıldı';
+  @override String get deducted => 'Hak düşüldü';
+  @override String get notDeducted => 'Hak düşülmedi';
+  @override String get actionLabel => 'İşlem';
+  @override String get changeLabel => 'Değişim';
+  @override String get remainAfter => 'Kalan Hak';
+  @override String get noReservations => 'Derse katılım kaydı bulunamadı';
+  @override String get noLogs => 'İşlem geçmişi bulunamadı';
+  @override String get makeupLesson => 'Telafi dersi';
+  @override String get lessonTypeGroupShort => 'Grup';
+  @override String get lessonTypeIndividualShort => 'Bireysel';
+  @override String get cancelledLesson => 'İptal edilen ders';
+  @override String get noAttendanceRecords => 'Yoklama kaydı bulunamadı';
+  @override Map<String, String> get logActionLabels => const {
+    'manual_deduction': 'Manuel Düşüm',
+    'burn': 'Yakma',
+    'unburn': 'Yakma İptali',
+    'attendance': 'Yoklama',
+    'attendance_removed': 'Yoklama İptali',
+    'attendance_deduction': 'Yoklama Düşümü',
+    'attendance_refund': 'Yoklama İadesi',
+  };
+
+  @override Map<String, String> get paymentTypeLabels => const {
+    'NAKIT': 'Nakit',
+    'KREDI_KARTI': 'Kredi Kartı',
+    'EFT_HAVALE': 'EFT / Havale',
+    'ONLINE_ODEME': 'Online Ödeme',
+  };
+  @override String get paymentType => 'Ödeme Türü';
+  @override String get paidDate => 'Ödeme Tarihi';
+  @override String get paidExplanation => 'Açıklama';
+
   @override Map<String, String> get professionLabels => const {
     'fitness_trainer': 'Fitness Eğitmeni',
     'plates_trainer': 'Pilates Eğitmeni',
@@ -976,6 +1431,8 @@ class GymLabels implements AppLabels {
 
 class MusicSchoolLabels extends GymLabels {
   const MusicSchoolLabels();
+
+  @override String get birthDateFormatDash => 'GG-AA-YYYY';
 
   @override String get member => 'Öğrenci';
   @override String get trainer => 'Öğretmen';

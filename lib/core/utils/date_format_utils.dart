@@ -21,4 +21,15 @@ class DateFormatUtils {
       return dateTimeString;
     }
   }
+
+  /// d.m.Y (saat yok; gün/ay baştaki sıfırsız), yerel saat dilimi.
+  static String formatDateDayMonthYearDots(String? dateTimeString) {
+    if (dateTimeString == null || dateTimeString.isEmpty) return '';
+    try {
+      final d = DateTime.parse(dateTimeString).toLocal();
+      return '${d.day}.${d.month}.${d.year}';
+    } catch (_) {
+      return dateTimeString;
+    }
+  }
 }

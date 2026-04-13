@@ -6,13 +6,12 @@ import 'package:e_sport_life/config/user-config/user_config_cubit.dart';
 import 'package:e_sport_life/core/constants/employee_profession.dart';
 import 'package:e_sport_life/core/l10n/app_labels.dart';
 import 'package:e_sport_life/core/services/trainer_profile_service.dart';
-import 'package:e_sport_life/core/enums/supported_locale.dart';
 import 'package:e_sport_life/core/utils/shared-preferences/email_verification_cache_utils.dart';
-import 'package:e_sport_life/core/utils/shared-preferences/locale_cache_utils.dart';
 import 'package:e_sport_life/core/widgets/color_picker_dialog_widget.dart';
 import 'package:e_sport_life/core/widgets/email_change_dialog_widget.dart';
 import 'package:e_sport_life/core/widgets/password_change_dialog_widget.dart';
 import 'package:e_sport_life/core/widgets/phone_change_dialog_widget.dart';
+import 'package:e_sport_life/core/widgets/profile_language_selector_widget.dart';
 import 'package:e_sport_life/core/widgets/profile_photo_update_dialog_widget.dart';
 import 'package:e_sport_life/core/widgets/top_appbar_widget.dart';
 import 'package:e_sport_life/core/widgets/exit_app_dialog_widget.dart';
@@ -91,7 +90,6 @@ class _TrainerProfileEditScreenState extends State<TrainerProfileEditScreen> {
   bool _emailVerified = false;
   bool _isEmployeeActive = true;
   bool _isSendingVerification = false;
-  SupportedLocale _currentLocale = AppLabels.currentLocale;
   bool _verificationCooldown = false;
   static const int _cooldownSeconds = 60;
   int _cooldownRemaining = 0;
@@ -527,164 +525,62 @@ class _TrainerProfileEditScreenState extends State<TrainerProfileEditScreen> {
   }
 
   Widget _buildProfilePhotoRow(dynamic theme) {
-    return Stack(
-      children: [
-        _buildProfilePhoto(theme),
-        Positioned(
-          top: 0,
-          right: 4,
-          child: _buildLanguageSelector(theme),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLanguageSelector(dynamic theme) {
-    final isTr = _currentLocale == SupportedLocale.tr;
-    return PopupMenuButton<SupportedLocale>(
-      onSelected: (locale) {
-        setState(() => _currentLocale = locale);
-        AppLabels.changeLocale(locale);
-        LocaleCacheUtils.save(locale);
-      },
-      offset: const Offset(0, 44),
-      elevation: 6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: theme.defaultWhiteColor,
-      itemBuilder: (_) => [
-        _buildLocaleMenuItem(
-          locale: SupportedLocale.tr,
-          flag: '🇹🇷',
-          label: 'Türkçe',
-          isSelected: isTr,
-          theme: theme,
-        ),
-        _buildLocaleMenuItem(
-          locale: SupportedLocale.en,
-          flag: '🇬🇧',
-          label: 'English',
-          isSelected: !isTr,
-          theme: theme,
-        ),
-      ],
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-        decoration: BoxDecoration(
-          color: theme.defaultWhiteColor,
-          border: Border.all(color: theme.default700Color, width: 1),
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: theme.defaultBlackColor.withOpacity(0.06),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(isTr ? '🇹🇷' : '🇬🇧',
-                style: const TextStyle(fontSize: 18)),
-            const SizedBox(width: 6),
-            Text(
-              isTr ? 'TR' : 'EN',
-              style: theme.textCaption(color: theme.default900Color),
-            ),
-            const SizedBox(width: 2),
-            Icon(Icons.expand_more_rounded,
-                color: theme.default700Color, size: 18),
-          ],
-        ),
-      ),
-    );
-  }
-
-  PopupMenuItem<SupportedLocale> _buildLocaleMenuItem({
-    required SupportedLocale locale,
-    required String flag,
-    required String label,
-    required bool isSelected,
-    required dynamic theme,
-  }) {
-    return PopupMenuItem<SupportedLocale>(
-      value: locale,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? theme.default300Color : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            Text(flag, style: const TextStyle(fontSize: 20)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                label,
-                style: theme.textBody(
-                  color: isSelected
-                      ? theme.default700Color
-                      : theme.defaultBlackColor,
-                ),
-              ),
-            ),
-            if (isSelected)
-              Icon(Icons.check_circle,
-                  color: theme.default700Color, size: 20),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProfilePhoto(dynamic theme) {
     return Center(
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
-        children: [
-          _imageProvider != null
-              ? GestureDetector(
-                  onTap: () async => await _handlePhotoUpdate(),
-                  child: ClipOval(
-                    child: Image(
-                      image: _imageProvider!,
-                      width: _photoSize,
-                      height: _photoSize,
-                      fit: BoxFit.cover,
+      child: SizedBox(
+        width: _photoSize,
+        height: _photoSize,
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
+          children: [
+            _imageProvider != null
+                ? GestureDetector(
+                    onTap: () async => await _handlePhotoUpdate(),
+                    child: ClipOval(
+                      child: Image(
+                        image: _imageProvider!,
+                        width: _photoSize,
+                        height: _photoSize,
+                        fit: BoxFit.cover,
+                      ),
                     ),
+                  )
+                : SvgPicture.asset(
+                    theme.userSvgPath,
+                    fit: BoxFit.contain,
+                    width: _photoSize,
+                    height: _photoSize,
                   ),
-                )
-              : SvgPicture.asset(
-                  theme.userSvgPath,
-                  fit: BoxFit.contain,
-                  width: _photoSize,
-                  height: _photoSize,
-                ),
-          Positioned(
-            top: 80,
-            right: -5,
-            child: GestureDetector(
-              onTap: () async => await _handlePhotoUpdate(),
-              child: Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: theme.default100Color,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: theme.default900Color, width: 1),
-                ),
-                child: Icon(
-                  Icons.edit,
-                  color: theme.default700Color,
-                  size: 20,
+            Positioned(
+              top: 80,
+              right: -5,
+              child: GestureDetector(
+                onTap: () async => await _handlePhotoUpdate(),
+                child: Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: theme.default100Color,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: theme.default900Color, width: 1),
+                  ),
+                  child: Icon(
+                    Icons.edit,
+                    color: theme.default700Color,
+                    size: 20,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              top: 0,
+              right: 0,
+              child: ProfileLanguageSelectorWidget(
+                onLocaleChanged: () => setState(() {}),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1171,10 +1067,8 @@ class _TrainerProfileEditScreenState extends State<TrainerProfileEditScreen> {
                             children: [
                               Text(
                                 label,
-                                style: theme.textCaption(
-                                    color: theme.default900Color).copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: theme.textCaptionSemiBold(
+                                    color: theme.default900Color),
                               ),
                               const SizedBox(width: 4),
                               GestureDetector(
@@ -1505,7 +1399,7 @@ class _TrainerProfileEditScreenState extends State<TrainerProfileEditScreen> {
               onPressed: _isSaving ? null : () async => await _saveProfile(),
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.default500Color,
-                foregroundColor: Colors.white,
+                foregroundColor: theme.defaultWhiteColor,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -1522,29 +1416,21 @@ class _TrainerProfileEditScreenState extends State<TrainerProfileEditScreen> {
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                                AlwaysStoppedAnimation<Color>(theme.defaultWhiteColor),
                           ),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           labels.saving,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: theme.fontFamily,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: theme.textBody(
+                              color: theme.defaultWhiteColor),
                         ),
                       ],
                     )
                   : Text(
                       labels.save,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: theme.fontFamily,
-                        color: theme.defaultBlackColor,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: theme.textBody(
+                          color: theme.defaultBlackColor),
                     ),
             ),
           ),
@@ -1560,8 +1446,8 @@ class _TrainerProfileEditScreenState extends State<TrainerProfileEditScreen> {
                       );
                     },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
+                backgroundColor: theme.defaultRed700Color,
+                foregroundColor: theme.defaultWhiteColor,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -1569,11 +1455,8 @@ class _TrainerProfileEditScreenState extends State<TrainerProfileEditScreen> {
               ),
               child: Text(
                 labels.logout,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: theme.fontFamily,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: theme.textBody(
+                    color: theme.defaultWhiteColor),
               ),
             ),
           ),
