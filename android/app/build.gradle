@@ -29,7 +29,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.manasteknoloji.esport_"
+    namespace "com.manasteknoloji.barisswimming"
     compileSdkVersion 36  //flutter.compileSdkVersion
     ndkVersion "28.2.13676358"//flutter.ndkVersion - 16 KB sayfa boyutu desteği için güncellendi
 
@@ -48,7 +48,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.manasteknoloji.esport_"
+        applicationId "com.manasteknoloji.barisswimming"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion//flutter.minSdkVersion

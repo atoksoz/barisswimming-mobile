@@ -90,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
           });
 */
           return MaterialApp(
-            title: 'Esport Life',
+            title: 'Barış Swimming',
             debugShowCheckedModeBanner: false,
             locale: const Locale('tr', 'TR'),
             localizationsDelegates: const [

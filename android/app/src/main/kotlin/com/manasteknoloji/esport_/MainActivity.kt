@@ -1,4 +1,4 @@
-package com.manasteknoloji.esport_
+package com.manasteknoloji.barisswimming
 
 import android.os.Bundle
 import android.view.WindowManager

@@ -45,21 +45,21 @@
 		<true/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
-	<key>UIStatusBarHidden</key>
-	<false/>
-	<key>NSContactsUsageDescription</key>
-	<string>Arkadaşınızı davet etmek için rehberinizden kişi seçmenize izin verin</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Profil fotoğrafı ve ölçüm fotoğrafları eklemek için fotoğraf kütüphanenize erişim gereklidir</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Fotoğrafları kaydetmek için fotoğraf kütüphanenize erişim gereklidir</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Profil fotoğrafı ve ölçüm fotoğrafları çekmek için kameraya erişim gereklidir</string>
-	<key>NFCReaderUsageDescription</key>
-	<string>Yoklama almak için NFC kart okuma özelliğine erişim gereklidir</string>
-	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
-	<array>
-		<string>D2760000850101</string>
-	</array>
-</dict>
+		<key>UIStatusBarHidden</key>
+		<false/>
+		<key>NSContactsUsageDescription</key>
+		<string>Arkadaşınızı davet etmek için rehberinizden kişi seçmenize izin verin</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Profil fotoğrafı ve ölçüm fotoğrafları eklemek için fotoğraf kütüphanenize erişim gereklidir</string>
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>Fotoğrafları kaydetmek için fotoğraf kütüphanenize erişim gereklidir</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Profil fotoğrafı ve ölçüm fotoğrafları çekmek için kameraya erişim gereklidir</string>
+		<key>NFCReaderUsageDescription</key>
+		<string>Yoklama almak için NFC kart okuma özelliğine erişim gereklidir</string>
+		<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
+		<array>
+			<string>D2760000850101</string>
+		</array>
+	</dict>
 </plist>
