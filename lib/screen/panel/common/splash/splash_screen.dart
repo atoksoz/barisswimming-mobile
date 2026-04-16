@@ -19,33 +19,49 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   static const _navigationDelay = Duration(seconds: 1);
+  static const _sliderFallbackDelay = Duration(seconds: 4);
+  static const _startupWatchdogDelay = Duration(seconds: 6);
+  static const _cacheReadTimeout = Duration(seconds: 2);
 
   List<String> _sliderImages = [];
   String _greetingMessage = '';
   int _currentIndex = 0;
   bool _isSliderVisible = false;
+  bool _hasNavigated = false;
+  Timer? _startupWatchdog;
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    _startupWatchdog = Timer(_startupWatchdogDelay, _navigateToSliderScreen);
     _handleSplashFlow();
+  }
+
+  @override
+  void dispose() {
+    _startupWatchdog?.cancel();
+    super.dispose();
   }
 
   Future<void> _handleSplashFlow() async {
     try {
-      final storedSlider = await getSplashScreenSliderItems();
+      final storedSlider = await getSplashScreenSliderItems()
+          .timeout(_cacheReadTimeout, onTimeout: () => null);
+
+      if (!mounted) return;
 
       if (storedSlider != null && storedSlider.isNotEmpty) {
         setState(() {
           _sliderImages = storedSlider;
           _isSliderVisible = true;
         });
+        _startSliderFallbackNavigation();
       } else {
         _startDelayedNavigation();
       }
     } catch (_) {
-      // Non-blocking
+      _startDelayedNavigation();
     } finally {
       SplashScreenService.fetchAndStoreSplashData(context);
     }
@@ -54,12 +70,24 @@ class _SplashScreenState extends State<SplashScreen> {
   void _startDelayedNavigation() {
     _setGreeting();
     Timer(_navigationDelay, () {
-      if (!mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const SliderScreen()),
-      );
+      _navigateToSliderScreen();
     });
+  }
+
+  void _startSliderFallbackNavigation() {
+    Timer(_sliderFallbackDelay, () {
+      _navigateToSliderScreen();
+    });
+  }
+
+  void _navigateToSliderScreen() {
+    if (!mounted || _hasNavigated) return;
+    _startupWatchdog?.cancel();
+    _hasNavigated = true;
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const SliderScreen()),
+    );
   }
 
   void _setGreeting() {
@@ -87,12 +115,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (index == _sliderImages.length - 1) {
       Future.delayed(_navigationDelay, () {
-        if (!mounted) return;
         if (_currentIndex == _sliderImages.length - 1) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const SliderScreen()),
-          );
+          _navigateToSliderScreen();
         }
       });
     }
@@ -123,6 +147,9 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Image.network(
               _sliderImages[index],
               fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const Center(
+                child: LoadingIndicatorWidget(),
+              ),
             ),
           );
         },

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import "package:shared_preferences/shared_preferences.dart";
 
 class ApplicationConstant {
@@ -38,29 +39,49 @@ class ApplicationConstant {
 
   static String deneme = "";
 
-  static saveStringValue(String key, String value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(key, value);
+  static Future<void> saveStringValue(String key, String value) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(key, value);
+    } on PlatformException {
+      // Non-blocking: cache write failures should not crash runtime flow.
+    }
   }
 
   static Future<String?> getStringValue(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(key);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(key);
+    } on PlatformException {
+      return null;
+    }
   }
 
   static Future<void> getMemberIdValue() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    deneme = prefs.getString(memberIdKey) ?? "";
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      deneme = prefs.getString(memberIdKey) ?? "";
+    } on PlatformException {
+      deneme = "";
+    }
   }
 
-  static saveIntValue(String key, int value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt(key, value);
+  static Future<void> saveIntValue(String key, int value) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(key, value);
+    } on PlatformException {
+      // Non-blocking: cache write failures should not crash runtime flow.
+    }
   }
 
-  static getIntValue(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.getInt(key);
+  static Future<int?> getIntValue(String key) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getInt(key);
+    } on PlatformException {
+      return null;
+    }
   }
 
   static void setUser(String token) {

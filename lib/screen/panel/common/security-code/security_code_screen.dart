@@ -45,74 +45,222 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
   bool _passwordVisibility = true;
 
   static Future<bool> useToken(BuildContext context, String code) async {
+    bool tokenAcceptedByApi = false;
     try {
       String url = SystemApiUrlConstants.getUseTokenUrl(code);
 
       final response = await RequestUtil.get(url);
-      var result = extractOutputIfFound(response!.body);
-      if (result != null) {
-        var d = result;
-        var data = json.decode(result["data"]);
-        ApplicationConstant.setApplicationId(
-            d["application_id"]?.toString() ?? '');
-        ApplicationConstant.setFirmId(d["firm_id"]?.toString() ?? '');
-        ApplicationConstant.setHamamSpaApiUrl(
-            data["hamamspa_api_url"]?.toString() ?? '');
-        ApplicationConstant.setKantincimApiUrl(
-            data["kantincim"]?.toString() ?? '');
-        ApplicationConstant.setGymTrainingApiUrl(
-            data["gym_training"]?.toString() ?? '');
-        ApplicationConstant.setRandevuAlApiUrl(
-            data["online_resarvation"]?.toString() ?? '');
-        ApplicationConstant.setDigitalSignageApiUrl(
-            data["digital_signage"]?.toString() ?? '');
-        ApplicationConstant.setHost(data["host"]?.toString() ?? '');
-        ApplicationConstant.setMemberId(data["member_id"]?.toString() ?? '');
-        ApplicationConstant.setName(data["name"]?.toString() ?? '');
-        ApplicationConstant.setPhone(data["phone"]?.toString() ?? '');
-        ApplicationConstant.setBirthday(data["birthday"]?.toString() ?? '');
-        ApplicationConstant.setGender(data["gender"]?.toString() ?? '');
-        ApplicationConstant.setToken(data["token"]?.toString() ?? '');
-        ApplicationConstant.setImageUrl(data["image_url"]?.toString() ?? '');
-        ApplicationConstant.setThumbImageUrl(
-            data["thumb_image_url"]?.toString() ?? '');
-        ApplicationConstant.setSecurityKey(
-            d["security_code"]?.toString() ?? '');
-
-        var jsonData = data;
-        JwtStorageService.saveToken(data["token"]);
-        final config = UserConfig.fromMap(jsonData);
-        await saveUserConfigToSharedPref(config);
-
-        final externalApplicationConfigData =
-            ExternalApplicationsConfig.fromMap(jsonData);
-        await saveExternalApplicationsConfigToSharedPref(
-            externalApplicationConfigData);
-
-        context.read<UserConfigCubit>().updateUserConfig(config);
-        context
-            .read<ExternalApplicationsConfigCubit>()
-            .updateExternalApplicationsConfig(externalApplicationConfigData);
-
-        final savedLocale = await LocaleCacheUtils.load();
-        AppLabels.init(config.applicationType, locale: savedLocale);
-
-        if (config.userType != MobileUserType.member) {
-          await _fetchAndLoadAbilities(
-              context, data["token"], data["hamamspa_api_url"]);
-        }
-
-        return true;
-      } else {
+      if (response == null) {
         return false;
       }
+
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        return false;
+      }
+
+      Map<String, dynamic>? payload;
+
+      final legacyOutput = extractOutputIfFound(response.body);
+      if (legacyOutput != null) {
+        payload = _extractPayloadFromLegacyOutput(legacyOutput);
+      }
+
+      payload ??= _extractUseTokenPayload(response.body);
+      if (payload == null) {
+        return false;
+      }
+
+      final token = payload["token"]?.toString() ?? '';
+      if (token.isEmpty) {
+        return false;
+      }
+
+      // Token is present; API validation succeeded at this point.
+      tokenAcceptedByApi = true;
+
+      ApplicationConstant.setApplicationId(
+          payload["application_id"]?.toString() ?? '');
+      ApplicationConstant.setFirmId(payload["firm_id"]?.toString() ?? '');
+      ApplicationConstant.setHamamSpaApiUrl(
+          payload["hamamspa_api_url"]?.toString() ?? '');
+      ApplicationConstant.setKantincimApiUrl(
+          payload["kantincim"]?.toString() ?? '');
+      ApplicationConstant.setGymTrainingApiUrl(
+          payload["gym_training"]?.toString() ?? '');
+      ApplicationConstant.setRandevuAlApiUrl(
+          payload["online_resarvation"]?.toString() ?? '');
+      ApplicationConstant.setDigitalSignageApiUrl(
+          payload["digital_signage"]?.toString() ?? '');
+      ApplicationConstant.setHost(payload["host"]?.toString() ?? '');
+      ApplicationConstant.setMemberId(payload["member_id"]?.toString() ?? '');
+      ApplicationConstant.setName(payload["name"]?.toString() ?? '');
+      ApplicationConstant.setPhone(payload["phone"]?.toString() ?? '');
+      ApplicationConstant.setBirthday(payload["birthday"]?.toString() ?? '');
+      ApplicationConstant.setGender(payload["gender"]?.toString() ?? '');
+      ApplicationConstant.setToken(token);
+      ApplicationConstant.setImageUrl(payload["image_url"]?.toString() ?? '');
+      ApplicationConstant.setThumbImageUrl(
+          payload["thumb_image_url"]?.toString() ?? '');
+      ApplicationConstant.setSecurityKey(
+          payload["security_code"]?.toString() ?? '');
+
+      final jsonData = payload;
+      await JwtStorageService.saveToken(token);
+      final config = UserConfig.fromMap(jsonData);
+      await saveUserConfigToSharedPref(config);
+
+      final externalApplicationConfigData =
+          ExternalApplicationsConfig.fromMap(jsonData);
+      await saveExternalApplicationsConfigToSharedPref(
+          externalApplicationConfigData);
+
+      context.read<UserConfigCubit>().updateUserConfig(config);
+      context
+          .read<ExternalApplicationsConfigCubit>()
+          .updateExternalApplicationsConfig(externalApplicationConfigData);
+
+      final savedLocale = await LocaleCacheUtils.load();
+      AppLabels.init(config.applicationType, locale: savedLocale);
+
+      if (config.userType != MobileUserType.member) {
+        await _fetchAndLoadAbilities(
+            context, token, payload["hamamspa_api_url"]?.toString() ?? '');
+      }
+
+      return true;
     } on TimeoutException {
       rethrow;
     } on SocketException {
       rethrow;
+    } on PlatformException catch (error) {
+      final isSharedPrefsChannelError = _isSharedPreferencesChannelError(error);
+
+      if (tokenAcceptedByApi && isSharedPrefsChannelError) {
+        // Non-blocking: token already validated by API.
+        return true;
+      }
+
+      if (tokenAcceptedByApi) {
+        return true;
+      }
+
+      return false;
     } catch (_) {
+      // Prevent false "invalid code" when API accepted token but a local post-step failed.
+      if (tokenAcceptedByApi) {
+        return true;
+      }
+
       return false;
     }
+  }
+
+  static Map<String, dynamic>? _extractPayloadFromLegacyOutput(
+      Map<String, dynamic> output) {
+    final dataMap = _normalizeDynamicMap(output['data']);
+    if (dataMap != null) {
+      return <String, dynamic>{...output, ...dataMap};
+    }
+
+    if (output['token'] != null || output['member_id'] != null) {
+      return Map<String, dynamic>.from(output);
+    }
+
+    return null;
+  }
+
+  static Map<String, dynamic>? _extractUseTokenPayload(dynamic responseBody) {
+    try {
+      final decoded =
+          responseBody is String ? json.decode(responseBody) : responseBody;
+
+      // Prefer the map that actually contains a non-empty token, even if nested.
+      final tokenPayload = _findPayloadWithToken(decoded);
+      if (tokenPayload != null) {
+        return tokenPayload;
+      }
+
+      // Best-effort fallback if token cannot be found.
+      return _normalizeDynamicMap(decoded);
+    } catch (_) {
+      // Non-blocking: payload parse is best-effort
+    }
+
+    return null;
+  }
+
+  static Map<String, dynamic>? _findPayloadWithToken(dynamic value,
+      {int depth = 0}) {
+    if (depth > 8 || value == null) {
+      return null;
+    }
+
+    final map = _normalizeDynamicMap(value);
+    if (map != null) {
+      final token = map['token']?.toString() ?? '';
+      if (token.isNotEmpty) {
+        return map;
+      }
+
+      for (final entry in map.entries) {
+        final nested = _findPayloadWithToken(entry.value, depth: depth + 1);
+        if (nested != null) {
+          return nested;
+        }
+      }
+      return null;
+    }
+
+    if (value is List) {
+      for (final item in value) {
+        final nested = _findPayloadWithToken(item, depth: depth + 1);
+        if (nested != null) {
+          return nested;
+        }
+      }
+    }
+
+    if (value is String && value.isNotEmpty) {
+      try {
+        final decoded = json.decode(value);
+        return _findPayloadWithToken(decoded, depth: depth + 1);
+      } catch (_) {
+        return null;
+      }
+    }
+
+    return null;
+  }
+
+  static Map<String, dynamic>? _normalizeDynamicMap(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      return value;
+    }
+
+    if (value is Map) {
+      return Map<String, dynamic>.from(value);
+    }
+
+    if (value is String && value.isNotEmpty) {
+      try {
+        final decoded = json.decode(value);
+        if (decoded is Map) {
+          return Map<String, dynamic>.from(decoded);
+        }
+      } catch (_) {
+        // Value is a normal string, not a JSON payload.
+        return null;
+      }
+    }
+
+    if (value is List && value.isNotEmpty) {
+      final first = value.first;
+      if (first is Map) {
+        return Map<String, dynamic>.from(first);
+      }
+    }
+
+    return null;
   }
 
   static Future<void> _fetchAndLoadAbilities(
@@ -297,7 +445,7 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
       setState(() {
         _kvkkContent = kvkkJson['content'] ?? '';
       });
-    } catch (e) {
+    } catch (_) {
       setState(() {
         _kvkkContent = AppLabels.current.kvkkLoadError;
       });
@@ -532,6 +680,10 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
                                         onPressed: _submit == false
                                             ? null
                                             : () async {
+                                                if (_isValidating) {
+                                                  return;
+                                                }
+
                                                 if (!_kvkkAccepted) {
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(
@@ -556,7 +708,8 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
                                                   try {
                                                     _result = await useToken(
                                                         context,
-                                                        myController.text);
+                                                        myController.text
+                                                            .trim());
                                                     if (_result == true) {
                                                       await _registerDevice();
                                                       _isValidating = false;
@@ -707,6 +860,14 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
     } catch (_) {
       // Non-blocking: device registration failure shouldn't prevent app usage
     }
+  }
+
+  static bool _isSharedPreferencesChannelError(PlatformException error) {
+    final raw = '${error.code} ${error.message ?? ''} ${error.details ?? ''}'
+        .toLowerCase();
+    return raw.contains('shared_preferences') ||
+        raw.contains('sharedpreferencesapi') ||
+        raw.contains('dev.flutter.pigeon.shared_preferences_android');
   }
 
   Widget _buildHeaderBackground(

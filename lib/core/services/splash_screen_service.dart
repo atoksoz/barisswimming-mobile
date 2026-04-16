@@ -23,8 +23,13 @@ class SplashScreenService {
       if (externalApplicationConfig?.rta == null ||
           userConfig?.firmUuid == null) return;
 
-      final url = RtaUrlService.getMobileLauncherUrl(
-          externalApplicationConfig!.rta, userConfig!.firmUuid);
+      final rtaBaseUrl = externalApplicationConfig!.rta;
+      if (_isInvalidBaseUrl(rtaBaseUrl)) {
+        return;
+      }
+
+      final url =
+          RtaUrlService.getMobileLauncherUrl(rtaBaseUrl, userConfig!.firmUuid);
 
       await clearSplashScreenItems();
 
@@ -60,5 +65,12 @@ class SplashScreenService {
     } catch (e) {
       print(e);
     }
+  }
+
+  static bool _isInvalidBaseUrl(String url) {
+    final uri = Uri.tryParse(url);
+    if (uri == null) return true;
+    final isHttp = uri.scheme == 'http' || uri.scheme == 'https';
+    return !(isHttp && uri.hasAuthority);
   }
 }
