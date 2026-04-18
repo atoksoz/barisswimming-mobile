@@ -76,8 +76,6 @@ PODS:
   - mobile_scanner (7.0.0):
     - Flutter
     - FlutterMacOS
-  - nfc_manager (0.0.1):
-    - Flutter
   - no_screenshot (0.3.2-beta.3):
     - Flutter
   - OrderedSet (6.0.3)
@@ -119,7 +117,6 @@ DEPENDENCIES:
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - mobile_scanner (from `.symlinks/plugins/mobile_scanner/darwin`)
-  - nfc_manager (from `.symlinks/plugins/nfc_manager/ios`)
   - no_screenshot (from `.symlinks/plugins/no_screenshot/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -163,8 +160,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_picker_ios/ios"
   mobile_scanner:
     :path: ".symlinks/plugins/mobile_scanner/darwin"
-  nfc_manager:
-    :path: ".symlinks/plugins/nfc_manager/ios"
   no_screenshot:
     :path: ".symlinks/plugins/no_screenshot/ios"
   package_info_plus:
@@ -198,7 +193,6 @@ SPEC CHECKSUMS:
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   mobile_scanner: 9157936403f5a0644ca3779a38ff8404c5434a93
-  nfc_manager: f6d5609c09b4640b914a3dc67479a2e392965fd0
   no_screenshot: 5e345998c43ffcad5d6834f249590483fcc037bd
   OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
