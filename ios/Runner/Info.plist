@@ -55,11 +55,5 @@
 		<string>Fotoğrafları kaydetmek için fotoğraf kütüphanenize erişim gereklidir</string>
 		<key>NSCameraUsageDescription</key>
 		<string>Profil fotoğrafı ve ölçüm fotoğrafları çekmek için kameraya erişim gereklidir</string>
-		<key>NFCReaderUsageDescription</key>
-		<string>Yoklama almak için NFC kart okuma özelliğine erişim gereklidir</string>
-		<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
-		<array>
-			<string>D2760000850101</string>
-		</array>
 	</dict>
 </plist>
