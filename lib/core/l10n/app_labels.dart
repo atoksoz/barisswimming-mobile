@@ -79,12 +79,6 @@ abstract class AppLabels {
   String get attendanceDescription;
   String get attendanceScanQr;
   String get scanMemberQr;
-  String get readNfcCard;
-  String get nfcComingSoon;
-  String get nfcReadDescription;
-  String get nfcNotAvailable;
-  String get nfcReadingCard;
-  String get nfcReadError;
   String get cardNumber;
   String get enterCardNumber;
   String get searchMember;
@@ -104,6 +98,17 @@ abstract class AppLabels {
   String get undoDeductionError;
   String get noDeductionHistory;
   String get onlyTodayCanUndo;
+  String get attendanceSelectLessonTitle;
+  String get attendanceNoLessonsToday;
+  /// Ders programı — bugün için «Yoklama al» pill metni.
+  String get scheduleTakeAttendanceFab;
+  /// Yoklama ekranı — önceden seçilen ders bloğunun başlığı.
+  String get attendancePresetLessonHeading;
+  /// Üst başlığın altında tek satır ipucu (ne işe yaradığı).
+  String get attendancePresetLessonSectionHint;
+  /// Yoklama — kapalı kart satırında «devamını görüntüle» bağlantısı.
+  String get attendanceLessonCardShowMore;
+  String get attendanceLessonCardShowLess;
 
   // ─── Durum ───
   String get loading;
@@ -230,6 +235,10 @@ abstract class AppLabels {
   String get registered;
   String get registrationAvailable;
   String get reservationOnLessonDay;
+  /// [formattedDate] uzun tarih metni (ör. `13 Nisan 2026`).
+  String scheduleListHeaderForDate(String formattedDate);
+  String get groupLessonScheduleLessonTimeLabel;
+  String get groupLessonScheduleCapacityLabel;
 
   // ─── Ölçüm ───
   String get myMeasurements;
@@ -403,6 +412,8 @@ abstract class AppLabels {
   String get todayProgram;
   String get todayGroupLessons;
   String get todayQuickReservations;
+  /// Bugünün özeti popup’ta “hızlı randevu” satır grubu başlığı (yüzme kursu eğitmeninde [SwimmingCourseLabels] ile “yoklama”).
+  String get trainerTodayDashboardQuickReservationSectionTitle;
   String get todayPtReservations;
   String get recentTransactions;
   String get noRecentTransactions;
@@ -464,9 +475,59 @@ abstract class AppLabels {
   // ─── Müzik Okulu / Genel Panel ───
   String get todayMyLessons;
   String get todayMyPayments;
+  /// Üye anasayfa üst satır — bugünkü yoklama kayıtları (yüzme vb.).
+  String get todayMyAttendances;
   String get myActivePackages;
   /// Anasayfa üçüncü buton + özet ekranı başlığı
   String get todaySummaryTitle;
+  /// Yüzme kursu eğitmen anasayfa — bugünkü yoklamalar özeti kartı
+  String get trainerHomeTodayAttendanceTitle;
+  /// Yüzme kursu eğitmen hızlı erişim — doğrudan QR tarama ile yoklama
+  String get trainerQuickAccessAttendanceByQrTitle;
+
+  // ─── Eğitmen ders ekleme (Randevu service-plans / Fitiz schedule) ───
+  String get trainerScheduleAddLessonTitle;
+  String get trainerScheduleEditLessonTitle;
+  String get trainerScheduleEditLessonDaysHint;
+  String get trainerScheduleLoadLessonFailed;
+  String get trainerScheduleDeleteLessonConfirm;
+  String get trainerScheduleLessonDeleted;
+  String get trainerScheduleDeleteLessonFailed;
+  String get trainerScheduleLessonNameLabel;
+  String get trainerScheduleServiceTypeLabel;
+  String get trainerScheduleWeekdayLabel;
+  String get trainerScheduleStartTimeLabel;
+  String get trainerScheduleStartTimeHint;
+  String get trainerScheduleDurationLabel;
+  String get trainerSchedulePeriodLabel;
+  String get trainerSchedulePeriodWeekly;
+  String get trainerSchedulePeriodOneTime;
+  String get trainerSchedulePersonLimitLabel;
+  String get trainerScheduleTrackPaymentLabel;
+  String get trainerScheduleTrainerFixedHint;
+  String get trainerScheduleNoLocationOption;
+  String get trainerScheduleLessonSaved;
+  String get trainerScheduleLessonSaveFailed;
+  String get trainerScheduleLoadFormFailed;
+  String get trainerScheduleSelectService;
+  String get trainerScheduleSectionEssentials;
+  String get trainerScheduleSectionSchedule;
+  String get trainerScheduleSectionLimits;
+  String get trainerScheduleSectionMore;
+  String get trainerScheduleTrackPaymentSubtitle;
+  String get trainerScheduleLessonDaysLabel;
+  String get trainerScheduleLessonDaysHint;
+  /// Seçilen günlere göre saat/süre kartlarının üst başlığı.
+  String get trainerScheduleDayTimeSlotsTitle;
+  /// Gün satırında saat alanı etiketi (gün adı ayrı gösterilir).
+  String get trainerScheduleDayStartTimeShortLabel;
+  /// Saat seçici (ikon / erişilebilirlik).
+  String get trainerSchedulePickTimeTooltip;
+  /// Saat alanı — dokunarak sistem saat seçicisi.
+  String get trainerSchedulePickTimeFieldHint;
+  String get trainerScheduleSelectAtLeastOneDay;
+  String trainerScheduleLessonsSaveResult(int saved, int failed);
+
   /// Anasayfa özet kartları — bölüm başlığı
   String get homeSummarySectionTitle;
   String get homeSummaryActivePackagesLabel;
@@ -799,15 +860,10 @@ class GymLabels implements AppLabels {
 
   // Yoklama / Hak Düşüm
   @override String get attendance => 'Yoklama';
-  @override String get attendanceDescription => 'QR kod, NFC kart veya kart numarası ile üyeyi bularak yoklama alabilirsiniz.';
+  @override String get attendanceDescription =>
+      'QR kod veya kart numarası ile üyeyi bularak yoklama alabilirsiniz.';
   @override String get attendanceScanQr => 'QR Kod Tara';
   @override String get scanMemberQr => 'Üye QR kodunu okutun';
-  @override String get readNfcCard => 'NFC Kart Okut';
-  @override String get nfcComingSoon => 'NFC kart okuma özelliği yakında aktif olacaktır.';
-  @override String get nfcReadDescription => 'Üyenin NFC kartını cihaza yaklaştırın';
-  @override String get nfcNotAvailable => 'Bu cihazda NFC özelliği kullanılamıyor.';
-  @override String get nfcReadingCard => 'Kart bekleniyor... Lütfen NFC kartı cihaza yaklaştırın.';
-  @override String get nfcReadError => 'NFC kart okunamadı, lütfen tekrar deneyin.';
   @override String get cardNumber => 'Kart Numarası';
   @override String get enterCardNumber => '10 haneli kart numarasını giriniz';
   @override String get searchMember => 'Üye Ara';
@@ -815,18 +871,31 @@ class GymLabels implements AppLabels {
   @override String get invalidOrExpiredQr => 'Geçersiz veya süresi dolmuş QR kod';
   @override String get memberNotFoundByCard => 'Bu karta kayıtlı üye bulunamadı';
   @override String get noActivePackage => 'Aktif paketi bulunmuyor';
-  @override String get burnConfirm => 'Paket düşümü yapmak istediğinize emin misiniz?';
-  @override String get burnSuccess => 'Paket düşümü başarıyla gerçekleştirildi';
+  @override String get burnConfirm =>
+      'Bu ders için katılımı onaylamak istiyor musunuz?';
+  @override String get burnSuccess =>
+      'Yoklama kaydı alındı ve paket düşümü yapıldı.';
   @override String get burnError => 'Paket düşümü sırasında hata oluştu';
   @override String get scanNewMember => 'Yeni Üye Ara';
   @override String get activePackages => 'Aktif Paketler';
   @override String get packageDeductions => 'Paket Düşümleri';
   @override String get undoDeduction => 'Geri Al';
   @override String get undoDeductionConfirm => 'Paket düşümünü geri almak istediğinize emin misiniz?';
-  @override String get undoDeductionSuccess => 'Paket düşümü başarıyla geri alındı';
+  @override String get undoDeductionSuccess =>
+      'Yoklama kaydı ve paket düşümü başarıyla geri alındı.';
   @override String get undoDeductionError => 'Paket düşümü geri alınırken hata oluştu';
   @override String get noDeductionHistory => 'Veri Bulunamadı';
   @override String get onlyTodayCanUndo => 'Sadece bugünkü kayıtlar geri alınabilir';
+  @override String get attendanceSelectLessonTitle => 'Hangi derse katılım kaydedilsin?';
+  @override String get attendanceNoLessonsToday =>
+      'Bugün takviminizde grup dersi yok; önce ders programından ders ekleyin veya tarihi kontrol edin.';
+  @override String get scheduleTakeAttendanceFab => 'Yoklama al';
+  @override String get attendancePresetLessonHeading =>
+      'Bu yoklamanın bağlı olduğu ders';
+  @override String get attendancePresetLessonSectionHint =>
+      'Üyeyi QR veya kart ile bulduğunuzda hak düşümü bu grup dersine yazılır.';
+  @override String get attendanceLessonCardShowMore => 'Devamını görüntüle';
+  @override String get attendanceLessonCardShowLess => 'Daha az göster';
 
   // Durum
   @override String get loading => 'Yükleniyor...';
@@ -953,6 +1022,10 @@ class GymLabels implements AppLabels {
   @override String get registered => 'Kayıt Yapıldı';
   @override String get registrationAvailable => 'Kayıt Yapılabilir';
   @override String get reservationOnLessonDay => 'Rezervasyon ders günü yapılır.';
+  @override String scheduleListHeaderForDate(String formattedDate) =>
+      '$formattedDate Grup Dersi Listesi';
+  @override String get groupLessonScheduleLessonTimeLabel => 'Ders Saati';
+  @override String get groupLessonScheduleCapacityLabel => 'Kontenjan';
 
   // Ölçüm
   @override String get myMeasurements => 'Ölçümlerim';
@@ -1125,6 +1198,8 @@ class GymLabels implements AppLabels {
   @override String get todayProgram => 'Bugünün Programı';
   @override String get todayGroupLessons => 'Bugünkü Grup Dersleri';
   @override String get todayQuickReservations => 'Bugünkü Hızlı Randevular';
+  @override String get trainerTodayDashboardQuickReservationSectionTitle =>
+      todayQuickReservations;
   @override String get todayPtReservations => 'Bugünkü PT Randevuları';
   @override String get recentTransactions => 'Son İşlemler';
   @override String get noRecentTransactions => 'Henüz işlem bulunmuyor';
@@ -1186,8 +1261,69 @@ class GymLabels implements AppLabels {
   // Müzik Okulu / Genel Panel
   @override String get todayMyLessons => 'Bugünkü\nDerslerim';
   @override String get todayMyPayments => 'Bugünkü\nÖdemelerim';
+  @override String get todayMyAttendances => 'Bugünkü\nYoklamalarım';
   @override String get myActivePackages => 'Aktif\nPaketlerim';
   @override String get todaySummaryTitle => 'Bugünün\nÖzeti';
+  @override String get trainerHomeTodayAttendanceTitle => 'Bugünkü\nYoklamalarım';
+  @override String get trainerQuickAccessAttendanceByQrTitle => 'QR ile\nYoklama';
+  @override String get trainerScheduleAddLessonTitle => 'Ders ekle';
+  @override String get trainerScheduleEditLessonTitle => 'Dersi düzenle';
+  @override String get trainerScheduleEditLessonDaysHint =>
+      'Bu planın ders günü sabittir; saat, süre ve diğer alanları güncelleyebilirsiniz.';
+  @override String get trainerScheduleLoadLessonFailed => 'Ders bilgileri yüklenemedi';
+  @override String get trainerScheduleDeleteLessonConfirm =>
+      'Bu dersi silmek istiyor musunuz?';
+  @override String get trainerScheduleLessonDeleted => 'Ders silindi';
+  @override String get trainerScheduleDeleteLessonFailed => 'Ders silinemedi';
+  @override String get trainerScheduleLessonNameLabel => 'Ders';
+  @override String get trainerScheduleServiceTypeLabel => 'Ders türü';
+  @override String get trainerScheduleWeekdayLabel => 'Ders günü';
+  @override String get trainerScheduleStartTimeLabel => 'Başlangıç saati';
+  @override String get trainerScheduleStartTimeHint => 'SS:DD (ör. 09:00)';
+  @override String get trainerScheduleDurationLabel => 'Süre (saat)';
+  @override String get trainerSchedulePeriodLabel => 'Tekrar';
+  @override String get trainerSchedulePeriodWeekly => 'Haftalık';
+  @override String get trainerSchedulePeriodOneTime => 'Tek seferlik';
+  @override String get trainerSchedulePersonLimitLabel => 'Kontenjan';
+  @override String get trainerScheduleTrackPaymentLabel =>
+      'Paket / hak takibi (ücretli ders)';
+  @override String get trainerScheduleTrainerFixedHint =>
+      'Eğitmen olarak yalnızca kendi adınıza plan oluşturabilirsiniz.';
+  @override String get trainerScheduleNoLocationOption => 'Lokasyon yok';
+  @override String get trainerScheduleLessonSaved => 'Ders planı kaydedildi';
+  @override String get trainerScheduleLessonSaveFailed => 'Ders planı kaydedilemedi';
+  @override String get trainerScheduleLoadFormFailed => 'Form verileri yüklenemedi';
+  @override String get trainerScheduleSelectService => 'Ders türü seçin';
+  @override String get trainerScheduleSectionEssentials => 'Temel bilgiler';
+  @override String get trainerScheduleSectionSchedule => 'Gün ve süre';
+  @override String get trainerScheduleSectionLimits => 'Kontenjan';
+  @override String get trainerScheduleSectionMore => 'Konum ve notlar';
+  @override String get trainerScheduleTrackPaymentSubtitle =>
+      'Açıkken ders, üye paketinden ücretli / hak düşümü olarak işlenir.';
+  @override String get trainerScheduleLessonDaysLabel => 'Ders günleri';
+  @override String get trainerScheduleLessonDaysHint =>
+      'Birden fazla gün seçebilirsiniz; her gün için ayrı plan oluşturulur. Günlerin saat ve süreleri farklı olabilir.';
+  @override String get trainerScheduleDayTimeSlotsTitle =>
+      'Seçili günlere göre saat ve süre';
+  @override String get trainerScheduleDayStartTimeShortLabel => 'Saat';
+  @override String get trainerSchedulePickTimeTooltip => 'Saat seç';
+  @override String get trainerSchedulePickTimeFieldHint => 'Seçmek için dokunun';
+  @override String get trainerScheduleSelectAtLeastOneDay =>
+      'En az bir ders günü seçin';
+  @override String trainerScheduleLessonsSaveResult(int saved, int failed) {
+    if (failed == 0) {
+      return saved == 1
+          ? 'Ders planı kaydedildi'
+          : '$saved ders planı kaydedildi';
+    }
+    if (saved == 0) {
+      return failed == 1
+          ? 'Ders planı kaydedilemedi'
+          : '$failed ders planı kaydedilemedi';
+    }
+    return '$saved ders planı kaydedildi, $failed kaydedilemedi';
+  }
+
   @override String get homeSummarySectionTitle => 'Özet';
   @override String get homeSummaryActivePackagesLabel => 'Aktif Paket';
   @override String get homeSummaryRemainingRightsLabel => 'Kalan Toplam Hak';
@@ -1498,6 +1634,9 @@ class MusicSchoolLabels extends GymLabels {
 class SwimmingCourseLabels extends GymLabels {
   const SwimmingCourseLabels();
 
+  /// Özet popup / eğitmen kartlarında “grup” vurgusu yok — yüzme bağlamında genel “bugünkü dersler”.
+  @override String get todayGroupLessons => 'Bugünkü dersler';
+
   @override String get member => 'Kursiyer';
   @override String get groupLesson => 'Yüzme Dersi';
   @override String get personalTraining => 'Özel Yüzme Dersi';
@@ -1512,6 +1651,18 @@ class SwimmingCourseLabels extends GymLabels {
   @override String get groupLessonRules => 'Yüzme Dersi Kuralları';
   @override String get groupLessons => 'Yüzme\nDersleri';
   @override String get groupLessonDetail => 'Yüzme Dersi Detayı';
+  @override String scheduleListHeaderForDate(String formattedDate) =>
+      '$formattedDate Yüzme dersleri listesi';
+  @override String get trainerScheduleAddLessonTitle => 'Yüzme dersi ekle';
+  @override String get trainerScheduleEditLessonTitle => 'Yüzme Dersini Düzenle';
+  @override String get trainerScheduleDeleteLessonConfirm =>
+      'Bu yüzme dersini silmek istiyor musunuz?';
+  @override String get trainerScheduleLessonDeleted => 'Yüzme dersi silindi';
+  @override String get trainerScheduleDeleteLessonFailed => 'Yüzme dersi silinemedi';
+  @override String get trainerTodayDashboardQuickReservationSectionTitle =>
+      'Bugünkü Yoklamalar';
+  @override String get trainerScheduleTrainerFixedHint =>
+      'Plan, yüzme eğitmeni olarak yalnızca sizin hesabınıza kaydedilir.';
   @override String get subscriptionInfo => 'Kurs Bilgileri';
   @override String get membershipRules => 'Kurs Kuralları';
   @override String get membershipFrozen => '(Kurs Donduruldu)';

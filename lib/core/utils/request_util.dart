@@ -29,6 +29,40 @@ class ApiResponse {
 
   String? get message =>
       body is Map ? (body['message'] ?? body['error']) : null;
+
+  /// Randevu/API-System: HTTP 200 olsa bile `status`≥400 için anlamlı metin çoğunlukla [extras].
+  String? get randevuUserMessage {
+    if (body is! Map) return null;
+    final m = Map<String, dynamic>.from(body as Map);
+    String? nonEmpty(dynamic v) {
+      if (v == null) return null;
+      final s = v.toString().trim();
+      return s.isEmpty ? null : s;
+    }
+
+    final extras = nonEmpty(m['extras']);
+    if (extras != null) return extras;
+
+    for (final key in ['message', 'error']) {
+      final s = nonEmpty(m[key]);
+      if (s != null && s.toUpperCase() != 'ERROR') return s;
+    }
+
+    final msg = nonEmpty(m['messages']);
+    if (msg != null && msg.toUpperCase() != 'ERROR') return msg;
+
+    return null;
+  }
+}
+
+bool _randevuPayloadIndicatesApplicationError(dynamic decoded) {
+  if (decoded is! Map) return false;
+  final m = Map<String, dynamic>.from(decoded);
+  final s = m['status'];
+  if (s == null) return false;
+  final code = s is int ? s : int.tryParse(s.toString());
+  if (code == null) return false;
+  return code >= 400;
 }
 
 class RequestUtil {
@@ -68,11 +102,22 @@ class RequestUtil {
       return const ApiResponse(statusCode: 0, body: null, isSuccess: false);
     }
     try {
-      final decoded = json.decode(response.body);
+      final raw = response.body.trim();
+      final ok = response.statusCode >= 200 && response.statusCode < 300;
+      if (raw.isEmpty) {
+        return ApiResponse(
+          statusCode: response.statusCode,
+          body: null,
+          isSuccess: ok,
+        );
+      }
+      final decoded = json.decode(raw);
+      final payloadError =
+          decoded is Map && _randevuPayloadIndicatesApplicationError(decoded);
       return ApiResponse(
         statusCode: response.statusCode,
         body: decoded,
-        isSuccess: response.statusCode >= 200 && response.statusCode < 300,
+        isSuccess: ok && !payloadError,
       );
     } catch (_) {
       return ApiResponse(

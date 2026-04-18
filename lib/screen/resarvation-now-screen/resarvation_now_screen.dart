@@ -135,6 +135,103 @@ class _ResarvationNowState extends State<ResarvationNow> {
     }
   }
 
+  bool _isQuickReservationCancelled(MyResarvationNowModel data) {
+    return data.deleted_at.isNotEmpty;
+  }
+
+  /// Geçmiş takvim günü iptal edilemez; bugün ve sonrası (yarın, gelecek) iptal edilebilir.
+  bool _canCancelQuickReservationByDate(MyResarvationNowModel data) {
+    try {
+      final parsed = DateTime.parse(data.date);
+      final appointmentDay =
+          DateTime(parsed.year, parsed.month, parsed.day);
+      final n = DateTime.now();
+      final today = DateTime(n.year, n.month, n.day);
+      return !appointmentDay.isBefore(today);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Widget _quickReservationListTrailing(MyResarvationNowModel data) {
+    if (data.deleted_at.isNotEmpty) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text(
+            "İptal Edildi",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: BlocTheme.theme.defaultRed700Color,
+              fontFamily: "Inter",
+              fontWeight: FontWeight.normal,
+              fontSize: 14,
+            ),
+          ),
+        ],
+      );
+    }
+    if (!_canCancelQuickReservationByDate(data)) {
+      return const SizedBox.shrink();
+    }
+    return InkWell(
+      onTap: () async {
+        String text = DateTime.parse(data.date).day.toString() +
+            " " +
+            DateFormat.MMMM("tr").format(DateTime.parse(data.date)) +
+            " - " +
+            data.time +
+            " saatindeki " +
+            data.resarvation_now_plan_name +
+            " isimli randevuyu iptal etmek istiyor musunuz ?";
+        var cancel = await customConfirmationDialog(
+          context,
+          message: text,
+          svgPath: BlocTheme.theme.attentionSvgPath,
+          confirmText: "Evet",
+          cancelText: "Hayır",
+        );
+        if (cancel == true) {
+          var result = await cancelResarvation(data.id);
+          if (result == false) {
+            warningDialog(
+              context,
+              message:
+                  "Randevu iptal edilirken bir hata oluştu, lütfen daha sonra tekrar deneyiniz",
+            );
+          } else {
+            setState(() {});
+          }
+        }
+      },
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text(
+            "İptal Et",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: BlocTheme.theme.defaultRed700Color,
+              fontFamily: "Inter",
+              fontWeight: FontWeight.normal,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(width: 4),
+          Icon(
+            Icons.delete_outline,
+            size: 18,
+            color: BlocTheme.theme.defaultRed700Color,
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     initializeDateFormatting();
@@ -213,14 +310,23 @@ class _ResarvationNowState extends State<ResarvationNow> {
                                   BorderRadius.all(Radius.circular(10))),
                           margin: EdgeInsetsDirectional.fromSTEB(0, 0, 20, 0),
                           alignment: Alignment.center,
-                          child: Text(
-                            "Randevu Oluştur",
-                            style: TextStyle(
-                                color: ApplicationColor.fourthText,
-                                fontFamily: "Inter",
-                                letterSpacing: 0,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: Text(
+                                "Randevu Oluştur",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: ApplicationColor.fourthText,
+                                    fontFamily: "Inter",
+                                    letterSpacing: 0,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18),
+                              ),
+                            ),
                           ),
                         ))),
                 Expanded(
@@ -243,14 +349,23 @@ class _ResarvationNowState extends State<ResarvationNow> {
                                   BorderRadius.all(Radius.circular(10))),
                           margin: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                           alignment: Alignment.center,
-                          child: Text(
-                            "Randevularım",
-                            style: TextStyle(
-                                color: ApplicationColor.fourthText,
-                                fontFamily: "Inter",
-                                letterSpacing: 0,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: Text(
+                                "Randevularım",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: ApplicationColor.fourthText,
+                                    fontFamily: "Inter",
+                                    letterSpacing: 0,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18),
+                              ),
+                            ),
                           ),
                         ))),
               ],
@@ -535,6 +650,10 @@ class _ResarvationNowState extends State<ResarvationNow> {
       itemCount: model.length,
       itemBuilder: (context, index) {
         final data = model[index];
+        final cancelled = _isQuickReservationCancelled(data);
+        final baseColor = ApplicationColor.fourthText;
+        final lineColor = baseColor.withOpacity(0.55);
+
         return Container(
           decoration: BoxDecoration(
               boxShadow: [
@@ -569,14 +688,22 @@ class _ResarvationNowState extends State<ResarvationNow> {
                                   child: Text(
                                 textAlign: TextAlign.left,
                                 data.resarvation_now_plan_name,
-                                maxLines: 3,
+                                maxLines: 2,
                                 softWrap: true,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    color: ApplicationColor.fourthText,
+                                    color: cancelled
+                                        ? baseColor.withOpacity(0.65)
+                                        : baseColor,
                                     fontFamily: "Inter",
                                     letterSpacing: 0,
                                     fontWeight: FontWeight.w900,
-                                    fontSize: 16),
+                                    fontSize: 16,
+                                    decoration: cancelled
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                    decorationColor: lineColor,
+                                  ),
                               ))
                             ],
                           ),
@@ -584,7 +711,6 @@ class _ResarvationNowState extends State<ResarvationNow> {
                         Expanded(
                           child: Row(
                             children: [
-                              // Bu kısmı flexible yap
                               Expanded(
                                 child: Text(
                                   textAlign: TextAlign.left,
@@ -594,96 +720,23 @@ class _ResarvationNowState extends State<ResarvationNow> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    color: ApplicationColor.fourthText,
+                                    color: cancelled
+                                        ? baseColor.withOpacity(0.65)
+                                        : baseColor,
                                     fontFamily: "Inter",
                                     fontWeight: FontWeight.normal,
                                     fontSize: 14,
+                                    decoration: cancelled
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                    decorationColor: lineColor,
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              SizedBox(
-                                width: 70,
-                                // Buton için sabit genişlik
-                                child: InkWell(
-                                  onTap: () async {
-                                    if (data.is_today == "1" &&
-                                        data.deleted_at == "") {
-                                      String text = DateTime.parse(data.date)
-                                              .day
-                                              .toString() +
-                                          " " +
-                                          DateFormat.MMMM("tr").format(
-                                              DateTime.parse(data.date)) +
-                                          " - " +
-                                          data.time +
-                                          " saatindeki " +
-                                          data.resarvation_now_plan_name +
-                                          " isimli randevuyu iptal etmek istiyor musunuz ?";
-                                      var cancel =
-                                          await customConfirmationDialog(
-                                        context,
-                                        message: text,
-                                        svgPath:
-                                            BlocTheme.theme.attentionSvgPath,
-                                        confirmText: "Evet",
-                                        cancelText: "Hayır",
-                                      );
-                                      if (cancel == true) {
-                                        var result =
-                                            await cancelResarvation(data.id);
-                                        if (result == false) {
-                                          warningDialog(
-                                            context,
-                                            message:
-                                                "Randevu iptal edilirken bir hata oluştu, lütfen daha sonra tekrar deneyiniz",
-                                          );
-                                        } else {
-                                          setState(() {});
-                                        }
-                                      }
-                                    }
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      if (data.deleted_at != "")
-                                        Text(
-                                          "İptal Edildi",
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                            color: BlocTheme
-                                                .theme.defaultRed700Color,
-                                            fontFamily: "Inter",
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 14,
-                                          ),
-                                        )
-                                      else if (data.is_today == "1") ...[
-                                        Text(
-                                          "İptal Et",
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                            color: BlocTheme
-                                                .theme.defaultRed700Color,
-                                            fontFamily: "Inter",
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Icon(
-                                          Icons.delete_outline,
-                                          size: 18,
-                                          color: BlocTheme
-                                              .theme.defaultRed700Color,
-                                        ),
-                                        // Eğer SVG kullanıyorsan: SvgPicture.asset('assets/icons/delete.svg', width: 16)
-                                      ]
-                                    ],
-                                  ),
-                                ),
-                              )
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: _quickReservationListTrailing(data),
+                              ),
                             ],
                           ),
                         )

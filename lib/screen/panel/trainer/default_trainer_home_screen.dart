@@ -787,10 +787,12 @@ class _DefaultTrainerHomeScreenState extends State<DefaultTrainerHomeScreen> {
         iconColor: theme.default900Color,
         onTap: () {
           if (!_guardActive()) return;
-          Navigator.push(
+          Navigator.push<void>(
             context,
-            MaterialPageRoute(builder: (_) => const AttendanceScreen()),
-          );
+            MaterialPageRoute<void>(builder: (_) => const AttendanceScreen()),
+          ).then((_) {
+            if (mounted) _loadTodaySummary();
+          });
         },
         margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
       ));

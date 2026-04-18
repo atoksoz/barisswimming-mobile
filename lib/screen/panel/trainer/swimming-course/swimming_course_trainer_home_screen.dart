@@ -21,7 +21,10 @@ import 'package:e_sport_life/core/widgets/icon_button_widget.dart';
 import 'package:e_sport_life/core/widgets/quick_access_section_widget.dart';
 import 'package:e_sport_life/core/widgets/image_popup_widget.dart';
 import 'package:e_sport_life/core/widgets/warning_dialog_widget.dart';
+import 'package:e_sport_life/data/model/trainer/trainer_today_dashboard_model.dart';
 import 'package:e_sport_life/screen/panel/common/attendance/attendance_screen.dart';
+import 'package:e_sport_life/screen/panel/trainer/swimming-course/lesson_schedule/swimming_course_trainer_lesson_schedule_screen.dart';
+import 'package:e_sport_life/screen/panel/trainer/swimming-course/trainer_today_dashboard_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -35,8 +38,14 @@ class SwimmingCourseTrainerHomeScreen extends StatefulWidget {
 
 class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerHomeScreen> {
   List<dynamic> _recentReservations = [];
+  TrainerTodayDashboardModel? _todayDashboard;
   bool _isLoading = true;
   bool _isEmployeeActive = true;
+
+  /// Anasayfa üst kart rozetleri — Randevu `today-summary`.
+  int _trainerHomeTodayLessonsCount = 0;
+  int _trainerHomeTodayAttendanceCount = 0;
+  int _trainerHomeTodaySummaryCount = 0;
 
   String _name = "";
   ImageProvider? _imageProviderThumb;
@@ -96,10 +105,16 @@ class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerH
       final result = await RequestUtil.getJson(url);
       if (result.isSuccess && result.output != null && result.output is Map<String, dynamic>) {
         final data = result.output as Map<String, dynamic>;
+        final dashboard = TrainerTodayDashboardModel.fromJson(data);
         if (mounted) {
           setState(() {
-            _recentReservations =
-                List<dynamic>.from(data['recent_reservations'] ?? []);
+            _todayDashboard = dashboard;
+            _recentReservations = dashboard.recentReservations
+                .map((e) => e.toRecentListMap())
+                .toList();
+            _trainerHomeTodayLessonsCount = dashboard.lessonsBadgeCount;
+            _trainerHomeTodayAttendanceCount = dashboard.attendanceBadgeCount;
+            _trainerHomeTodaySummaryCount = dashboard.summaryBadgeCount;
           });
         }
       }
@@ -208,6 +223,8 @@ class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerH
                               _buildSlider(theme),
                             ],
                             const SizedBox(height: 10),
+                            _buildTopSummaryCards(theme, labels),
+                            const SizedBox(height: 10),
                             _buildQuickAccessSection(
                                 theme, labels, abilityState),
                             const SizedBox(height: 10),
@@ -313,6 +330,93 @@ class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerH
     );
   }
 
+  // ─── Üst özet kartları (müzik okulu üye anasayfa üst üçlüsü stili) ───
+
+  Widget _buildTopSummaryCards(BaseTheme theme, AppLabels labels) {
+    void openLessonSchedule() {
+      if (!_guardActive()) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (_) => SwimmingCourseTrainerLessonScheduleScreen(
+            initialWeekday: DateTime.now().weekday,
+          ),
+        ),
+      );
+    }
+
+    void openTodayAttendancePopup() {
+      if (!_guardActive()) return;
+      final d = _todayDashboard;
+      if (d == null) return;
+      SwimmingCourseTrainerTodayDashboardDialogs.showTodayAttendance(context, d);
+    }
+
+    void openTodaySummaryPopup() {
+      if (!_guardActive()) return;
+      final d = _todayDashboard;
+      if (d == null) return;
+      SwimmingCourseTrainerTodayDashboardDialogs.showTodaySummary(context, d);
+    }
+
+    return Row(
+      children: [
+        Container(
+          margin: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                spreadRadius: 1,
+                color: theme.panelScaffoldBackgroundColor,
+              ),
+            ],
+            color: theme.defaultWhiteColor,
+            border: Border.all(color: theme.defaultGray300Color, width: 1),
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+          ),
+          width: MediaQuery.sizeOf(context).width - 40,
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                iconButtonWidget(
+                  icon: Icons.calendar_month_outlined,
+                  text: labels.todayMyLessons,
+                  iconWidth: 45,
+                  iconHeight: 40,
+                  centerText: true,
+                  badge: '$_trainerHomeTodayLessonsCount',
+                  onTap: openLessonSchedule,
+                  margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                ),
+                iconButtonWidget(
+                  icon: Icons.fact_check_outlined,
+                  text: labels.trainerHomeTodayAttendanceTitle,
+                  iconWidth: 45,
+                  iconHeight: 40,
+                  centerText: true,
+                  badge: '$_trainerHomeTodayAttendanceCount',
+                  onTap: openTodayAttendancePopup,
+                  margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                ),
+                iconButtonWidget(
+                  icon: Icons.dashboard_customize_outlined,
+                  text: labels.todaySummaryTitle,
+                  iconWidth: 45,
+                  iconHeight: 40,
+                  centerText: true,
+                  badge: '$_trainerHomeTodaySummaryCount',
+                  onTap: openTodaySummaryPopup,
+                  margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   // ─── Slider ───
 
   Widget _buildSlider(BaseTheme theme) {
@@ -348,35 +452,93 @@ class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerH
     );
   }
 
-  // ─── Hızlı erişim (yalnızca yoklama; üç sütun genişliği korunur) ───
+  // ─── Hızlı erişim — müzik okulu üye paneli gibi tek satırda 3 Expanded hücre ───
 
   Widget _buildQuickAccessSection(
       BaseTheme theme, AppLabels labels, MobileAbilityState abilityState) {
-    if (!abilityState.canView(MobileAbilitySubjects.qrScan)) {
-      return const SizedBox.shrink();
+    void openLessonSchedule() {
+      if (!_guardActive()) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (_) => SwimmingCourseTrainerLessonScheduleScreen(
+            initialWeekday: DateTime.now().weekday,
+          ),
+        ),
+      );
     }
+
+    final canAttendance =
+        abilityState.canView(MobileAbilitySubjects.qrScan);
+
     return QuickAccessSectionWidget(
       children: [
         Row(
           children: [
-            iconButtonWidget(
-              icon: Icons.check_circle_outline,
-              text: labels.attendance,
-              iconWidth: 45,
-              iconHeight: 40,
-              centerText: true,
-              iconColor: theme.default900Color,
-              onTap: () {
-                if (!_guardActive()) return;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const AttendanceScreen()),
-                );
-              },
-              margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-            ),
-            const Expanded(child: SizedBox.shrink()),
-            const Expanded(child: SizedBox.shrink()),
+            if (canAttendance) ...[
+              iconButtonWidget(
+                icon: Icons.check_circle_outline,
+                text: labels.attendance,
+                iconWidth: 45,
+                iconHeight: 40,
+                centerText: true,
+                iconColor: theme.default900Color,
+                onTap: () {
+                  if (!_guardActive()) return;
+                  Navigator.push<void>(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (_) => const AttendanceScreen(),
+                    ),
+                  ).then((_) {
+                    if (mounted) _loadTodaySummary();
+                  });
+                },
+                margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+              ),
+              iconButtonWidget(
+                icon: Icons.qr_code_scanner_rounded,
+                text: labels.trainerQuickAccessAttendanceByQrTitle,
+                iconWidth: 45,
+                iconHeight: 40,
+                centerText: true,
+                iconColor: theme.default900Color,
+                onTap: () {
+                  if (!_guardActive()) return;
+                  Navigator.push<void>(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (_) => const AttendanceScreen(
+                        openScannerOnLaunch: true,
+                      ),
+                    ),
+                  ).then((_) {
+                    if (mounted) _loadTodaySummary();
+                  });
+                },
+                margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+              ),
+              iconButtonWidget(
+                icon: Icons.calendar_month_outlined,
+                text: labels.profileMenuLessonScheduleTitle,
+                iconWidth: 45,
+                iconHeight: 40,
+                centerText: true,
+                iconColor: theme.default900Color,
+                onTap: openLessonSchedule,
+                margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+              ),
+            ] else
+              iconButtonWidget(
+                icon: Icons.calendar_month_outlined,
+                text: labels.profileMenuLessonScheduleTitle,
+                iconWidth: 45,
+                iconHeight: 40,
+                centerText: true,
+                iconColor: theme.default900Color,
+                onTap: openLessonSchedule,
+                margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+              ),
           ],
         ),
       ],

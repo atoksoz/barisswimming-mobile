@@ -6,10 +6,14 @@ class DaySelector extends StatefulWidget {
   final int selectedDay;
   final Function(int) onDayChanged;
 
+  /// [false] ise gün kutularına dokunulduğunda seçim değişmez (ör. yoklamada “sadece bugün”).
+  final bool allowDayChange;
+
   const DaySelector({
     Key? key,
     required this.selectedDay,
     required this.onDayChanged,
+    this.allowDayChange = true,
   }) : super(key: key);
 
   @override
@@ -74,9 +78,11 @@ class _DaySelectorState extends State<DaySelector> {
   Widget buildDay(int day, String label) {
     final bool isSelected = widget.selectedDay == day;
     return InkWell(
-      onTap: () {
-        widget.onDayChanged(day);
-      },
+      onTap: widget.allowDayChange
+          ? () {
+              widget.onDayChanged(day);
+            }
+          : null,
       child: Container(
         width: 80,
         alignment: Alignment.center,

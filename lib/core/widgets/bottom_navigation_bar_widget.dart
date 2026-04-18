@@ -72,7 +72,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
   List<NavTab> _getTabOrder(MobileUserType userType, BuildContext context) {
     switch (userType) {
       case MobileUserType.trainer:
-        return [NavTab.home, NavTab.qr, NavTab.profile];
+        return [NavTab.home, NavTab.profile];
       case MobileUserType.moderator:
         return [NavTab.home, NavTab.qr, NavTab.profile];
       case MobileUserType.admin:

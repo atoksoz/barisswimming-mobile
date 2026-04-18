@@ -200,11 +200,8 @@ class _MemberHomeStatementChartCardState
 
   Widget _buildExploreStylePieChart({
     required BaseTheme theme,
-    required AppLabels labels,
     required List<PieChartSectionData> sections,
-    required bool hasPieSlices,
     required double balanceAbs,
-    required bool showNoDebtMessageInCenter,
   }) {
     final emptyColor = theme.defaultGray300Color;
     final List<PieChartSectionData> dataSections = sections.isNotEmpty
@@ -218,50 +215,14 @@ class _MemberHomeStatementChartCardState
             ),
           ];
 
-    final Widget centerChild = !hasPieSlices
-        ? Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '—',
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                style: theme.textLabelBold(color: theme.default900Color),
-              ),
-              if (showNoDebtMessageInCenter) ...[
-                const SizedBox(height: 2),
-                Text(
-                  labels.homeStatementChartNoDebtLine,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textMini(color: theme.defaultGray500Color),
-                ),
-              ],
-            ],
-          )
-        : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                _formatBalancePieCenter(balanceAbs),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textLabelBold(color: theme.default900Color),
-              ),
-              if (showNoDebtMessageInCenter) ...[
-                const SizedBox(height: 2),
-                Text(
-                  labels.homeStatementChartNoDebtLine,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textMini(color: theme.defaultGray500Color),
-                ),
-              ],
-            ],
-          );
+    final centerValue = _formatBalancePieCenter(balanceAbs);
+    final centerChild = Text(
+      centerValue,
+      textAlign: TextAlign.center,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: theme.textLabelBold(color: theme.default900Color),
+    );
 
     return SizedBox(
       width: _pieSize,
@@ -405,18 +366,6 @@ class _MemberHomeStatementChartCardState
                           color: theme.defaultGray500Color,
                         ),
                       ),
-                      if (showNoDebtInfo) ...[
-                        const SizedBox(height: 2),
-                        Text(
-                          labels.homeStatementChartNoDebtLine,
-                          textAlign: TextAlign.end,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textCaption(
-                            color: theme.defaultGray500Color,
-                          ),
-                        ),
-                      ],
                     ],
                   ),
                 ),
@@ -500,16 +449,32 @@ class _MemberHomeStatementChartCardState
                   top: 0,
                   bottom: 3,
                 ),
-                child: Align(
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: _buildExploreStylePieChart(
-                    theme: theme,
-                    labels: labels,
-                    sections: pieSections,
-                    hasPieSlices: hasPieSlices,
-                    balanceAbs: balanceAbs,
-                    showNoDebtMessageInCenter: showNoDebtInfo,
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: _buildExploreStylePieChart(
+                        theme: theme,
+                        sections: pieSections,
+                        balanceAbs: balanceAbs,
+                      ),
+                    ),
+                    if (showNoDebtInfo) ...[
+                      const SizedBox(height: 12),
+                      Text(
+                        labels.homeStatementChartNoDebtLine,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textCaption(
+                          color: theme.defaultGray500Color,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ),

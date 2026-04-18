@@ -18,6 +18,7 @@ import 'package:e_sport_life/screen/panel/member/profile-menu/member_profile_men
 import 'package:e_sport_life/screen/panel/member/qr-code/member_qr_screen.dart';
 import 'package:e_sport_life/screen/panel/trainer/trainer_home_screen.dart';
 import 'package:e_sport_life/screen/panel/trainer/trainer_profile_screen.dart';
+import 'package:e_sport_life/core/widgets/lazy_indexed_stack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,6 +36,26 @@ class Tabs extends StatefulWidget {
 class _TabsState extends State<Tabs> {
   int _selectedIndex = 0;
   int _backIndex = 0;
+
+  /// [IndexedStack] yerine lazy yükleme: yalnızca seçilen (ve daha önce açılmış)
+  /// sekmeler widget oluşturur (ör. QR ekranı girişte arka planda istek atmaz).
+  List<bool> _tabEverBuilt = [];
+
+  void _syncTabEverBuilt(List<Widget> options) {
+    final len = options.length;
+    if (_tabEverBuilt.length != len) {
+      final prev = _tabEverBuilt;
+      _tabEverBuilt = List<bool>.filled(len, false);
+      for (var i = 0; i < prev.length && i < len; i++) {
+        if (prev[i]) {
+          _tabEverBuilt[i] = true;
+        }
+      }
+    }
+    if (_selectedIndex >= 0 && _selectedIndex < len) {
+      _tabEverBuilt[_selectedIndex] = true;
+    }
+  }
 
   @override
   void initState() {
@@ -119,7 +140,6 @@ class _TabsState extends State<Tabs> {
   List<Widget> _buildTrainerWidgetOptions() {
     return [
       const TrainerHomeScreen(),
-      const DynamicQrScreen(),
       const TrainerProfileScreen(),
     ];
   }
@@ -128,7 +148,6 @@ class _TabsState extends State<Tabs> {
     final labels = AppLabels.current;
     return [
       Text('', style: BlocTheme.theme.textTitleSemiBold()),
-      Text(labels.qrCode, style: BlocTheme.theme.textTitleSemiBold()),
       Text(labels.profile, style: BlocTheme.theme.textTitleSemiBold()),
     ];
   }
@@ -136,8 +155,7 @@ class _TabsState extends State<Tabs> {
   List<GButton> _buildTrainerTabs() {
     final labels = AppLabels.current;
     return [
-      GButton(icon: Icons.home, text: labels.trainer),
-      GButton(icon: Icons.qr_code_2, text: labels.qrCode),
+      GButton(icon: Icons.home, text: labels.home),
       GButton(icon: Icons.person, text: labels.profile),
     ];
   }
@@ -249,6 +267,8 @@ class _TabsState extends State<Tabs> {
               _selectedIndex = widgetOptions.length - 1;
             }
 
+            _syncTabEverBuilt(widgetOptions);
+
             return Scaffold(
               backgroundColor: BlocTheme.theme.defaultBackgroundColor,
               appBar: _selectedIndex == 0
@@ -283,8 +303,9 @@ class _TabsState extends State<Tabs> {
                       ),
                       title: headerOptions[_selectedIndex],
                     ),
-              body: IndexedStack(
+              body: LazyIndexedStack(
                 index: _selectedIndex,
+                tabEverBuilt: _tabEverBuilt,
                 children: widgetOptions,
               ),
               bottomNavigationBar: Padding(

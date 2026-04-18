@@ -79,15 +79,10 @@ class GymLabelsEn implements AppLabels {
 
   // Attendance / Right Deduction
   @override String get attendance => 'Attendance';
-  @override String get attendanceDescription => 'Find the member by QR code, NFC card or card number to take attendance.';
+  @override String get attendanceDescription =>
+      'Find the member by QR code or card number to take attendance.';
   @override String get attendanceScanQr => 'Scan QR Code';
   @override String get scanMemberQr => 'Scan member QR code';
-  @override String get readNfcCard => 'Scan NFC Card';
-  @override String get nfcComingSoon => 'NFC card scanning will be available soon.';
-  @override String get nfcReadDescription => 'Hold the member NFC card near the device';
-  @override String get nfcNotAvailable => 'NFC is not available on this device.';
-  @override String get nfcReadingCard => 'Waiting for card... Please hold the NFC card near the device.';
-  @override String get nfcReadError => 'Could not read NFC card, please try again.';
   @override String get cardNumber => 'Card Number';
   @override String get enterCardNumber => 'Enter 10-digit card number';
   @override String get searchMember => 'Search Member';
@@ -95,18 +90,31 @@ class GymLabelsEn implements AppLabels {
   @override String get invalidOrExpiredQr => 'Invalid or expired QR code';
   @override String get memberNotFoundByCard => 'No member found for this card';
   @override String get noActivePackage => 'No active package';
-  @override String get burnConfirm => 'Are you sure you want to deduct a session?';
-  @override String get burnSuccess => 'Session deducted successfully';
+  @override String get burnConfirm =>
+      'Would you like to confirm attendance for this lesson?';
+  @override String get burnSuccess =>
+      'Attendance recorded and session deducted.';
   @override String get burnError => 'An error occurred during session deduction';
   @override String get scanNewMember => 'Scan New Member';
   @override String get activePackages => 'Active Packages';
   @override String get packageDeductions => 'Package Deductions';
   @override String get undoDeduction => 'Undo';
   @override String get undoDeductionConfirm => 'Are you sure you want to undo this deduction?';
-  @override String get undoDeductionSuccess => 'Deduction undone successfully';
+  @override String get undoDeductionSuccess =>
+      'Attendance record and session deduction undone successfully.';
   @override String get undoDeductionError => 'An error occurred while undoing the deduction';
   @override String get noDeductionHistory => 'No deduction history found';
   @override String get onlyTodayCanUndo => 'Only today\'s records can be undone';
+  @override String get attendanceSelectLessonTitle => 'Which lesson is this attendance for?';
+  @override String get attendanceNoLessonsToday =>
+      'There are no group lessons on your schedule today. Add a lesson in the schedule or check the date.';
+  @override String get scheduleTakeAttendanceFab => 'Take attendance';
+  @override String get attendancePresetLessonHeading =>
+      'Lesson linked to this attendance';
+  @override String get attendancePresetLessonSectionHint =>
+      'When you find the member via QR or card, the session is deducted for this group lesson.';
+  @override String get attendanceLessonCardShowMore => 'View details';
+  @override String get attendanceLessonCardShowLess => 'Show less';
 
   // Status
   @override String get loading => 'Loading...';
@@ -233,6 +241,10 @@ class GymLabelsEn implements AppLabels {
   @override String get registered => 'Registered';
   @override String get registrationAvailable => 'Registration Available';
   @override String get reservationOnLessonDay => 'Reservation is made on lesson day.';
+  @override String scheduleListHeaderForDate(String formattedDate) =>
+      'Group lessons — $formattedDate';
+  @override String get groupLessonScheduleLessonTimeLabel => 'Lesson time';
+  @override String get groupLessonScheduleCapacityLabel => 'Capacity';
 
   // Measurement
   @override String get myMeasurements => 'My Measurements';
@@ -405,6 +417,8 @@ class GymLabelsEn implements AppLabels {
   @override String get todayProgram => 'Today\'s Program';
   @override String get todayGroupLessons => 'Today\'s Group Lessons';
   @override String get todayQuickReservations => 'Today\'s Quick Reservations';
+  @override String get trainerTodayDashboardQuickReservationSectionTitle =>
+      todayQuickReservations;
   @override String get todayPtReservations => 'Today\'s PT Reservations';
   @override String get recentTransactions => 'Recent Transactions';
   @override String get noRecentTransactions => 'No transactions yet';
@@ -466,8 +480,69 @@ class GymLabelsEn implements AppLabels {
   // Music School / General Panel
   @override String get todayMyLessons => 'Today\'s\nLessons';
   @override String get todayMyPayments => 'Today\'s\nPayments';
+  @override String get todayMyAttendances => 'Today\'s\nAttendance';
   @override String get myActivePackages => 'Active\nPackages';
   @override String get todaySummaryTitle => 'Today\'s\nSummary';
+  @override String get trainerHomeTodayAttendanceTitle => 'Today\'s\nAttendance';
+  @override String get trainerQuickAccessAttendanceByQrTitle => 'Attendance\nby QR';
+  @override String get trainerScheduleAddLessonTitle => 'Add lesson';
+  @override String get trainerScheduleEditLessonTitle => 'Edit lesson';
+  @override String get trainerScheduleEditLessonDaysHint =>
+      'This plan\'s weekday is fixed; you can update time, duration, and other fields.';
+  @override String get trainerScheduleLoadLessonFailed => 'Could not load lesson details';
+  @override String get trainerScheduleDeleteLessonConfirm =>
+      'Do you want to delete this lesson?';
+  @override String get trainerScheduleLessonDeleted => 'Lesson deleted';
+  @override String get trainerScheduleDeleteLessonFailed => 'Could not delete lesson';
+  @override String get trainerScheduleLessonNameLabel => 'Lesson';
+  @override String get trainerScheduleServiceTypeLabel => 'Lesson type';
+  @override String get trainerScheduleWeekdayLabel => 'Lesson day';
+  @override String get trainerScheduleStartTimeLabel => 'Start time';
+  @override String get trainerScheduleStartTimeHint => 'HH:mm (e.g. 09:00)';
+  @override String get trainerScheduleDurationLabel => 'Duration (hours)';
+  @override String get trainerSchedulePeriodLabel => 'Recurrence';
+  @override String get trainerSchedulePeriodWeekly => 'Weekly';
+  @override String get trainerSchedulePeriodOneTime => 'One-time';
+  @override String get trainerSchedulePersonLimitLabel => 'Capacity';
+  @override String get trainerScheduleTrackPaymentLabel =>
+      'Track package/credits (paid lesson)';
+  @override String get trainerScheduleTrainerFixedHint =>
+      'Plans are saved only for your trainer account.';
+  @override String get trainerScheduleNoLocationOption => 'No location';
+  @override String get trainerScheduleLessonSaved => 'Lesson plan saved';
+  @override String get trainerScheduleLessonSaveFailed => 'Could not save lesson plan';
+  @override String get trainerScheduleLoadFormFailed => 'Could not load form data';
+  @override String get trainerScheduleSelectService => 'Select lesson type';
+  @override String get trainerScheduleSectionEssentials => 'Basics';
+  @override String get trainerScheduleSectionSchedule => 'Day & duration';
+  @override String get trainerScheduleSectionLimits => 'Capacity';
+  @override String get trainerScheduleSectionMore => 'Location & notes';
+  @override String get trainerScheduleTrackPaymentSubtitle =>
+      'When on, the lesson is treated as paid and deducts from the member package.';
+  @override String get trainerScheduleLessonDaysLabel => 'Lesson days';
+  @override String get trainerScheduleLessonDaysHint =>
+      'Select one or more days; a separate plan is created for each. Each day can have its own start time and duration.';
+  @override String get trainerScheduleDayTimeSlotsTitle =>
+      'Time and duration per selected day';
+  @override String get trainerScheduleDayStartTimeShortLabel => 'Time';
+  @override String get trainerSchedulePickTimeTooltip => 'Choose time';
+  @override String get trainerSchedulePickTimeFieldHint => 'Tap to select';
+  @override String get trainerScheduleSelectAtLeastOneDay =>
+      'Select at least one lesson day';
+  @override String trainerScheduleLessonsSaveResult(int saved, int failed) {
+    if (failed == 0) {
+      return saved == 1
+          ? 'Lesson plan saved'
+          : 'Saved $saved lesson plans';
+    }
+    if (saved == 0) {
+      return failed == 1
+          ? 'Could not save lesson plan'
+          : 'Could not save $failed lesson plans';
+    }
+    return 'Saved $saved lesson plans, $failed failed';
+  }
+
   @override String get homeSummarySectionTitle => 'Overview';
   @override String get homeSummaryActivePackagesLabel => 'Active Packages';
   @override String get homeSummaryRemainingRightsLabel => 'Total Remaining Credits';
@@ -780,6 +855,9 @@ class MusicSchoolLabelsEn extends GymLabelsEn {
 class SwimmingCourseLabelsEn extends GymLabelsEn {
   const SwimmingCourseLabelsEn();
 
+  /// Swimming course: lesson summary wording without “group”.
+  @override String get todayGroupLessons => 'Today\'s lessons';
+
   @override String get member => 'Trainee';
   @override String get groupLesson => 'Swimming Lesson';
   @override String get personalTraining => 'Private Swimming Lesson';
@@ -794,6 +872,17 @@ class SwimmingCourseLabelsEn extends GymLabelsEn {
   @override String get groupLessonRules => 'Swimming Lesson Rules';
   @override String get groupLessons => 'Swimming\nLessons';
   @override String get groupLessonDetail => 'Swimming Lesson Detail';
+  @override String scheduleListHeaderForDate(String formattedDate) =>
+      'Swimming lessons — $formattedDate';
+  @override String get trainerScheduleAddLessonTitle => 'Add swimming lesson';
+  @override String get trainerScheduleEditLessonTitle => 'Edit swimming lesson';
+  @override String get trainerScheduleDeleteLessonConfirm =>
+      'Do you want to delete this swimming lesson?';
+  @override String get trainerScheduleLessonDeleted => 'Swimming lesson deleted';
+  @override String get trainerScheduleDeleteLessonFailed =>
+      'Could not delete swimming lesson';
+  @override String get trainerTodayDashboardQuickReservationSectionTitle =>
+      'Today\'s attendance';
   @override String get subscriptionInfo => 'Course Info';
   @override String get membershipRules => 'Course Rules';
   @override String get membershipFrozen => '(Course Frozen)';

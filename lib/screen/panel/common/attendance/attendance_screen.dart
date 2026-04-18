@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:e_sport_life/config/ability/mobile_ability_cubit.dart';
 import 'package:e_sport_life/config/external-applications-config/external_applications_config_cubit.dart';
 import 'package:e_sport_life/config/themes/base_theme.dart';
@@ -5,24 +7,38 @@ import 'package:e_sport_life/config/themes/bloc_theme.dart';
 import 'package:e_sport_life/core/constants/mobile_ability_subjects.dart';
 import 'package:e_sport_life/core/constants/url/randevu_al_url_constants.dart';
 import 'package:e_sport_life/core/constants/url/security_code_url_constants.dart';
+import 'package:e_sport_life/core/enums/supported_locale.dart';
 import 'package:e_sport_life/core/l10n/app_labels.dart';
+import 'package:e_sport_life/core/utils/date_format_utils.dart';
 import 'package:e_sport_life/core/utils/request_util.dart';
 import 'package:e_sport_life/core/widgets/bottom_navigation_bar_widget.dart';
 import 'package:e_sport_life/core/widgets/image_popup_widget.dart';
 import 'package:e_sport_life/core/widgets/no_data_text_widget.dart';
 import 'package:e_sport_life/core/widgets/confirm_dialog_widget.dart';
 import 'package:e_sport_life/core/widgets/top_appbar_widget.dart';
+import 'package:e_sport_life/core/widgets/trainer_group_lesson_schedule_card.dart';
 import 'package:e_sport_life/core/widgets/warning_dialog_widget.dart';
+import 'package:e_sport_life/data/model/trainer_schedule_calendar_event_model.dart';
+import 'package:e_sport_life/screen/panel/common/attendance/attendance_lesson_pick_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:e_sport_life/core/services/nfc_reader_service.dart';
-import 'package:e_sport_life/core/widgets/nfc_reader_dialog_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 enum _ScreenState { landing, scanning, memberView }
 
 class AttendanceScreen extends StatefulWidget {
-  const AttendanceScreen({super.key});
+  const AttendanceScreen({
+    super.key,
+    this.openScannerOnLaunch = false,
+    this.presetAttendanceLesson,
+  });
+
+  /// [true] ise ekran açılır açılmaz QR tarama görünür (hızlı erişim).
+  final bool openScannerOnLaunch;
+
+  /// Ders programından gelince ders seçim adımı atlanır; gün/saat/konum üstte gösterilir.
+  final TrainerScheduleCalendarEventModel? presetAttendanceLesson;
 
   @override
   State<AttendanceScreen> createState() => _AttendanceScreenState();
@@ -46,10 +62,29 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   final FocusNode _cardFocusNode = FocusNode();
   final ScrollController _historyScrollController = ScrollController();
 
+  /// Önceden seçilen ders: kapalıyken yalnız üst satır (devamını görüntüle).
+  bool _presetLessonDetailExpanded = false;
+
   @override
   void initState() {
     super.initState();
     _historyScrollController.addListener(_onHistoryScroll);
+    if (widget.openScannerOnLaunch) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _openScanner();
+      });
+    }
+  }
+
+  @override
+  void didUpdateWidget(AttendanceScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final oldPid = oldWidget.presetAttendanceLesson?.servicePlanId;
+    final newPid = widget.presetAttendanceLesson?.servicePlanId;
+    if (oldPid != newPid) {
+      _presetLessonDetailExpanded = false;
+    }
   }
 
   @override
@@ -58,12 +93,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     _cardController.dispose();
     _cardFocusNode.dispose();
     _historyScrollController.dispose();
-    _stopNfcSession();
     super.dispose();
-  }
-
-  Future<void> _stopNfcSession() async {
-    await NfcReaderService.stopSession();
   }
 
   void _onHistoryScroll() {
@@ -120,12 +150,58 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     _openScanner();
   }
 
-  // ─── Card Number Search ───
-
-  void _fillCardNumber(String cardNumber) {
-    _cardController.text = cardNumber;
-    _searchByCardNumber();
+  void _debugLogAttendanceResponse(String label, ApiResponse result) {
+    final body = result.body;
+    if (body is Map<String, dynamic>) {
+      debugPrint(
+        '[Attendance] $label → status=${result.statusCode} '
+        'isSuccess=${result.isSuccess} body=${jsonEncode(body)}',
+      );
+    } else {
+      debugPrint(
+        '[Attendance] $label → status=${result.statusCode} '
+        'isSuccess=${result.isSuccess} body=$body',
+      );
+    }
   }
+
+  /// Aktif paket GET bazen boş veya [output] liste değil (proxy farkı); üye detayındaki
+  /// [packages] ile yedeklenir — yapı randevu `member-detail` ile uyumludur.
+  List<dynamic> _resolveAttendancePackageList(
+    ApiResponse packagesResponse,
+    Map<String, dynamic>? memberOutputMap,
+  ) {
+    final direct = packagesResponse.outputList;
+    if (direct != null && direct.isNotEmpty) {
+      return direct;
+    }
+
+    final rawOut = packagesResponse.output;
+    if (rawOut is Map) {
+      final nested = rawOut['packages'];
+      if (nested is List && nested.isNotEmpty) {
+        return List<dynamic>.from(nested);
+      }
+    }
+
+    final fromDetail = memberOutputMap?['packages'];
+    if (fromDetail is List<dynamic>) {
+      final activeOnly = fromDetail.where((p) {
+        if (p is! Map) return false;
+        return p['situation']?.toString() == 'active';
+      }).toList();
+      if (activeOnly.isNotEmpty) {
+        return activeOnly;
+      }
+      if (fromDetail.isNotEmpty) {
+        return List<dynamic>.from(fromDetail);
+      }
+    }
+
+    return [];
+  }
+
+  // ─── Card Number Search ───
 
   Future<void> _searchByCardNumber() async {
     final labels = AppLabels.current;
@@ -151,15 +227,13 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           externalConfig.onlineReservation, cardNumber);
       final result = await RequestUtil.getJson(url);
 
-      if (!result.isSuccess || result.output == null) {
-        _showError(labels.memberNotFoundByCard);
-        setState(() => _isLoading = false);
-        return;
-      }
+      _debugLogAttendanceResponse('member-by-card', result);
 
       final memberId = result.outputMap?['id'] ?? result.outputMap?['member_id'];
       if (memberId == null) {
-        _showError(labels.memberNotFoundByCard);
+        _showError(
+          result.randevuUserMessage ?? labels.memberNotFoundByCard,
+        );
         setState(() => _isLoading = false);
         return;
       }
@@ -266,6 +340,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           externalConfig.onlineReservation, memberId);
       final memberResult = await RequestUtil.getJson(memberUrl);
 
+      _debugLogAttendanceResponse('member-detail', memberResult);
+
       if (!memberResult.isSuccess || memberResult.output == null) {
         final errorExtras = (memberResult.body is Map) ? memberResult.body['extras']?.toString() : null;
         _showError(errorExtras?.isNotEmpty == true ? errorExtras! : labels.noData);
@@ -284,12 +360,19 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         RequestUtil.getJson(historyUrl),
       ]);
 
+      _debugLogAttendanceResponse('member-active-packages', results[0]);
+      _debugLogAttendanceResponse('member-attendance-history', results[1]);
+
       final historyOutput = results[1].outputMap ?? {};
 
       if (mounted) {
+        final memberOut = memberResult.outputMap ?? {'id': memberId};
         setState(() {
-          _memberData = memberResult.outputMap ?? {'id': memberId};
-          _memberPackages = results[0].outputList ?? [];
+          _memberData = memberOut;
+          _memberPackages = _resolveAttendancePackageList(
+            results[0],
+            memberOut,
+          );
           _deductionHistory = List<dynamic>.from(historyOutput['data'] ?? []);
           _historyCurrentPage = historyOutput['current_page'] ?? 1;
           _historyLastPage = historyOutput['last_page'] ?? 1;
@@ -354,16 +437,29 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     final labels = AppLabels.current;
     final productName = package['name'] ?? package['product_name'] ?? '';
 
-    final confirmed = await confirmDialog(
-      context,
-      message: '$productName\n\n${labels.burnConfirm}',
-    );
-
-    if (confirmed != true) return;
-
-    setState(() => _isLoading = true);
-
     try {
+      TrainerScheduleCalendarEventModel? selected =
+          widget.presetAttendanceLesson;
+      if (selected == null || selected.servicePlanId <= 0) {
+        selected = await pushLessonPickForAttendance(context);
+      }
+      if (!mounted || selected == null) return;
+      if (selected.servicePlanId <= 0) {
+        _showError(labels.error);
+        return;
+      }
+
+      final lessonCtx = _lessonContextLines(selected, labels);
+      final confirmed = await confirmDialog(
+        context,
+        message: '$productName\n\n$lessonCtx\n\n${labels.burnConfirm}',
+      );
+
+      if (confirmed != true) return;
+      if (!mounted) return;
+
+      setState(() => _isLoading = true);
+
       final externalConfig =
           context.read<ExternalApplicationsConfigCubit>().state;
       if (externalConfig == null) return;
@@ -372,7 +468,6 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           package['member_register_id'] ?? package['id'];
       if (memberRegisterId == null) {
         _showError(labels.burnError);
-        setState(() => _isLoading = false);
         return;
       }
 
@@ -390,24 +485,29 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         'member_name': memberName,
         'member_phone': memberPhone,
         'product_name': productName,
+        'service_plan_id': selected.servicePlanId,
       });
 
       if (mounted) {
         if (result.isSuccess) {
+          setState(() => _isLoading = false);
           await warningDialog(context, message: labels.burnSuccess);
-          await _fetchMemberAndPackages(int.parse(memberId.toString()));
+          if (mounted) {
+            setState(() => _isLoading = true);
+            await _fetchMemberAndPackages(int.parse(memberId.toString()));
+          }
         } else {
           final errorMessage =
               (result.body is Map && result.body['extras'] != null && result.body['extras'].toString().isNotEmpty)
                   ? result.body['extras'].toString()
                   : labels.burnError;
           _showError(errorMessage);
-          setState(() => _isLoading = false);
         }
       }
     } catch (e) {
       debugPrint('Attendance error: $e');
       _showError(AppLabels.current.burnError);
+    } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
@@ -425,13 +525,17 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     );
 
     if (confirmed != true) return;
+    if (!mounted) return;
 
     setState(() => _isLoading = true);
 
     try {
       final externalConfig =
           context.read<ExternalApplicationsConfigCubit>().state;
-      if (externalConfig == null) return;
+      if (externalConfig == null) {
+        if (mounted) setState(() => _isLoading = false);
+        return;
+      }
 
       final id = record['id'];
       final url = RandevuAlUrlConstants.getAttendanceUndoUrl(
@@ -443,9 +547,18 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
       if (mounted) {
         if (isPayloadSuccess) {
-          await warningDialog(context, message: labels.undoDeductionSuccess);
           final memberId = _memberData?['id'] ?? _memberData?['member_id'];
-          if (memberId != null) {
+          setState(() {
+            _deductionHistory.removeWhere((el) {
+              if (el is! Map) return false;
+              final rid = el['id'];
+              return rid?.toString() == id?.toString();
+            });
+            _isLoading = false;
+          });
+          await warningDialog(context, message: labels.undoDeductionSuccess);
+          if (memberId != null && mounted) {
+            setState(() => _isLoading = true);
             await _fetchMemberAndPackages(int.parse(memberId.toString()));
           }
         } else {
@@ -466,28 +579,138 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
   // ─── Helpers ───
 
+  String _lessonContextLines(
+    TrainerScheduleCalendarEventModel e,
+    AppLabels labels,
+  ) {
+    final localeName = AppLabels.currentLocale == SupportedLocale.tr
+        ? 'tr_TR'
+        : 'en_US';
+    DateTime? startLocal;
+    try {
+      startLocal =
+          DateFormatUtils.parseRandevuCalendarEventStartLocal(e.start);
+    } catch (_) {}
+    final dateStr = startLocal != null
+        ? DateFormat.yMMMMEEEEd(localeName).format(startLocal)
+        : '';
+    final timeRange = DateFormatUtils.formatLocalHmRange(
+      e.start,
+      e.end,
+      durationHours: e.durationHours,
+    );
+    final lines = <String>[e.title.trim()];
+    if (dateStr.isNotEmpty) lines.add(dateStr);
+    if (timeRange.isNotEmpty) {
+      lines.add('${labels.groupLessonScheduleLessonTimeLabel}: $timeRange');
+    }
+    final loc = e.locationName?.trim();
+    if (loc != null && loc.isNotEmpty) {
+      lines.add('${labels.location}: $loc');
+    }
+    return lines.join('\n');
+  }
+
+  /// Müzik okulu anasayfa özeti ile aynı tip mavi altı çizili tetikleyici.
+  Widget _buildAttendanceExpandToggleText({
+    required BaseTheme theme,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    final blue = theme.defaultBlue800Color;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: const BorderRadius.all(Radius.circular(6)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+        child: Text(
+          text,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: theme.textCaptionSemiBold(color: blue).copyWith(
+                decoration: TextDecoration.underline,
+                decorationColor: blue,
+              ),
+        ),
+      ),
+    );
+  }
+
+  /// Ders programı kartı — girişte açıklama ile QR arası; üye görünümünde üstte.
+  Widget _buildPresetLessonExpandableSection(BaseTheme theme, AppLabels labels) {
+    final e = widget.presetAttendanceLesson;
+    if (e == null) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Icon(
+                Icons.event_note_outlined,
+                size: 26,
+                color: theme.default900Color,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    labels.attendancePresetLessonHeading,
+                    style: theme.textLabel(color: theme.default900Color),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    labels.attendancePresetLessonSectionHint,
+                    style: theme.textCaption(
+                      color: theme.panelSubTextColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        if (!_presetLessonDetailExpanded)
+          TrainerGroupLessonSchedulePeekCard(
+            data: e,
+            theme: theme,
+            labels: labels,
+            outerMargin: EdgeInsets.zero,
+          )
+        else
+          TrainerGroupLessonScheduleCard(
+            data: e,
+            theme: theme,
+            labels: labels,
+            outerMargin: EdgeInsets.zero,
+          ),
+        const SizedBox(height: 8),
+        Align(
+          alignment: AlignmentDirectional.centerEnd,
+          child: _buildAttendanceExpandToggleText(
+            theme: theme,
+            text: _presetLessonDetailExpanded
+                ? labels.attendanceLessonCardShowLess
+                : labels.attendanceLessonCardShowMore,
+            onTap: () => setState(
+              () => _presetLessonDetailExpanded = !_presetLessonDetailExpanded,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   void _showError(String message) {
     if (mounted) {
       warningDialog(context, message: message);
-    }
-  }
-
-  Future<void> _startNfcSession() async {
-    final labels = AppLabels.current;
-
-    final isAvailable = await NfcReaderService.isAvailable();
-    if (!isAvailable) {
-      if (mounted) _showError(labels.nfcNotAvailable);
-      return;
-    }
-
-    if (!mounted) return;
-
-    final cardNumber = await showNfcReaderDialog(context);
-    if (cardNumber != null && cardNumber.isNotEmpty) {
-      _fillCardNumber(cardNumber);
-    } else if (cardNumber == null && mounted) {
-      // null → kullanıcı kapattı veya okuma hatası
     }
   }
 
@@ -573,6 +796,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                 textAlign: TextAlign.center,
               ),
             ),
+            if (widget.presetAttendanceLesson != null) ...[
+              const SizedBox(height: 20),
+              _buildPresetLessonExpandableSection(theme, labels),
+            ],
             const SizedBox(height: 20),
             _buildActionCard(
               theme: theme,
@@ -580,14 +807,6 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               title: labels.attendanceScanQr,
               subtitle: labels.scanMemberQr,
               onTap: _openScanner,
-            ),
-            const SizedBox(height: 10),
-            _buildActionCard(
-              theme: theme,
-              icon: Icons.nfc_rounded,
-              title: labels.readNfcCard,
-              subtitle: labels.nfcReadDescription,
-              onTap: _startNfcSession,
             ),
             const SizedBox(height: 16),
             _buildCardNumberInput(theme, labels),
@@ -981,16 +1200,6 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         child: IntrinsicHeight(
           child: Row(
             children: [
-              Container(
-                width: 5,
-                decoration: BoxDecoration(
-                  color: isToday ? theme.panelSuccessColor : theme.defaultGray400Color,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(theme.panelCardRadius),
-                    bottomLeft: Radius.circular(theme.panelCardRadius),
-                  ),
-                ),
-              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -1017,7 +1226,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                 Padding(
                   padding: const EdgeInsets.only(right: 12),
                   child: Icon(Icons.undo_rounded,
-                      color: theme.default700Color, size: 22),
+                      color: theme.defaultRed700Color, size: 22),
                 ),
             ],
           ),
@@ -1159,17 +1368,6 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         height: 60,
         child: Row(
           children: [
-            Container(
-              width: 4,
-              height: 60,
-              decoration: BoxDecoration(
-                color: isDepleted ? theme.panelDangerColor : theme.panelSuccessColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(4),
-                  bottomLeft: Radius.circular(4),
-                ),
-              ),
-            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),

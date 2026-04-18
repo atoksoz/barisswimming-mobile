@@ -22,11 +22,11 @@ class SliderImagesService {
           context.read<ExternalApplicationsConfigCubit>().state;
       final userConfig = context.read<UserConfigCubit>().state;
 
-      if (externalApplicationConfig?.rta == null ||
-          userConfig?.firmUuid == null) return;
+      final rtaBase = externalApplicationConfig?.rta?.trim() ?? '';
+      if (rtaBase.isEmpty || userConfig?.firmUuid == null) return;
 
       final url = RtaUrlService.getMobileSliderUrl(
-          externalApplicationConfig!.rta, userConfig!.firmUuid);
+          rtaBase, userConfig!.firmUuid);
 
       await clearSliderScreenSliderItems();
 

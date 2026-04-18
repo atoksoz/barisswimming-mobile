@@ -7,6 +7,10 @@ import '../../config/themes/bloc_theme.dart';
 Future<void> warningDialog(
   BuildContext context, {
   required String message,
+  /// Verilirse [path] yerine daire içinde bu ikon gösterilir (ör. başarı: `Icons.check_circle_outline`).
+  IconData? leadingIcon,
+  Color? leadingIconBackgroundColor,
+  Color? leadingIconForegroundColor,
   String? path,
   Color? buttonColor,
   Color? buttonTextColor,
@@ -17,15 +21,46 @@ Future<void> warningDialog(
   VoidCallback? onPrimaryPressed,
   VoidCallback? onSecondaryPressed,
 }) async {
-  final String resolvedPrimaryButtonText = primaryButtonText ?? AppLabels.current.close;
-  final String svgPath = path ?? BlocTheme.theme.attentionSvgPath;
+  final theme = BlocTheme.theme;
+  final String resolvedPrimaryButtonText =
+      primaryButtonText ?? AppLabels.current.close;
+  final String svgPath = path ?? theme.attentionSvgPath;
+
+  Widget leadingGraphic() {
+    if (leadingIcon != null) {
+      return SizedBox(
+        height: 65,
+        child: Center(
+          child: Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: leadingIconBackgroundColor ?? theme.default100Color,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              leadingIcon,
+              size: 36,
+              color: leadingIconForegroundColor ?? theme.default700Color,
+            ),
+          ),
+        ),
+      );
+    }
+    return SvgPicture.asset(
+      svgPath,
+      width: 64,
+      height: 65,
+      fit: BoxFit.contain,
+    );
+  }
   final Color resolvedButtonColor =
-      buttonColor ?? BlocTheme.theme.default500Color;
+      buttonColor ?? theme.default500Color;
   final Color resolvedButtonTextColor =
-      buttonTextColor ?? BlocTheme.theme.defaultBlackColor;
+      buttonTextColor ?? theme.defaultBlackColor;
   final Color? resolvedSecondaryButtonColor = secondaryButtonColor;
   final Color resolvedSecondaryButtonTextColor =
-      secondaryButtonTextColor ?? BlocTheme.theme.defaultBlackColor;
+      secondaryButtonTextColor ?? theme.defaultBlackColor;
 
   return showDialog(
     context: context,
@@ -33,27 +68,37 @@ Future<void> warningDialog(
     builder: (BuildContext context) {
       return AlertDialog(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(theme.panelDialogRadius),
+        ),
         contentPadding: const EdgeInsets.all(20),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(
-              svgPath,
-              width: 64,
-              height: 65,
-              fit: BoxFit.contain,
-              // colorFilter: ColorFilter.mode(
-              //   resolvedButtonColor,
-              //   BlendMode.srcIn,
-              // ),
+            Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: theme.default500Color,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.close,
+                    color: theme.defaultBlackColor,
+                    size: 20,
+                  ),
+                ),
+              ),
             ),
+            leadingGraphic(),
             const SizedBox(height: 20),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: BlocTheme.theme.textBody(
-                  color: BlocTheme.theme.defaultBlackColor),
+              style: theme.textBody(color: theme.defaultBlackColor),
             ),
             const SizedBox(height: 20),
             Row(
@@ -66,15 +111,19 @@ Future<void> warningDialog(
                         onSecondaryPressed?.call();
                       },
                       style: ElevatedButton.styleFrom(
+                        elevation: 0,
                         backgroundColor: resolvedSecondaryButtonColor ??
-                            BlocTheme.theme.defaultRed700Color,
+                            theme.defaultRed700Color,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                          borderRadius:
+                              BorderRadius.circular(theme.panelButtonRadius),
+                        ),
                       ),
                       child: Text(
                         secondaryButtonText,
-                        style: BlocTheme.theme.textBody(
-                            color: resolvedSecondaryButtonTextColor),
+                        style: theme.textBody(
+                          color: resolvedSecondaryButtonTextColor,
+                        ),
                       ),
                     ),
                   ),
@@ -86,14 +135,18 @@ Future<void> warningDialog(
                       onPrimaryPressed?.call();
                     },
                     style: ElevatedButton.styleFrom(
+                      elevation: 0,
                       backgroundColor: resolvedButtonColor,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius:
+                            BorderRadius.circular(theme.panelButtonRadius),
+                      ),
                     ),
                     child: Text(
                       resolvedPrimaryButtonText,
-                      style: BlocTheme.theme.textBody(
-                          color: resolvedButtonTextColor),
+                      style: theme.textBody(
+                        color: resolvedButtonTextColor,
+                      ),
                     ),
                   ),
                 ),

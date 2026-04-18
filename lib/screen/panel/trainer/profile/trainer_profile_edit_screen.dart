@@ -781,8 +781,10 @@ class _TrainerProfileEditScreenState extends State<TrainerProfileEditScreen> {
               currentPassword: currentPassword,
               newPassword: newPassword,
             );
-            if (response.isSuccess) {
-              final body = response.body is Map ? response.body as Map : {};
+            if (response.statusCode >= 200 &&
+                response.statusCode < 300 &&
+                response.body is Map) {
+              final body = response.body as Map;
               final messages = body['messages'];
               if (messages == 'UPDATED') {
                 return {'success': true};

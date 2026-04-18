@@ -23,7 +23,15 @@ class TopAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios,
             size: 34, color: BlocTheme.theme.default900Color),
-        onPressed: () => Navigator.pop(context, true),
+        // `Navigator.pop` aynı karede `didPop` ile çakışırsa `_debugLocked` assert’i tetiklenebilir;
+        // sonraki karede `maybePop` güvenli. Kayıt sonucu bu ekrandan `Navigator.pop(context, record)` ile gelir.
+        onPressed: () {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              Navigator.of(context).maybePop();
+            }
+          });
+        },
       ),
       iconTheme: IconThemeData(color: BlocTheme.theme.default900Color),
       flexibleSpace: Stack(
