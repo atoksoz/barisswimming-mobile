@@ -112,7 +112,7 @@ class _PageMainState extends State<PageMain> {
                             IconButton(
                               onPressed: () {
                                 BlocProvider.of<BlocTheme>(context)
-                                    .add(SupportedTheme.GREEN);
+                                    .add(SupportedTheme.ORANGE);
                               },
                               icon: Icon(
                                 Icons.filter_2,
@@ -122,11 +122,11 @@ class _PageMainState extends State<PageMain> {
                             IconButton(
                               onPressed: () {
                                 BlocProvider.of<BlocTheme>(context)
-                                    .add(SupportedTheme.ORANGE);
+                                    .add(SupportedTheme.BLUE);
                               },
                               icon: Icon(
                                 Icons.filter_3,
-                                color: Colors.orange,
+                                color: Colors.lightBlue,
                               ),
                             ),
                           ],

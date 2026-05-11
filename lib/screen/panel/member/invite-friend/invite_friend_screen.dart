@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:e_sport_life/config/app-config/app_config_cubit.dart';
 import 'package:e_sport_life/config/app-content/app_content_cubit.dart';
 import 'package:e_sport_life/config/themes/bloc_theme.dart';
 import 'package:e_sport_life/core/l10n/app_labels.dart';
@@ -128,15 +129,18 @@ class _InviteFriendScreenState extends State<InviteFriendScreen> {
   }
 
   Future<void> _loadKvkkContent() async {
-    final cubitContent = context.read<AppContentCubit>().state;
-    if (cubitContent?.kvkk?.content != null) {
-      setState(() => _kvkkContent = cubitContent!.kvkk!.content!);
-      return;
+    final config = context.read<AppConfigCubit>().state;
+    if (!config.useStaticContent) {
+      final cubitContent = context.read<AppContentCubit>().state;
+      if (cubitContent?.kvkk?.content != null) {
+        setState(() => _kvkkContent = cubitContent!.kvkk!.content!);
+        return;
+      }
     }
 
     try {
       final kvkkString =
-          await rootBundle.loadString('assets/config/kvkk.json');
+          await rootBundle.loadString(config.kvkkContentAsset);
       final kvkkJson = json.decode(kvkkString);
       setState(() {
         _kvkkContent = kvkkJson['content'] ?? '';

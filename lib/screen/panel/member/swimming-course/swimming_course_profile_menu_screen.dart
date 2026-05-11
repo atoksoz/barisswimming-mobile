@@ -2,11 +2,12 @@ import 'package:e_sport_life/core/l10n/app_labels.dart';
 import 'package:e_sport_life/core/widgets/profile_menu_widget.dart';
 import 'package:e_sport_life/screen/aboutus-screen/about_us_screen.dart';
 import 'package:e_sport_life/screen/panel/common/content/kvkk_screen.dart';
-import 'package:e_sport_life/screen/panel/common/trainer-detail/trainer_list_screen.dart';
+import 'package:e_sport_life/screen/panel/common/trainer/trainer_list_screen.dart';
 import 'package:e_sport_life/screen/panel/member/muzik-okulum/guardian_list_screen.dart';
 import 'package:e_sport_life/screen/panel/member/muzik-okulum/invoice_list_screen.dart';
 import 'package:e_sport_life/screen/panel/member/swimming-course/swimming_course_attendance_screen.dart';
 import 'package:e_sport_life/screen/panel/member/swimming-course/swimming_course_member_profile_screen.dart';
+import 'package:e_sport_life/screen/panel/member/swimming-course/swimming_course_pools_screen.dart';
 import 'package:e_sport_life/screen/panel/member/muzik-okulum/package_list_screen.dart';
 import 'package:e_sport_life/screen/panel/member/muzik-okulum/payment_plan_list_screen.dart';
 import 'package:e_sport_life/screen/panel/member/muzik-okulum/statement_list_screen.dart';
@@ -73,6 +74,17 @@ class SwimmingCourseProfileMenuScreen extends StatelessWidget {
           context,
           MaterialPageRoute<void>(
             builder: (_) => const GuardianListScreen(),
+          ),
+        ),
+      ),
+      ProfileMenuItem(
+        title: labels.profileMenuSwimmingPoolsTitle,
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (_) => const SwimmingCoursePoolsScreen(
+              useMemberPoolEndpoint: true,
+            ),
           ),
         ),
       ),

@@ -8,6 +8,10 @@ class AppConfigState {
   final String welcomeMessage;
   final String developer;
   final bool useStaticContent;
+  /// Kurum/tesis kuralları (`facility_rules`): yoksa [useStaticContent] ile aynı; set edilirse yalnızca bu içerik için uzaktan/asset ayrımı.
+  final bool useStaticFacilityRules;
+  /// [useStaticContent] true iken KVKK bu asset dosyasından; false iken önce uzaktan, yoksa buradan.
+  final String kvkkContentAsset;
   final String securityCodeHeaderMode;
   final String securityCodeHeaderImage;
   final double securityCodeWaveStartOffsetBottom;
@@ -21,6 +25,8 @@ class AppConfigState {
     required this.welcomeMessage,
     required this.developer,
     required this.useStaticContent,
+    required this.useStaticFacilityRules,
+    required this.kvkkContentAsset,
     required this.securityCodeHeaderMode,
     required this.securityCodeHeaderImage,
     required this.securityCodeWaveStartOffsetBottom,
@@ -36,6 +42,8 @@ class AppConfigState {
       welcomeMessage: '',
       developer: '',
       useStaticContent: true,
+      useStaticFacilityRules: true,
+      kvkkContentAsset: 'assets/config/kvkk.json',
       securityCodeHeaderMode: 'standard',
       securityCodeHeaderImage:
           'assets/images/application_images/verification_screen_bg.png',
@@ -61,6 +69,14 @@ class AppConfigCubit extends Cubit<AppConfigState> {
       final welcomeMessage = jsonMap['welcome_message'] ?? '';
       final developer = jsonMap['developer'] ?? '';
       final useStaticContent = jsonMap['use_static_content'] ?? true;
+      final useStaticFacilityRules = jsonMap.containsKey(
+              'use_static_facility_rules')
+          ? _readBool(jsonMap['use_static_facility_rules'], useStaticContent)
+          : useStaticContent;
+      final kvkkContentAsset = jsonMap['kvkk_content_asset'] is String &&
+              (jsonMap['kvkk_content_asset'] as String).isNotEmpty
+          ? jsonMap['kvkk_content_asset'] as String
+          : 'assets/config/kvkk.json';
       final securityCodeHeaderMode =
           jsonMap['security_code_header_mode'] ?? 'standard';
       final securityCodeHeaderImage = jsonMap['security_code_header_image'] ??
@@ -81,6 +97,8 @@ class AppConfigCubit extends Cubit<AppConfigState> {
           welcomeMessage: welcomeMessage,
           developer: developer,
           useStaticContent: useStaticContent,
+          useStaticFacilityRules: useStaticFacilityRules,
+          kvkkContentAsset: kvkkContentAsset,
           securityCodeHeaderMode: securityCodeHeaderMode,
           securityCodeHeaderImage: securityCodeHeaderImage,
           securityCodeWaveStartOffsetBottom: securityCodeWaveStartOffsetBottom,
@@ -95,6 +113,17 @@ class AppConfigCubit extends Cubit<AppConfigState> {
       // Hata durumunda varsayılan değerleri tut
       emit(AppConfigState.initial());
     }
+  }
+
+  bool _readBool(dynamic value, bool fallback) {
+    if (value is bool) return value;
+    if (value is String) {
+      final s = value.toLowerCase();
+      if (s == 'true' || s == '1' || s == 'yes' || s == 'on') return true;
+      if (s == 'false' || s == '0' || s == 'no' || s == 'off') return false;
+    }
+    if (value is num) return value != 0;
+    return fallback;
   }
 
   double _readDouble(dynamic value, double fallback) {

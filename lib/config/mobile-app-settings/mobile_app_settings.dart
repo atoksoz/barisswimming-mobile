@@ -20,6 +20,9 @@ class MobileAppSettings {
   final Map<String, String> mobileAppVersions; // Platform-based versions: android, ios, harmonyos
   final Map<String, String> mobileAppUrls; // Platform-based URLs: android, ios, harmonyos
 
+  /// Panel/app ayarı `mobile_ui_accent`: green | orange | blue
+  final String mobileUiAccent;
+
   const MobileAppSettings({
     required this.mobileAppVersion,
     required this.allowProfilePhotoUpdate,
@@ -39,6 +42,7 @@ class MobileAppSettings {
     required this.showGymExxtraShop,
     required this.mobileAppVersions,
     required this.mobileAppUrls,
+    required this.mobileUiAccent,
   });
 
   factory MobileAppSettings.fromOutput(List<dynamic> items) {
@@ -152,6 +156,7 @@ class MobileAppSettings {
               'ios': legacyIosUrl,
               'harmonyos': '',
             },
+      mobileUiAccent: _stringValue('mobile_ui_accent'),
     );
   }
 
@@ -233,6 +238,7 @@ class MobileAppSettings {
               'ios': json['iosAppUrl']?.toString() ?? '',
               'harmonyos': '',
             },
+      mobileUiAccent: json['mobileUiAccent']?.toString() ?? '',
     );
   }
 
@@ -256,6 +262,7 @@ class MobileAppSettings {
       'showGymExxtraShop': showGymExxtraShop,
       'mobileAppVersions': mobileAppVersions,
       'mobileAppUrls': mobileAppUrls,
+      'mobileUiAccent': mobileUiAccent,
     };
   }
 
@@ -278,6 +285,7 @@ class MobileAppSettings {
     bool? showGymExxtraShop,
     Map<String, String>? mobileAppVersions,
     Map<String, String>? mobileAppUrls,
+    String? mobileUiAccent,
   }) {
     return MobileAppSettings(
       mobileAppVersion: mobileAppVersion ?? this.mobileAppVersion,
@@ -302,6 +310,7 @@ class MobileAppSettings {
       showGymExxtraShop: showGymExxtraShop ?? this.showGymExxtraShop,
       mobileAppVersions: mobileAppVersions ?? this.mobileAppVersions,
       mobileAppUrls: mobileAppUrls ?? this.mobileAppUrls,
+      mobileUiAccent: mobileUiAccent ?? this.mobileUiAccent,
     );
   }
 }

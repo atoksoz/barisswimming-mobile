@@ -155,6 +155,27 @@ abstract class AppLabels {
   String get accountPassiveWarning;
   String get accountPassiveProfileWarning;
 
+  /// Masaj paket kartı başlığı (Hamam explore).
+  String get massagePackageDetailsCardTitle;
+
+  /// Kantin ürün şeridi başlığı.
+  String get canteenSectionTitle;
+
+  /// Güncelleme uyarısı — hedef sürüm metne gömülür.
+  String newVersionPromptWithTarget(String version);
+
+  /// Doluluk satırı zengin metin — ilk parça (örn. `%12 Doluluk `).
+  String hamamExploreOccupancyPercentPart(String ratePercentWhole);
+
+  /// Doluluk satırı zengin metin — ikinci parça küçük (örn. `(3 Üye)`).
+  String hamamExploreOccupancyMembersPart(int openCount);
+
+  /// PT paket geçmişi hızlı erişim (iki satır).
+  String get explorePtPackagesButtonLabel;
+
+  /// Hızlı randevu hızlı erişim (iki satır).
+  String get exploreQuickReservationButtonLabel;
+
   // ─── Geçiş / Turnstile ───
   String get entryIn;
   String get entryOut;
@@ -212,6 +233,15 @@ abstract class AppLabels {
   String get appointmentCreatedSuccess;
   String get appointmentNotFound;
 
+  /// Gym paket geçmişi — sol sütunda kısa başlangıç etiketi (örn. «Baş.»).
+  String get gymPackageHistoryStartShort;
+  /// Gym paket geçmişi — sağ sütunda kısa bitiş etiketi (örn. «Bit.»).
+  String get gymPackageHistoryEndShort;
+  /// Paket kartı dosya listesi başlığı.
+  String get gymPackageFilesSectionTitle;
+  /// Dosya satırı — oluşturulma tarihi (değer biçimlendirilmiş).
+  String gymPackageFileCreatedAtLine(String formattedDateTime);
+
   // ─── Ödeme ───
   String get paymentSummary;
   String get amount;
@@ -239,6 +269,17 @@ abstract class AppLabels {
   String scheduleListHeaderForDate(String formattedDate);
   String get groupLessonScheduleLessonTimeLabel;
   String get groupLessonScheduleCapacityLabel;
+  /// Eğitmen haftalık ders programı ekranı ([TrainerLessonScheduleScreen]) AppBar başlığı.
+  String get trainerLessonScheduleScreenTitle;
+
+  /// Eğitmen anasayfa hızlı erişim grid’inde ders programı kutusu ([QuickAccessSectionWidget]); çok satır olabilir.
+  String get trainerQuickAccessLessonScheduleTitle;
+
+  /// Ders programı kartında kontenjan rozeti — öğrenci listesi popup başlığı.
+  String get trainerLessonScheduleStudentListTitle;
+
+  /// [trainerLessonScheduleStudentListTitle] listesi boşsa gösterilen metin.
+  String get trainerLessonScheduleStudentListEmpty;
 
   // ─── Ölçüm ───
   String get myMeasurements;
@@ -485,6 +526,30 @@ abstract class AppLabels {
   /// Yüzme kursu eğitmen hızlı erişim — doğrudan QR tarama ile yoklama
   String get trainerQuickAccessAttendanceByQrTitle;
 
+  // ─── Müzik okulu eğitmen — öğretmen kartı parçaları (hızlı erişim) ───
+  String get trainerCardQuickWeeklyStats;
+  String get trainerCardQuickMyLessons;
+  String get trainerCardNoData;
+  String get trainerCardWeeklyNormalLessonsLabel;
+  String get trainerCardWeeklyMakeupLessonsLabel;
+  String get trainerCardWeeklyTotalLessonsLabel;
+  String get trainerCardDateFromLabel;
+  String get trainerCardDateToLabel;
+  /// Verdiğim dersler — başlangıç tarihi filtresi üst yazısı (sol üst).
+  String get trainerLessonsListDateFromCaption;
+  /// Verdiğim dersler — bitiş tarihi filtresi iç yazısı.
+  String get trainerLessonsListDateToCaption;
+  String get trainerCardLoadButton;
+  String get trainerCardProfessionLabel;
+  String get trainerCardAccountStatusLabel;
+  String get passiveStatus;
+  /// Müzik: sınıf; diğer: mekân (ders listesi satırı).
+  String get trainerCardLessonVenueLabel;
+  /// Verdiğim dersler — oturum kartında katılımcı listesi başlığı.
+  String get trainerMyLessonsParticipantsHeading;
+  /// Verdiğim dersler — gri kutuda yoklama listesi başlığı.
+  String get trainerMyLessonsAttendanceRollHeading;
+
   // ─── Eğitmen ders ekleme (Randevu service-plans / Fitiz schedule) ───
   String get trainerScheduleAddLessonTitle;
   String get trainerScheduleEditLessonTitle;
@@ -527,6 +592,32 @@ abstract class AppLabels {
   String get trainerSchedulePickTimeFieldHint;
   String get trainerScheduleSelectAtLeastOneDay;
   String trainerScheduleLessonsSaveResult(int saved, int failed);
+
+  /// Randevu grup dersi — kayıtlı öğrenci listesi (Fitiz schedule kartı).
+  String get trainerServicePlanRosterTitle;
+  String get trainerServicePlanRosterNoEnrolled;
+  String get trainerServicePlanRosterLoadFailed;
+  String get trainerServicePlanRosterPresentLabel;
+  String get trainerServicePlanRosterSaveFailed;
+  String get trainerServicePlanRosterWillBurn;
+  String get trainerServicePlanRosterWillUnburn;
+  /// Fitiz yakma — ikon uzun açıklama (gelmedi / ders yanması / hak düşümü).
+  String get trainerServicePlanRosterBurnTooltip;
+
+  /// Yoklama satırı — hangi üyelik paketinden düşüm yapılacağı.
+  String get trainerServicePlanRosterPackageLabel;
+  /// Üyelik atanmamış veya paket seçenekleri gelmediğinde bilgi (yoklama/yakma kapalı).
+  String get trainerServicePlanRosterPackageUnavailableHint;
+  /// Paket geçerlilik satırı — başlangıç/bitiş tek satırda etiketlenir.
+  String get trainerServicePlanRosterPackagePeriodLabel;
+  String get trainerServicePlanRosterPackageStatusLabel;
+  /// Paket pasif — resepsiyondan aktif paket atanması (müzik okulu yoklama satırı).
+  String get trainerServicePlanRosterPackagePassiveHint;
+  /// Kalan hak sıfır / tükenmiş — resepsiyondan aktif paket atanması.
+  String get trainerServicePlanRosterPackageNoRemainingHint;
+  /// Sunucuya yazılmamış paket seçimi uyarısı.
+  String get trainerServicePlanRosterPackagePendingApplyHint;
+  String get trainerServicePlanRosterPackageUpdateFailed;
 
   /// Anasayfa özet kartları — bölüm başlığı
   String get homeSummarySectionTitle;
@@ -639,6 +730,10 @@ abstract class AppLabels {
   String get profileMenuStatementTitle;
   String get profileMenuInvoiceInfoTitle;
   String get profileMenuGuardianInfoTitle;
+  /// Profil menüsü — yüzme kursu havuz lokasyonları listesi.
+  String get profileMenuSwimmingPoolsTitle;
+  /// Havuz satırında harita/link yoksa gösterilen kısa metin.
+  String get swimmingPoolNoLocationHint;
   String get debt;
   String get credit;
   String get balance;
@@ -942,6 +1037,18 @@ class GymLabels implements AppLabels {
   @override String get accountPassiveWarning => 'Hesabınız pasif durumda, bu özelliği kullanamazsınız.';
   @override String get accountPassiveProfileWarning => 'Hesabınız pasif durumda, profil bilgilerinizi güncelleyemezsiniz.';
 
+  @override String get massagePackageDetailsCardTitle => 'Masaj Paket Bilgileri';
+  @override String get canteenSectionTitle => 'Kantin';
+  @override String newVersionPromptWithTarget(String version) =>
+      'Yeni bir sürüm mevcut. Uygulamayı $version sürümüne güncellemek ister misiniz?';
+  @override String hamamExploreOccupancyPercentPart(String ratePercentWhole) =>
+      '%$ratePercentWhole Doluluk ';
+  @override String hamamExploreOccupancyMembersPart(int openCount) =>
+      '($openCount $member)';
+  @override String get explorePtPackagesButtonLabel => 'PT\nPaketlerim';
+  @override String get exploreQuickReservationButtonLabel =>
+      'Hızlı\nRandevu';
+
   // Geçiş / Turnstile
   @override String get entryIn => 'Giriş';
   @override String get entryOut => 'Çıkış';
@@ -982,6 +1089,18 @@ class GymLabels implements AppLabels {
   @override String get nutritionInfo => 'Beslenme\nBilgilerim';
   @override String get groupLessons => 'Grup\nDersleri';
 
+  @override String get trainerLessonScheduleScreenTitle =>
+      groupLessons.replaceAll('\n', ' ');
+
+  @override String get trainerQuickAccessLessonScheduleTitle =>
+      trainerLessonScheduleScreenTitle;
+
+  @override String get trainerLessonScheduleStudentListTitle =>
+      'Öğrenci listesi';
+
+  @override String get trainerLessonScheduleStudentListEmpty =>
+      'Listelenecek öğrenci yok.';
+
   // Paket / Abonelik
   @override String get subscriptionInfo => 'Abonelik Bilgileri';
   @override String get purchasedBranchPackages => 'Satın Alınan Branş Paketleri';
@@ -998,6 +1117,12 @@ class GymLabels implements AppLabels {
   @override String get cancelled => 'İptal Edildi';
   @override String get appointmentCreatedSuccess => 'Randevu başarıyla oluşturuldu';
   @override String get appointmentNotFound => 'Randevu planı bulunamadı.';
+
+  @override String get gymPackageHistoryStartShort => 'Baş.';
+  @override String get gymPackageHistoryEndShort => 'Bit.';
+  @override String get gymPackageFilesSectionTitle => 'Dosyalar';
+  @override String gymPackageFileCreatedAtLine(String formattedDateTime) =>
+      'Oluşturulma Tarihi : $formattedDateTime';
 
   // Ödeme
   @override String get paymentSummary => 'Ödeme Özeti';
@@ -1128,7 +1253,7 @@ class GymLabels implements AppLabels {
   @override String get debtExistsWarning => 'Bakiyeniz bulunmaktadır, lütfen ödemenizi yapınız.';
   @override String get membershipFrozenWarning => 'Üyeliğiniz dondurulmuştur. Tesise giriş çıkış yapamazsınız.';
   @override String get noActivePackageWarning => 'Aktif bir paketiniz bulunmamaktadır.';
-  @override String get outsideEntryHoursWarning => 'Giriş saatiniz dışındasınız. Lütfen resepsiyon ile görüşünüz.';
+  @override String get outsideEntryHoursWarning => 'Giriş saati dışındasınız. Lütfen resepsiyon ile görüşünüz.';
 
   // Profil Düzenleme
   @override String get fullName => 'Adı Soyadı';
@@ -1266,6 +1391,23 @@ class GymLabels implements AppLabels {
   @override String get todaySummaryTitle => 'Bugünün\nÖzeti';
   @override String get trainerHomeTodayAttendanceTitle => 'Bugünkü\nYoklamalarım';
   @override String get trainerQuickAccessAttendanceByQrTitle => 'QR ile\nYoklama';
+  @override String get trainerCardQuickWeeklyStats => 'Haftalık\nders özeti';
+  @override String get trainerCardQuickMyLessons => 'Verdiğim\ndersler';
+  @override String get trainerCardNoData => 'Gösterilecek kayıt yok.';
+  @override String get trainerCardWeeklyNormalLessonsLabel => 'Haftalık normal ders';
+  @override String get trainerCardWeeklyMakeupLessonsLabel => 'Haftalık telafi dersi';
+  @override String get trainerCardWeeklyTotalLessonsLabel => 'Haftalık toplam ders';
+  @override String get trainerCardDateFromLabel => 'Başlangıç';
+  @override String get trainerCardDateToLabel => 'Bitiş';
+  @override String get trainerLessonsListDateFromCaption => 'Başlangıç tarihi';
+  @override String get trainerLessonsListDateToCaption => 'Bitiş tarihi';
+  @override String get trainerCardLoadButton => 'Yükle';
+  @override String get trainerCardProfessionLabel => 'Meslek';
+  @override String get trainerCardAccountStatusLabel => 'Hesap durumu';
+  @override String get passiveStatus => 'Pasif';
+  @override String get trainerCardLessonVenueLabel => 'Mekân';
+  @override String get trainerMyLessonsParticipantsHeading => 'Katılımcılar';
+  @override String get trainerMyLessonsAttendanceRollHeading => 'Yoklama';
   @override String get trainerScheduleAddLessonTitle => 'Ders ekle';
   @override String get trainerScheduleEditLessonTitle => 'Dersi düzenle';
   @override String get trainerScheduleEditLessonDaysHint =>
@@ -1323,6 +1465,43 @@ class GymLabels implements AppLabels {
     }
     return '$saved ders planı kaydedildi, $failed kaydedilemedi';
   }
+
+  @override String get trainerServicePlanRosterTitle => 'Yoklama Al';
+  @override String get trainerServicePlanRosterNoEnrolled =>
+      'Bu derse kayıtlı öğrenci yok.';
+  @override String get trainerServicePlanRosterLoadFailed =>
+      'Ders ve öğrenci listesi yüklenemedi.';
+  @override String get trainerServicePlanRosterPresentLabel => 'Geldi';
+  @override String get trainerServicePlanRosterSaveFailed =>
+      'Yoklama kaydedilemedi.';
+  @override String get trainerServicePlanRosterWillBurn =>
+      'Ders yanacak, hak düşecek';
+  @override String get trainerServicePlanRosterWillUnburn =>
+      'Yakma iptal edilecek';
+  @override String get trainerServicePlanRosterBurnTooltip =>
+      'Gelmedi sayılır; ders yanar ve paketten bir hak düşer. Yoklamayı kaydedince uygulanır.';
+
+  @override String get trainerServicePlanRosterPackageLabel => 'Paket';
+
+  @override String get trainerServicePlanRosterPackageUnavailableHint =>
+      'Paket bilgisi görüntülenemediği için yoklama alınamaz ve ders yakılamaz.';
+
+  @override String get trainerServicePlanRosterPackagePeriodLabel =>
+      'Başlangıç ve bitiş tarihleri';
+
+  @override String get trainerServicePlanRosterPackageStatusLabel => 'Durum';
+
+  @override String get trainerServicePlanRosterPackagePassiveHint =>
+      'Paket pasif. Yoklama ve ders yakma için resepsiyondan bu derse aktif paket atanmasını talep edin.';
+
+  @override String get trainerServicePlanRosterPackageNoRemainingHint =>
+      'Kalan ders hakkı yok. Yoklama ve ders yakma için resepsiyondan bu derse aktif paket atanmasını talep edin.';
+
+  @override String get trainerServicePlanRosterPackagePendingApplyHint =>
+      'Paket seçimi Kaydet ile derse uygulanır.';
+
+  @override String get trainerServicePlanRosterPackageUpdateFailed =>
+      'Paket seçimi güncellenemedi.';
 
   @override String get homeSummarySectionTitle => 'Özet';
   @override String get homeSummaryActivePackagesLabel => 'Aktif Paket';
@@ -1415,6 +1594,8 @@ class GymLabels implements AppLabels {
   @override String get profileMenuStatementTitle => 'Cari Ekstre';
   @override String get profileMenuInvoiceInfoTitle => 'Fatura Bilgileri';
   @override String get profileMenuGuardianInfoTitle => 'Veli Bilgisi';
+  @override String get profileMenuSwimmingPoolsTitle => 'Havuzlar';
+  @override String get swimmingPoolNoLocationHint => 'Konum bilgisi eklenmemiş';
   @override String get debt => 'Borç';
   @override String get credit => 'Alacak';
   @override String get balance => 'Bakiye';
@@ -1583,10 +1764,32 @@ class MusicSchoolLabels extends GymLabels {
   @override String get employees => 'Öğretmenler';
   @override String get movementCatalog => 'Egzersiz Kataloğu';
 
+  @override String get trainerCardLessonVenueLabel => 'Sınıf / derslik';
+  @override String get trainerMyLessonsParticipantsHeading => 'Öğrenciler';
+  @override String get trainerMyLessonsAttendanceRollHeading => 'Yoklama';
+
   @override String get noActiveMembership => 'Aktif Kaydınız Bulunmamaktadır';
   @override String get trainerRoster => 'Öğretmen Kadrosu';
   @override String get groupLessonRules => 'Ders Kuralları';
   @override String get groupLessons => 'Dersler';
+
+  @override String get trainerLessonScheduleScreenTitle => 'Ders Programı';
+
+  @override String get trainerQuickAccessLessonScheduleTitle => 'Ders\nProgramı';
+
+  @override String get profileMenuLessonScheduleTitle => 'Ders Programı';
+
+  @override String get trainerCardQuickWeeklyStats => 'Haftalık\nDers Özeti';
+
+  /// Özet kartları — Randevu stats; eğitmen haftalık plan özeti ekranı.
+  @override String get trainerCardWeeklyNormalLessonsLabel =>
+      'Haftalık Plan - Normal Ders';
+  @override String get trainerCardWeeklyMakeupLessonsLabel =>
+      'Haftalık Plan - Telafi Dersi';
+  @override String get trainerCardWeeklyTotalLessonsLabel => 'Haftalık Plan - Toplam';
+
+  @override String get trainerCardQuickMyLessons => 'Yoklamalar';
+
   @override String get groupLessonDetail => 'Ders Detayı';
   @override String get purchasedMembers => 'Dersi satın alanlar';
   @override String get exerciseList => 'Egzersiz\nListem';
@@ -1669,6 +1872,8 @@ class SwimmingCourseLabels extends GymLabels {
   @override String get measurementInfo => 'Gelişim\nTakibi';
   @override String get myMeasurements => 'Gelişim Takibim';
   @override String get addMeasurement => 'Gelişim Kaydı Ekle';
+
+  @override String get trainerMyLessonsAttendanceRollHeading => 'Yoklama';
 
   @override Map<String, String> get professionLabels => const {
     'swimming_trainer': 'Yüzme Eğitmeni',

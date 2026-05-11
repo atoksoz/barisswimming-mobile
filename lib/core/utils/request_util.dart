@@ -87,6 +87,13 @@ class RequestUtil {
     return _toApiResponse(response);
   }
 
+  static Future<ApiResponse> patchJson(String url,
+      {Map<String, dynamic>? body, String? token}) async {
+    final t = token ?? await JwtStorageService.getToken();
+    final response = await patch(url, body: body, token: t);
+    return _toApiResponse(response);
+  }
+
   static Future<ApiResponse> deleteJson(String url,
       {Map<String, dynamic>? body, String? token}) async {
     final t = token ?? await JwtStorageService.getToken();
@@ -223,6 +230,38 @@ class RequestUtil {
       return response;
     } catch (e) {
       print('PUT error: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> patch(
+    String url, {
+    Map<String, dynamic>? body,
+    String? token,
+    Duration timeout = const Duration(seconds: 10),
+  }) async {
+    try {
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+
+      if (token != null && token.isNotEmpty) {
+        headers['Authorization'] = 'Bearer $token';
+      }
+
+      print('HTTP PATCH Request: $url');
+
+      final response = await http
+          .patch(
+            Uri.parse(url),
+            headers: headers,
+            body: body != null ? json.encode(body) : null,
+          )
+          .timeout(timeout);
+      return response;
+    } catch (e) {
+      print('PATCH error: $e');
       return null;
     }
   }

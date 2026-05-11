@@ -43,7 +43,7 @@ class TrainerServicePlanFormService {
         .toList();
   }
 
-  static List<RandevuV2GroupLessonLocationModel> _parseLocationList(dynamic raw) {
+  static List<RandevuV2GroupLessonLocationModel> parseLocationList(dynamic raw) {
     final list = _unwrapList(raw);
     if (list == null) return const [];
     return list
@@ -79,7 +79,7 @@ class TrainerServicePlanFormService {
     final url = RandevuAlUrlConstants.getV2GroupLessonLocationsUrl(randevuBaseUrl);
     final res = await RequestUtil.getJson(url, token: t);
     if (!res.isSuccess || res.output == null) return const [];
-    return _parseLocationList(res.output);
+    return parseLocationList(res.output);
   }
 
   static Future<ApiResponse> createServicePlan({

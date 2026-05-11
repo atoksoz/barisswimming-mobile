@@ -13,6 +13,8 @@ class UserConfig {
   final String imageUrl;
   final String thumbImageUrl;
   final String firmUuid;
+  /// IAM / use-token çıktısı `host`; önbellekte tutulur (`ApplicationType` çıkarımı için).
+  final String tenantHostUrl;
   final MobileUserType userType;
   final ApplicationType applicationType;
 
@@ -27,6 +29,7 @@ class UserConfig {
     required this.imageUrl,
     required this.thumbImageUrl,
     required this.firmUuid,
+    this.tenantHostUrl = '',
     this.userType = MobileUserType.member,
     this.applicationType = ApplicationType.openGym,
   });
@@ -63,25 +66,30 @@ class UserConfig {
       imageUrl: map["image_url"] ?? "",
       thumbImageUrl: map["thumb_image_url"] ?? "",
       firmUuid: map["firm_uuid"] ?? "",
+      tenantHostUrl: map["host"]?.toString() ?? '',
       userType: MobileUserType.fromDynamic(map["user_type"]),
-      applicationType: ApplicationType.fromDynamic(map["application_type"]),
+      applicationType: ApplicationType.fromUserPayloadMap(map),
     );
   }
 
-  factory UserConfig.fromJson(Map<String, dynamic> json) => UserConfig(
-        memberId: json["member_id"] ?? '',
-        name: json["name"] ?? '',
-        phone: json["phone"] ?? '',
-        email: json["email"] ?? '',
-        birthday: json["birthday"] ?? '',
-        gender: json["gender"] ?? 0,
-        token: json["token"] ?? '',
-        imageUrl: json["image_url"] ?? '',
-        thumbImageUrl: json["thumb_image_url"] ?? '',
-        firmUuid: json["firm_uuid"] ?? '',
-        userType: MobileUserType.fromDynamic(json["user_type"]),
-        applicationType: ApplicationType.fromDynamic(json["application_type"]),
-      );
+  factory UserConfig.fromJson(Map<String, dynamic> json) {
+    final m = Map<String, dynamic>.from(json);
+    return UserConfig(
+      memberId: json["member_id"] ?? '',
+      name: json["name"] ?? '',
+      phone: json["phone"] ?? '',
+      email: json["email"] ?? '',
+      birthday: json["birthday"] ?? '',
+      gender: int.tryParse(json["gender"]?.toString() ?? '0') ?? 0,
+      token: json["token"] ?? '',
+      imageUrl: json["image_url"] ?? '',
+      thumbImageUrl: json["thumb_image_url"] ?? '',
+      firmUuid: json["firm_uuid"] ?? '',
+      tenantHostUrl: m["host"]?.toString() ?? '',
+      userType: MobileUserType.fromDynamic(json["user_type"]),
+      applicationType: ApplicationType.fromUserPayloadMap(m),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "member_id": memberId,
@@ -94,6 +102,7 @@ class UserConfig {
         "image_url": imageUrl,
         "thumb_image_url": thumbImageUrl,
         "firm_uuid": firmUuid,
+        "host": tenantHostUrl,
         "user_type": userType.value,
         "application_type": applicationType.value,
       };
@@ -109,6 +118,7 @@ class UserConfig {
         imageUrl: '',
         thumbImageUrl: '',
         firmUuid: '',
+        tenantHostUrl: '',
         userType: MobileUserType.member,
         applicationType: ApplicationType.openGym,
       );
@@ -124,6 +134,7 @@ class UserConfig {
     String? imageUrl,
     String? thumbImageUrl,
     String? firmUuid,
+    String? tenantHostUrl,
     MobileUserType? userType,
     ApplicationType? applicationType,
   }) {
@@ -138,6 +149,7 @@ class UserConfig {
       imageUrl: imageUrl ?? this.imageUrl,
       thumbImageUrl: thumbImageUrl ?? this.thumbImageUrl,
       firmUuid: firmUuid ?? this.firmUuid,
+      tenantHostUrl: tenantHostUrl ?? this.tenantHostUrl,
       userType: userType ?? this.userType,
       applicationType: applicationType ?? this.applicationType,
     );

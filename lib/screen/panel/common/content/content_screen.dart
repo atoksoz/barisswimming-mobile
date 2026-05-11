@@ -41,8 +41,10 @@ class _ContentScreenState extends State<ContentScreen> {
   }
 
   Future<void> _loadContent() async {
-    final useStatic =
-        context.read<AppConfigCubit>().state.useStaticContent;
+    final config = context.read<AppConfigCubit>().state;
+    final useStatic = widget.contentType == ContentType.facilityRules
+        ? config.useStaticFacilityRules
+        : config.useStaticContent;
 
     if (useStatic) {
       await _loadFromAsset();
@@ -100,7 +102,7 @@ class _ContentScreenState extends State<ContentScreen> {
   String get _assetPath {
     switch (widget.contentType) {
       case ContentType.kvkk:
-        return 'assets/config/kvkk.json';
+        return context.read<AppConfigCubit>().state.kvkkContentAsset;
       case ContentType.membershipRules:
         return 'assets/config/membership_rules.json';
       case ContentType.facilityRules:

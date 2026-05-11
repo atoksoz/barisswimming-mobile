@@ -2,8 +2,9 @@ import 'package:e_sport_life/core/l10n/app_labels.dart';
 import 'package:e_sport_life/core/widgets/profile_menu_widget.dart';
 import 'package:e_sport_life/screen/aboutus-screen/about_us_screen.dart';
 import 'package:e_sport_life/screen/panel/common/content/kvkk_screen.dart';
-import 'package:e_sport_life/screen/panel/trainer/profile/trainer_profile_edit_screen.dart';
-import 'package:e_sport_life/screen/panel/common/trainer-detail/trainer_list_screen.dart';
+import 'package:e_sport_life/screen/panel/member/swimming-course/swimming_course_pools_screen.dart';
+import 'package:e_sport_life/screen/panel/trainer/common/profile/trainer_profile_edit_screen.dart';
+import 'package:e_sport_life/screen/panel/common/trainer/trainer_list_screen.dart';
 import 'package:flutter/material.dart';
 
 class SwimmingCourseTrainerProfileScreen extends StatelessWidget {
@@ -18,6 +19,17 @@ class SwimmingCourseTrainerProfileScreen extends StatelessWidget {
         title: labels.myProfile,
         onTap: () => Navigator.push(
             context, MaterialPageRoute(builder: (_) => const TrainerProfileEditScreen())),
+      ),
+      ProfileMenuItem(
+        title: labels.profileMenuSwimmingPoolsTitle,
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (_) => const SwimmingCoursePoolsScreen(
+              useMemberPoolEndpoint: false,
+            ),
+          ),
+        ),
       ),
       ProfileMenuItem(
         title: labels.trainerRoster,

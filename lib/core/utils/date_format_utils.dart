@@ -6,6 +6,7 @@ class DateFormatUtils {
   static final _isoDate = DateFormat('yyyy-MM-dd');
   static final _sqlDateTime = DateFormat('yyyy-MM-dd HH:mm:ss');
   static final _hm = DateFormat('HH:mm');
+  static final _dayMonthYearDots = DateFormat('dd.MM.yyyy');
 
   /// Randevu `service-plans/calendar` — offsetsiz `YYYY-MM-DD HH:mm(:ss)`.
   static final RegExp _randevuCalendarNaiveDateTime = RegExp(
@@ -67,6 +68,16 @@ class DateFormatUtils {
       return _dateOnly.format(DateTime.parse(dateTimeString));
     } catch (_) {
       return dateTimeString;
+    }
+  }
+
+  /// Gün.ay.yıl (ör. Fitiz paket satırı `10.04.2026`).
+  static String formatDayMonthYearDots(String? dateTimeString) {
+    if (dateTimeString == null || dateTimeString.isEmpty) return '';
+    try {
+      return _dayMonthYearDots.format(DateTime.parse(dateTimeString.trim()).toLocal());
+    } catch (_) {
+      return '';
     }
   }
 

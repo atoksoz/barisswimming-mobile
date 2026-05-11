@@ -12,6 +12,8 @@ Future<void> warningDialog(
   Color? leadingIconBackgroundColor,
   Color? leadingIconForegroundColor,
   String? path,
+  /// Verilirse [leadingIcon] yokken SVG tek renge boyanır (ör. uyarı görselini nötrleştirmek için).
+  Color? leadingSvgColor,
   Color? buttonColor,
   Color? buttonTextColor,
   Color? secondaryButtonColor,
@@ -52,6 +54,9 @@ Future<void> warningDialog(
       width: 64,
       height: 65,
       fit: BoxFit.contain,
+      colorFilter: leadingSvgColor != null
+          ? ColorFilter.mode(leadingSvgColor!, BlendMode.srcIn)
+          : null,
     );
   }
   final Color resolvedButtonColor =

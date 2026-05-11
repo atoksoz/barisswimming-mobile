@@ -161,6 +161,20 @@ class GymLabelsEn implements AppLabels {
   @override String get accountPassiveWarning => 'Your account is passive, you cannot use this feature.';
   @override String get accountPassiveProfileWarning => 'Your account is passive, you cannot update your profile.';
 
+  @override String get massagePackageDetailsCardTitle =>
+      'Massage Package Details';
+  @override String get canteenSectionTitle => 'Canteen';
+  @override String newVersionPromptWithTarget(String version) =>
+      'A new version is available. Would you like to update to version $version?';
+  @override String hamamExploreOccupancyPercentPart(String ratePercentWhole) =>
+      '$ratePercentWhole% occupancy ';
+  @override String hamamExploreOccupancyMembersPart(int openCount) =>
+      '($openCount $member)';
+  @override String get explorePtPackagesButtonLabel =>
+      'Personal\nTraining';
+  @override String get exploreQuickReservationButtonLabel =>
+      'Quick\nReservation';
+
   // Turnstile
   @override String get entryIn => 'Entry';
   @override String get entryOut => 'Exit';
@@ -201,6 +215,18 @@ class GymLabelsEn implements AppLabels {
   @override String get nutritionInfo => 'My\nNutrition';
   @override String get groupLessons => 'Group\nLessons';
 
+  @override String get trainerLessonScheduleScreenTitle =>
+      groupLessons.replaceAll('\n', ' ');
+
+  @override String get trainerQuickAccessLessonScheduleTitle =>
+      trainerLessonScheduleScreenTitle;
+
+  @override String get trainerLessonScheduleStudentListTitle =>
+      'Student list';
+
+  @override String get trainerLessonScheduleStudentListEmpty =>
+      'No students to show.';
+
   // Package / Subscription
   @override String get subscriptionInfo => 'Subscription Info';
   @override String get purchasedBranchPackages => 'Purchased Branch Packages';
@@ -217,6 +243,12 @@ class GymLabelsEn implements AppLabels {
   @override String get cancelled => 'Cancelled';
   @override String get appointmentCreatedSuccess => 'Appointment created successfully';
   @override String get appointmentNotFound => 'No appointment schedule found.';
+
+  @override String get gymPackageHistoryStartShort => 'Start';
+  @override String get gymPackageHistoryEndShort => 'End';
+  @override String get gymPackageFilesSectionTitle => 'Files';
+  @override String gymPackageFileCreatedAtLine(String formattedDateTime) =>
+      'Created: $formattedDateTime';
 
   // Payment
   @override String get paymentSummary => 'Payment Summary';
@@ -347,7 +379,7 @@ class GymLabelsEn implements AppLabels {
   @override String get debtExistsWarning => 'You have an outstanding balance, please make your payment.';
   @override String get membershipFrozenWarning => 'Your membership is frozen. You cannot enter or exit the facility.';
   @override String get noActivePackageWarning => 'You do not have an active package.';
-  @override String get outsideEntryHoursWarning => 'You are outside your entry hours. Please contact reception.';
+  @override String get outsideEntryHoursWarning => 'You are outside entry hours. Please contact reception.';
 
   // Profile Edit
   @override String get fullName => 'Full Name';
@@ -485,6 +517,23 @@ class GymLabelsEn implements AppLabels {
   @override String get todaySummaryTitle => 'Today\'s\nSummary';
   @override String get trainerHomeTodayAttendanceTitle => 'Today\'s\nAttendance';
   @override String get trainerQuickAccessAttendanceByQrTitle => 'Attendance\nby QR';
+  @override String get trainerCardQuickWeeklyStats => 'Weekly\nlesson summary';
+  @override String get trainerCardQuickMyLessons => 'My\nteaching';
+  @override String get trainerCardNoData => 'No records to display.';
+  @override String get trainerCardWeeklyNormalLessonsLabel => 'Weekly regular lessons';
+  @override String get trainerCardWeeklyMakeupLessonsLabel => 'Weekly makeup lessons';
+  @override String get trainerCardWeeklyTotalLessonsLabel => 'Weekly total lessons';
+  @override String get trainerCardDateFromLabel => 'Start';
+  @override String get trainerCardDateToLabel => 'End';
+  @override String get trainerLessonsListDateFromCaption => 'Start date';
+  @override String get trainerLessonsListDateToCaption => 'End date';
+  @override String get trainerCardLoadButton => 'Load';
+  @override String get trainerCardProfessionLabel => 'Profession';
+  @override String get trainerCardAccountStatusLabel => 'Account status';
+  @override String get passiveStatus => 'Inactive';
+  @override String get trainerCardLessonVenueLabel => 'Venue';
+  @override String get trainerMyLessonsParticipantsHeading => 'Participants';
+  @override String get trainerMyLessonsAttendanceRollHeading => 'Attendance';
   @override String get trainerScheduleAddLessonTitle => 'Add lesson';
   @override String get trainerScheduleEditLessonTitle => 'Edit lesson';
   @override String get trainerScheduleEditLessonDaysHint =>
@@ -542,6 +591,43 @@ class GymLabelsEn implements AppLabels {
     }
     return 'Saved $saved lesson plans, $failed failed';
   }
+
+  @override String get trainerServicePlanRosterTitle => 'Take attendance';
+  @override String get trainerServicePlanRosterNoEnrolled =>
+      'No students enrolled in this lesson.';
+  @override String get trainerServicePlanRosterLoadFailed =>
+      'Could not load the lesson or student list.';
+  @override String get trainerServicePlanRosterPresentLabel => 'Attended';
+  @override String get trainerServicePlanRosterSaveFailed =>
+      'Could not save attendance.';
+  @override String get trainerServicePlanRosterWillBurn =>
+      'Lesson will burn, credit will deduct';
+  @override String get trainerServicePlanRosterWillUnburn =>
+      'Burn will be cancelled';
+  @override String get trainerServicePlanRosterBurnTooltip =>
+      'Counts as absent; burns the lesson and deducts one package credit. Applied when you save attendance.';
+
+  @override String get trainerServicePlanRosterPackageLabel => 'Package';
+
+  @override String get trainerServicePlanRosterPackageUnavailableHint =>
+      'Attendance and lesson burn are unavailable until package details can be loaded.';
+
+  @override String get trainerServicePlanRosterPackagePeriodLabel =>
+      'Start and end dates';
+
+  @override String get trainerServicePlanRosterPackageStatusLabel => 'Status';
+
+  @override String get trainerServicePlanRosterPackagePassiveHint =>
+      'This package is inactive. Ask reception to assign an active package to this lesson for attendance and lesson burn.';
+
+  @override String get trainerServicePlanRosterPackageNoRemainingHint =>
+      'No lesson credits left. Ask reception to assign an active package to this lesson for attendance and lesson burn.';
+
+  @override String get trainerServicePlanRosterPackagePendingApplyHint =>
+      'Your package selection will be applied when you tap Save.';
+
+  @override String get trainerServicePlanRosterPackageUpdateFailed =>
+      'Could not update package selection.';
 
   @override String get homeSummarySectionTitle => 'Overview';
   @override String get homeSummaryActivePackagesLabel => 'Active Packages';
@@ -636,6 +722,8 @@ class GymLabelsEn implements AppLabels {
   @override String get profileMenuStatementTitle => 'Financial Statement';
   @override String get profileMenuInvoiceInfoTitle => 'Billing Information';
   @override String get profileMenuGuardianInfoTitle => 'Guardian Information';
+  @override String get profileMenuSwimmingPoolsTitle => 'Pools';
+  @override String get swimmingPoolNoLocationHint => 'No location added';
   @override String get debt => 'Debt';
   @override String get credit => 'Credit';
   @override String get balance => 'Balance';
@@ -804,10 +892,30 @@ class MusicSchoolLabelsEn extends GymLabelsEn {
   @override String get employees => 'Teachers';
   @override String get movementCatalog => 'Exercise Catalog';
 
+  @override String get trainerCardLessonVenueLabel => 'Room / classroom';
+  @override String get trainerMyLessonsParticipantsHeading => 'Students';
+
   @override String get noActiveMembership => 'You Have No Active Enrollment';
   @override String get trainerRoster => 'Teacher Roster';
   @override String get groupLessonRules => 'Lesson Rules';
   @override String get groupLessons => 'Lessons';
+
+  @override String get trainerLessonScheduleScreenTitle => 'Lesson Schedule';
+
+  @override String get trainerQuickAccessLessonScheduleTitle => 'Lesson\nSchedule';
+
+  @override String get profileMenuLessonScheduleTitle => 'Lesson Schedule';
+
+  @override String get trainerCardQuickWeeklyStats => 'Weekly\nLesson Summary';
+
+  @override String get trainerCardWeeklyNormalLessonsLabel =>
+      'Weekly Plan - Regular Lesson';
+  @override String get trainerCardWeeklyMakeupLessonsLabel =>
+      'Weekly Plan - Makeup Lesson';
+  @override String get trainerCardWeeklyTotalLessonsLabel => 'Weekly Plan - Total';
+
+  @override String get trainerCardQuickMyLessons => 'Attendance';
+
   @override String get groupLessonDetail => 'Lesson Detail';
   @override String get purchasedMembers => 'Lesson Purchasers';
   @override String get exerciseList => 'My\nExercises';
@@ -889,6 +997,8 @@ class SwimmingCourseLabelsEn extends GymLabelsEn {
   @override String get measurementInfo => 'Progress\nTracking';
   @override String get myMeasurements => 'My Progress';
   @override String get addMeasurement => 'Add Progress Record';
+
+  @override String get trainerMyLessonsAttendanceRollHeading => 'Attendance';
 
   @override Map<String, String> get professionLabels => const {
     'swimming_trainer': 'Swimming Trainer',

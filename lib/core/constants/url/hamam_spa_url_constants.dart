@@ -24,9 +24,10 @@ class HamamSpaUrlConstants {
   static String unpaidPaymentPlanUri = "v1/member/payment-plan/unpaid";
   static String memberBalanceUri = "v1/member/balance";
 
+  /// Hamam SPA tabanı zaten `/api` ile birleştirilir; path parçasında
+  /// [ensureApiPath] kullanılmaz — aksi halde `.../member/api/` oluşur (404).
   static String getMemberDashboardDataUrl(String hamamSpaUrl) {
-    return hamamSpaUrl.ensureTrailingSlash() +
-        memberDashboardUri.ensureApiPath().ensureTrailingSlash();
+    return hamamSpaUrl.ensureApiPath().ensureTrailingSlash() + memberDashboardUri;
   }
 
   static String getOpenRoomSummaryUrl(String hamamSpaUrl) {

@@ -7,8 +7,14 @@ import '../../unshared/theme/application_theme.dart';
 import 'base_theme.dart';
 
 class BlocTheme extends Bloc<SupportedTheme, ThemeData> {
-  static BaseTheme theme = ApplicationTheme.getApplicationTheme();
-  BlocTheme(super.initialState);
+  BlocTheme()
+      : super(ApplicationTheme.initialBaseTheme.data) {
+    theme = ApplicationTheme.initialBaseTheme;
+    on<SupportedTheme>(_onThemeChanged);
+  }
+
+  /// Aktif [BaseTheme]; tema değişince [Bloc] güncellenir.
+  static BaseTheme theme = ApplicationTheme.initialBaseTheme;
 
   static SystemUiOverlayStyle uiOverlayStyle() =>
       (theme.data.brightness == Brightness.light
@@ -16,6 +22,9 @@ class BlocTheme extends Bloc<SupportedTheme, ThemeData> {
               : SystemUiOverlayStyle.dark)
           .copyWith(statusBarColor: theme.data.primaryColor);
 
-  @override
-  ThemeData get initialState => theme.data;
+  void _onThemeChanged(SupportedTheme next, Emitter<ThemeData> emit) {
+    final BaseTheme resolved = ApplicationTheme.themeFor(next);
+    theme = resolved;
+    emit(resolved.data);
+  }
 }

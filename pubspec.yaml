@@ -142,6 +142,7 @@ flutter:
     - assets/images/svg/personal_training_orange.svg
     - assets/images/svg/user_green.svg
     - assets/images/svg/user_orange.svg
+    - assets/images/svg/user_blue.svg
     - assets/images/svg/diet_green.svg
     - assets/images/svg/diet_orange.svg
     - assets/images/svg/calendar_green.svg
@@ -160,6 +161,7 @@ flutter:
     - assets/images/svg/turnstile_out_orange.svg
     - assets/images/svg/top_bg_green.svg
     - assets/images/svg/top_bg_orange.svg
+    - assets/images/svg/top_bg_blue.svg
     - assets/images/svg/desert_green.svg
     - assets/images/svg/cafe_green.svg
     - assets/images/svg/fruits_green.svg
@@ -172,6 +174,7 @@ flutter:
     - assets/images/svg/hot_drink_orange.svg
     - assets/images/svg/appbar_top_green.svg
     - assets/images/svg/appbar_top_orange.svg
+    - assets/images/svg/appbar_top_blue.svg
     - assets/images/svg/facebook.svg
     - assets/images/svg/instagram.svg
     - assets/images/svg/tiktok.svg
@@ -194,6 +197,7 @@ flutter:
     - assets/images/svg/suggestion_orange.svg
     - assets/images/svg/annoucement_green.svg
     - assets/images/svg/annoucement_orange.svg
+    - assets/images/svg/annoucement_blue.svg
     - assets/images/svg/invite_friend_green.svg
     - assets/images/svg/invite_friend_orange.svg
     - assets/images/svg/earn_as_you_spend_green.svg

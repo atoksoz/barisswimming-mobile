@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:e_sport_life/config/announcement/announcement_cubit.dart';
-import 'package:e_sport_life/config/app-content/app_content_cubit.dart';
 import 'package:e_sport_life/config/external-applications-config/external_applications_config.dart';
 import 'package:e_sport_life/config/external-applications-config/external_applications_config_cubit.dart';
 import 'package:e_sport_life/config/themes/base_theme.dart';
@@ -14,7 +13,7 @@ import 'package:e_sport_life/core/l10n/app_labels.dart';
 import 'package:e_sport_life/core/services/jwt_storage_service.dart';
 import 'package:e_sport_life/core/services/member_home_dashboard_service.dart';
 import 'package:e_sport_life/core/utils/shared-preferences/muzik_okulum_home_cache_utils.dart';
-import 'package:e_sport_life/core/services/mobile_app_settings_service.dart';
+import 'package:e_sport_life/core/utils/mobile_panel_app_settings_loader.dart';
 import 'package:e_sport_life/core/services/slider_images_service.dart';
 import 'package:e_sport_life/core/utils/shared-preferences/slider_utils.dart';
 import 'package:e_sport_life/core/widgets/announcement_icon_widget.dart';
@@ -24,7 +23,7 @@ import 'package:e_sport_life/core/widgets/member_active_package_rights_donut_car
 import 'package:e_sport_life/core/widgets/member_home_statement_chart_card.dart';
 import 'package:e_sport_life/core/widgets/quick_access_section_widget.dart';
 import 'package:e_sport_life/core/widgets/warning_dialog_widget.dart';
-import 'package:e_sport_life/screen/panel/common/trainer-detail/trainer_list_screen.dart';
+import 'package:e_sport_life/screen/panel/common/trainer/trainer_list_screen.dart';
 import 'package:e_sport_life/screen/panel/member/muzik-okulum/muzik_okulum_attendance_screen.dart';
 import 'package:e_sport_life/screen/panel/member/muzik-okulum/guardian_list_screen.dart';
 import 'package:e_sport_life/screen/panel/member/muzik-okulum/invoice_list_screen.dart';
@@ -83,23 +82,7 @@ class _MuzikOkulumHomeScreenState extends State<MuzikOkulumHomeScreen> {
   }
 
   Future<void> _loadMobileAppSettings() async {
-    try {
-      final externalConfig =
-          context.read<ExternalApplicationsConfigCubit>().state;
-      if (externalConfig == null) return;
-      final apiUrl = externalConfig.apiHamamspaUrl;
-      if (apiUrl.isEmpty) return;
-      final token = await JwtStorageService.getToken();
-      if (token == null || token.isEmpty) return;
-
-      final result = await MobileAppSettingsService.fetchSettings(
-          apiHamamSpaUrl: apiUrl, token: token);
-      if (result == null || !mounted) return;
-
-      if (result.content.hasAnyContent) {
-        context.read<AppContentCubit>().updateContent(result.content);
-      }
-    } catch (_) {}
+    await loadMobilePanelAppSettings(context);
   }
 
   Future<void> _loadMemberData() async {

@@ -13,7 +13,8 @@ Widget iconButtonWidget(
     bool? centerText,
     Color? iconColor,
     String? badge,
-    TextDecoration? badgeTextDecoration}) {
+    TextDecoration? badgeTextDecoration,
+    bool expandInRow = true}) {
   final theme = BlocTheme.theme;
   final shouldCenterText = centerText ?? false;
   final w = iconWidth ?? 65;
@@ -38,98 +39,101 @@ Widget iconButtonWidget(
     );
   }
 
-  return Expanded(
-    child: InkWell(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: theme.panelCardBackground,
-          border: Border.all(
-            color: theme.defaultGray50Color,
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
+  final card = InkWell(
+    onTap: onTap,
+    child: Container(
+      decoration: BoxDecoration(
+        color: theme.panelCardBackground,
+        border: Border.all(
+          color: theme.defaultGray50Color,
         ),
-        margin: margin,
-        width: 94,
-        height: 102,
-        child: Column(
-          mainAxisAlignment: shouldCenterText
-              ? MainAxisAlignment.spaceBetween
-              : MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  iconWidget,
-                  if (badge != null)
-                    Positioned(
-                      right: -6,
-                      top: -6,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: theme.default700Color,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          badge,
-                          style: theme.textMini(color: theme.defaultWhiteColor).copyWith(
-                                decoration: badgeTextDecoration,
-                                decorationColor: theme.defaultWhiteColor,
-                                color: theme.defaultWhiteColor,
-                              ),
-                        ),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+      ),
+      margin: margin,
+      width: 94,
+      height: 102,
+      child: Column(
+        mainAxisAlignment: shouldCenterText
+            ? MainAxisAlignment.spaceBetween
+            : MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                iconWidget,
+                if (badge != null)
+                  Positioned(
+                    right: -6,
+                    top: -6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: theme.default700Color,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                    ),
-                ],
-              ),
-            ),
-            shouldCenterText
-                ? Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              text,
-                              textAlign: TextAlign.center,
-                              softWrap: true,
-                              style: theme
-                                  .textSmallSemiBold(
-                                      color: theme.default900Color)
-                                  .copyWith(letterSpacing: 0),
+                      child: Text(
+                        badge,
+                        style: theme.textMini(color: theme.defaultWhiteColor).copyWith(
+                              decoration: badgeTextDecoration,
+                              decorationColor: theme.defaultWhiteColor,
+                              color: theme.defaultWhiteColor,
                             ),
-                          ),
-                        ],
                       ),
                     ),
-                  )
-                : Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          text,
-                          textAlign: TextAlign.center,
-                          softWrap: true,
-                          style: theme
-                              .textSmallSemiBold(
-                                  color: theme.default900Color)
-                              .copyWith(letterSpacing: 0),
-                        ),
-                      ),
-                    ],
                   ),
-          ],
-        ),
+              ],
+            ),
+          ),
+          shouldCenterText
+              ? Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            text,
+                            textAlign: TextAlign.center,
+                            softWrap: true,
+                            style: theme
+                                .textSmallSemiBold(
+                                    color: theme.default900Color)
+                                .copyWith(letterSpacing: 0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        text,
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                        style: theme
+                            .textSmallSemiBold(
+                                color: theme.default900Color)
+                            .copyWith(letterSpacing: 0),
+                      ),
+                    ),
+                  ],
+                ),
+        ],
       ),
     ),
   );
+
+  if (expandInRow) {
+    return Expanded(child: card);
+  }
+  return card;
 }

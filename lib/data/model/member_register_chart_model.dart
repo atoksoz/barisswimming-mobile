@@ -1,5 +1,7 @@
 import 'package:intl/intl.dart';
 
+import 'package:e_sport_life/core/constants/member_register_constants.dart';
+
 import 'member_register_model.dart';
 
 class MemberRegisterChartModel {
@@ -15,58 +17,102 @@ class MemberRegisterChartModel {
     required this.rate,
   });
 
+  Map<String, dynamic> toJson() => {
+        'total_gym_register_date': totalGymRegisterDate,
+        'remain_days': remainDays,
+        'rate': rate,
+        'is_gym_frozen': isGymFrozen,
+      };
+
+  /// Hamam / api-system birden fazla `member_register` döndürebilir (bitmiş + aktif).
+  /// Donut ve «kalan gün» yalnızca **takvim olarak aktif** GYM paketinden hesaplanır;
+  /// birden fazla aktif varsa **bitiş tarihi en geç** olan seçilir.
   static MemberRegisterChartModel fromRegisterList(
       List<MemberRegisterModel> registers) {
-    int totalDate = 0;
-    DateTime? lastDate;
-    bool isFrozen = false;
+    final dateFormat =
+        DateFormat(MemberRegisterConstants.apiDatePatternDdMmYyyy);
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
 
-    final dateFormat = DateFormat('dd-MM-yyyy');
+    MemberRegisterModel? bestReg;
+    DateTime? bestStartDay;
+    DateTime? bestEndDay;
 
-    for (var register in registers) {
+    for (final register in registers) {
+      if (register.packageType != MemberRegisterConstants.packageTypeGym) {
+        continue;
+      }
       try {
-        if (register.packageType == 'GYM') {
-          final startDate = dateFormat.parse(register.startDate);
-          final endDate = dateFormat.parse(register.endDate);
-          final diff = endDate.difference(startDate).inDays;
-          totalDate += diff;
-          lastDate = endDate;
+        final start = dateFormat.parse(register.startDate);
+        final end = dateFormat.parse(register.endDate);
+        final startDay = DateTime(start.year, start.month, start.day);
+        final endDay = DateTime(end.year, end.month, end.day);
 
-          // frozen varsa işleme dahil et
-          if (register.frozen != null &&
-              register.frozenStartDate != null &&
-              register.frozenEndDate != null) {
-            final frozenStart = dateFormat.parse(register.frozenStartDate!);
-            final frozenEnd = dateFormat.parse(register.frozenEndDate!);
-            final frozenDiff = frozenEnd.difference(frozenStart).inDays;
+        final isActive =
+            !startDay.isAfter(today) && !endDay.isBefore(today);
+        if (!isActive) continue;
 
-            totalDate += frozenDiff;
-
-            if (frozenEnd.isAfter(lastDate)) {
-              lastDate = frozenEnd;
-            }
-
-            lastDate = lastDate.add(Duration(days: frozenDiff));
-            isFrozen = true;
-          }
+        if (bestEndDay == null || endDay.isAfter(bestEndDay)) {
+          bestEndDay = endDay;
+          bestStartDay = startDay;
+          bestReg = register;
         }
-      } catch (e) {
-        print("Hata: $e");
+      } catch (_) {
+        continue;
       }
     }
 
-    final remain = (lastDate != null)
-        ? lastDate.difference(DateTime.now()).inDays.toDouble()
-        : 0.0;
+    if (bestReg == null || bestStartDay == null || bestEndDay == null) {
+      return MemberRegisterChartModel(
+        totalGymRegisterDate: 0,
+        remainDays: 0,
+        isGymFrozen: false,
+        rate: 0,
+      );
+    }
 
-    final chartRate = totalDate > 0 
-        ? ((remain / totalDate.toDouble()) * 100).round()
+    var totalDays = bestEndDay.difference(bestStartDay).inDays;
+    var isCurrentlyFrozen = false;
+
+    final reg = bestReg;
+    // Toplam / donut süresi yalnız paket başlangıç–bitiş; dondurulan günler eklenmez.
+    // «Şu an donduruldu» için frozen tarihleri kullanılır (bugün aralıkta mı).
+    if (reg.frozenStartDate != null && reg.frozenEndDate != null) {
+      try {
+        final frozenStart = dateFormat.parse(reg.frozenStartDate!);
+        final frozenEnd = dateFormat.parse(reg.frozenEndDate!);
+        final frozenStartDay =
+            DateTime(frozenStart.year, frozenStart.month, frozenStart.day);
+        final frozenEndDay =
+            DateTime(frozenEnd.year, frozenEnd.month, frozenEnd.day);
+
+        final inFreezeWindow = !today.isBefore(frozenStartDay) &&
+            !today.isAfter(frozenEndDay);
+        final explicitNotFrozen = reg.frozen == '0' ||
+            reg.frozen == false ||
+            reg.frozen == 0;
+        isCurrentlyFrozen = inFreezeWindow && !explicitNotFrozen;
+      } catch (_) {
+        // Dondurma tarihleri parse edilemezse uyarı bayrağı güncellenmez.
+      }
+    }
+
+    final remainRaw = bestEndDay.difference(today).inDays.toDouble();
+    final remain =
+        remainRaw < 0 ? 0.0 : remainRaw;
+
+    final chartRate = totalDays > 0
+        ? ((remain / totalDays) *
+                MemberRegisterConstants.chartRatePercentMax)
+            .round()
+            .clamp(0, MemberRegisterConstants.chartRatePercentMax)
         : 0;
 
     return MemberRegisterChartModel(
-        totalGymRegisterDate: totalDate.toDouble(),
-        remainDays: remain,
-        isGymFrozen: isFrozen,
-        rate: chartRate);
+      totalGymRegisterDate: totalDays.toDouble(),
+      remainDays: remain,
+      isGymFrozen: isCurrentlyFrozen,
+      rate: chartRate,
+    );
   }
 }

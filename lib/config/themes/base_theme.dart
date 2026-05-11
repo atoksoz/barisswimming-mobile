@@ -117,6 +117,10 @@ abstract class BaseTheme {
   Color get defaultGray800Color => HexColor.fromHex("#1F2937");
   Color get defaultGray900Color => HexColor.fromHex("#111827");
   Color get defaultOrange400Color => HexColor.fromHex("#F48243");
+
+  /// Donut/pie grafiklerinde kalan süre / dolu payı gibi sıcak vurgu (amber #FBBF24).
+  Color get chartAmberAccentColor => HexColor.fromHex("#FBBF24");
+
   Color get defaultBlue500Color => HexColor.fromHex("#3B82F6");
   Color get defaultMainColor => HexColor.fromHex("#242424");
 //    Color get defaultGray200Color => const Color(0xFFEEEEEE);
@@ -188,6 +192,31 @@ abstract class BaseTheme {
 
   /// Anasayfa kaydırma alanında üst üçlü / slider / özet / hızlı erişim blokları arası dikey boşluk.
   double get panelHomeBlockGap => 10;
+
+  /// Liste kartlarında kullanılan hafif gölge (paket geçmişi vb.).
+  double get panelListCardShadowSpread => 1;
+  double get panelListCardShadowBlur => 8;
+  double get panelListCardShadowOffsetY => 2;
+  double get panelListCardShadowOpacity => 0.06;
+
+  /// Ayırıcı ve ince çerçeve kalınlığı.
+  double get panelDividerThickness => 1;
+
+  /// Kart satırı ikonları (dosya türü / indir vb.).
+  double get panelRowIconSize => 24;
+  double get panelRowIconSizeSmall => 20;
+
+  /// İkon ile metin arası yatay boşluk.
+  double get panelInlineLeadingGap => 12;
+
+  /// İki metin satırı arası sıkı dikey boşluk.
+  double get panelTightVerticalGap => 2;
+
+  /// Paket listesi üst satırı (ad + tarih) minimum yükseklik.
+  double get panelPackageTitleRowMinHeight => 20;
+
+  /// Küçük ek / dosya kutusu dolgu ve kartlar arası dikey ara (8px).
+  double get panelCompactInset => 8;
 
   BoxDecoration get panelCardDecoration => BoxDecoration(
         color: defaultWhiteColor,

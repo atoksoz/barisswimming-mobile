@@ -13,18 +13,21 @@ import 'package:e_sport_life/core/enums/mobile_user_type.dart';
 import 'package:e_sport_life/core/l10n/app_labels.dart';
 import 'package:e_sport_life/core/services/jwt_storage_service.dart';
 import 'package:e_sport_life/core/services/slider_images_service.dart';
+import 'package:e_sport_life/core/utils/mobile_panel_app_settings_loader.dart';
 import 'package:e_sport_life/core/utils/date_format_utils.dart';
 import 'package:e_sport_life/core/utils/request_util.dart';
 import 'package:e_sport_life/core/utils/shared-preferences/slider_utils.dart';
+import 'package:e_sport_life/core/widgets/bottom_navigation_bar_widget.dart';
 import 'package:e_sport_life/core/widgets/announcement_icon_widget.dart';
 import 'package:e_sport_life/core/widgets/icon_button_widget.dart';
 import 'package:e_sport_life/core/widgets/quick_access_section_widget.dart';
 import 'package:e_sport_life/core/widgets/image_popup_widget.dart';
 import 'package:e_sport_life/core/widgets/warning_dialog_widget.dart';
-import 'package:e_sport_life/data/model/trainer/trainer_today_dashboard_model.dart';
+import 'package:e_sport_life/data/model/common/trainer_today_dashboard_model.dart';
 import 'package:e_sport_life/screen/panel/common/attendance/attendance_screen.dart';
-import 'package:e_sport_life/screen/panel/trainer/swimming-course/lesson_schedule/swimming_course_trainer_lesson_schedule_screen.dart';
-import 'package:e_sport_life/screen/panel/trainer/swimming-course/trainer_today_dashboard_dialogs.dart';
+import 'package:e_sport_life/screen/panel/member/swimming-course/swimming_course_pools_screen.dart';
+import 'package:e_sport_life/screen/panel/trainer/common/lesson_schedule/trainer_lesson_schedule_screen.dart';
+import 'package:e_sport_life/screen/panel/trainer/common/trainer_today_dashboard_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -60,8 +63,13 @@ class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerH
     _loadMemberData();
     _loadSliderImages();
     _checkLatestAnnouncement();
+    _loadMobileAppSettings();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _checkActivePersonnelIfNeeded());
+  }
+
+  Future<void> _loadMobileAppSettings() async {
+    await loadMobilePanelAppSettings(context);
   }
 
   Future<void> _checkActivePersonnelIfNeeded() async {
@@ -212,31 +220,46 @@ class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerH
                 children: [
                   _buildHeader(theme, labels),
                   Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: _loadData,
-                      child: SingleChildScrollView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        child: Column(
-                          children: [
-                            if (_sliderImages.isNotEmpty) ...[
-                              const SizedBox(height: 10),
-                              _buildSlider(theme),
-                            ],
-                            const SizedBox(height: 10),
-                            _buildTopSummaryCards(theme, labels),
-                            const SizedBox(height: 10),
-                            _buildQuickAccessSection(
-                                theme, labels, abilityState),
-                            const SizedBox(height: 10),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: _buildRecentTransactionsSection(
-                                  theme, labels),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (_sliderImages.isNotEmpty) ...[
+                          const SizedBox(height: 10),
+                          _buildSlider(theme),
+                        ],
+                        const SizedBox(height: 10),
+                        _buildTopSummaryCards(theme, labels),
+                        Expanded(
+                          child: RefreshIndicator(
+                            onRefresh: _loadData,
+                            child: SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              child: Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.stretch,
+                                children: [
+                                  const SizedBox(height: 10),
+                                  _buildQuickAccessSection(
+                                    theme,
+                                    labels,
+                                    abilityState,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    child: _buildRecentTransactionsSection(
+                                      theme,
+                                      labels,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ],
@@ -338,7 +361,7 @@ class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerH
       Navigator.push(
         context,
         MaterialPageRoute<void>(
-          builder: (_) => SwimmingCourseTrainerLessonScheduleScreen(
+          builder: (_) => TrainerLessonScheduleScreen(
             initialWeekday: DateTime.now().weekday,
           ),
         ),
@@ -349,14 +372,14 @@ class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerH
       if (!_guardActive()) return;
       final d = _todayDashboard;
       if (d == null) return;
-      SwimmingCourseTrainerTodayDashboardDialogs.showTodayAttendance(context, d);
+      TrainerTodayDashboardDialogs.showTodayAttendance(context, d);
     }
 
     void openTodaySummaryPopup() {
       if (!_guardActive()) return;
       final d = _todayDashboard;
       if (d == null) return;
-      SwimmingCourseTrainerTodayDashboardDialogs.showTodaySummary(context, d);
+      TrainerTodayDashboardDialogs.showTodaySummary(context, d);
     }
 
     return Row(
@@ -452,7 +475,7 @@ class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerH
     );
   }
 
-  // ─── Hızlı erişim — müzik okulu üye paneli gibi tek satırda 3 Expanded hücre ───
+  // ─── Hızlı erişim — satır başına en fazla 3 ikon; Havuzlar alt satırda ───
 
   Widget _buildQuickAccessSection(
       BaseTheme theme, AppLabels labels, MobileAbilityState abilityState) {
@@ -461,8 +484,21 @@ class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerH
       Navigator.push(
         context,
         MaterialPageRoute<void>(
-          builder: (_) => SwimmingCourseTrainerLessonScheduleScreen(
+          builder: (_) => TrainerLessonScheduleScreen(
             initialWeekday: DateTime.now().weekday,
+          ),
+        ),
+      );
+    }
+
+    void openPools() {
+      if (!_guardActive()) return;
+      Navigator.push<void>(
+        context,
+        MaterialPageRoute<void>(
+          builder: (_) => const SwimmingCoursePoolsScreen(
+            useMemberPoolEndpoint: false,
+            bottomNavTab: NavTab.home,
           ),
         ),
       );
@@ -470,6 +506,18 @@ class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerH
 
     final canAttendance =
         abilityState.canView(MobileAbilitySubjects.qrScan);
+
+    Widget poolsButton() => iconButtonWidget(
+          icon: Icons.pool_outlined,
+          text: labels.profileMenuSwimmingPoolsTitle,
+          iconWidth: 45,
+          iconHeight: 40,
+          centerText: true,
+          iconColor: theme.default900Color,
+          onTap: openPools,
+          margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+          expandInRow: false,
+        );
 
     return QuickAccessSectionWidget(
       children: [
@@ -526,9 +574,9 @@ class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerH
                 centerText: true,
                 iconColor: theme.default900Color,
                 onTap: openLessonSchedule,
-                margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
               ),
-            ] else
+            ] else ...[
               iconButtonWidget(
                 icon: Icons.calendar_month_outlined,
                 text: labels.profileMenuLessonScheduleTitle,
@@ -537,9 +585,16 @@ class _SwimmingCourseTrainerHomeScreenState extends State<SwimmingCourseTrainerH
                 centerText: true,
                 iconColor: theme.default900Color,
                 onTap: openLessonSchedule,
-                margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
               ),
+            ],
           ],
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [poolsButton()],
         ),
       ],
     );

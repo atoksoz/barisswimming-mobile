@@ -113,6 +113,10 @@ class RandevuAlUrlConstants {
   static String getMyMuzikOkulumHomeDashboardUrl(String baseUrl) =>
       '${_selfService(baseUrl)}muzik-okulum/home-dashboard';
 
+  /// Üye JWT — havuz / grup dersi lokasyonları (`routes/api_v2_member.php`).
+  static String getMemberPoolLocationsUrl(String baseUrl) =>
+      '${_selfService(baseUrl)}pool-locations';
+
   // ─── Eğitmen / mobil staff — delegasyon [RandevuAlTrainerUrlConstants] ───
 
   static String getTrainerVoteUrl(String baseUrl) =>
@@ -185,6 +189,15 @@ class RandevuAlUrlConstants {
   static String getMobileEmployeeLessonsUrl(String baseUrl, int id) =>
       RandevuAlTrainerUrlConstants.getMobileEmployeeLessonsUrl(baseUrl, id);
 
+  static String getMobileEmployeeStatsUrl(String baseUrl, int id) =>
+      RandevuAlTrainerUrlConstants.getMobileEmployeeStatsUrl(baseUrl, id);
+
+  static String getV2MeTrainerSelfEmployeeStatsUrl(String baseUrl) =>
+      RandevuAlTrainerUrlConstants.getV2MeTrainerSelfEmployeeStatsUrl(baseUrl);
+
+  static String getV2MeTrainerSelfEmployeeLessonsUrl(String baseUrl) =>
+      RandevuAlTrainerUrlConstants.getV2MeTrainerSelfEmployeeLessonsUrl(baseUrl);
+
   static String getMobileServicesUrl(String baseUrl) =>
       RandevuAlTrainerUrlConstants.getMobileServicesUrl(baseUrl);
 
@@ -245,6 +258,35 @@ class RandevuAlUrlConstants {
 
   static String getV2ServicePlanByIdUrl(String baseUrl, int id) =>
       RandevuAlTrainerUrlConstants.getV2ServicePlanByIdUrl(baseUrl, id);
+
+  static String getV2ServicePlanAttendanceUrl(String baseUrl, int servicePlanId) =>
+      RandevuAlTrainerUrlConstants.getV2ServicePlanAttendanceUrl(
+          baseUrl, servicePlanId);
+
+  static String getV2ServicePlanBurnUrl(String baseUrl, int servicePlanId) =>
+      RandevuAlTrainerUrlConstants.getV2ServicePlanBurnUrl(baseUrl, servicePlanId);
+
+  static String getV2TrainerEnrollmentPackageOptionsUrl(
+    String baseUrl, {
+    required int planId,
+    required int enrollmentId,
+  }) =>
+      RandevuAlTrainerUrlConstants.getV2TrainerEnrollmentPackageOptionsUrl(
+        baseUrl,
+        planId: planId,
+        enrollmentId: enrollmentId,
+      );
+
+  static String getV2TrainerEnrollmentPackageUrl(
+    String baseUrl, {
+    required int planId,
+    required int enrollmentId,
+  }) =>
+      RandevuAlTrainerUrlConstants.getV2TrainerEnrollmentPackageUrl(
+        baseUrl,
+        planId: planId,
+        enrollmentId: enrollmentId,
+      );
 
   static String getV2ServicesUrl(String baseUrl, {String? applicationType}) =>
       RandevuAlTrainerUrlConstants.getV2ServicesUrl(baseUrl,

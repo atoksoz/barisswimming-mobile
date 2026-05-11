@@ -70,6 +70,8 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
         return false;
       }
 
+      _mergeTenantFieldsFromTokenResponse(payload, response.body);
+
       final token = payload["token"]?.toString() ?? '';
       if (token.isEmpty) {
         return false;
@@ -153,6 +155,60 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
 
       return false;
     }
+  }
+
+  /// Token iç içe bir alt nesnede dönüyorsa (`_findPayloadWithToken`), üst `output`
+  /// veya kökte kalan `application_type` / `user_type` alanları yükte kaybolabiliyor.
+  static void _mergeTenantFieldsFromTokenResponse(
+    Map<String, dynamic> payload,
+    String responseBody,
+  ) {
+    const keys = [
+      'application_type',
+      'user_type',
+      'application_id',
+      'firm_uuid',
+    ];
+
+    Map<String, dynamic>? decodeRoot() {
+      try {
+        final decoded = json.decode(responseBody);
+        if (decoded is Map<String, dynamic>) {
+          return decoded;
+        }
+        if (decoded is Map) {
+          return Map<String, dynamic>.from(decoded);
+        }
+      } catch (_) {
+        // ignore
+      }
+      return null;
+    }
+
+    bool isMissing(dynamic v) =>
+        v == null ||
+        v.toString().trim().isEmpty ||
+        v.toString().trim().toLowerCase() == 'null';
+
+    void copyFrom(Map<String, dynamic>? source) {
+      if (source == null) return;
+      for (final k in keys) {
+        if (!isMissing(payload[k])) continue;
+        final v = source[k];
+        if (!isMissing(v)) {
+          payload[k] = v;
+        }
+      }
+    }
+
+    final root = decodeRoot();
+    if (root == null) return;
+
+    final output = root['output'];
+    if (output is Map) {
+      copyFrom(Map<String, dynamic>.from(output));
+    }
+    copyFrom(root);
   }
 
   static Map<String, dynamic>? _extractPayloadFromLegacyOutput(
@@ -433,14 +489,18 @@ class _SecurityCodeScreenState extends State<SecurityCodeScreen> {
   }
 
   Future<void> _loadKvkkContent() async {
-    final cubitContent = context.read<AppContentCubit>().state;
-    if (cubitContent?.kvkk?.content != null) {
-      setState(() => _kvkkContent = cubitContent!.kvkk!.content!);
-      return;
+    final config = context.read<AppConfigCubit>().state;
+    if (!config.useStaticContent) {
+      final cubitContent = context.read<AppContentCubit>().state;
+      if (cubitContent?.kvkk?.content != null) {
+        setState(() => _kvkkContent = cubitContent!.kvkk!.content!);
+        return;
+      }
     }
 
     try {
-      final kvkkString = await rootBundle.loadString('assets/config/kvkk.json');
+      final kvkkString =
+          await rootBundle.loadString(config.kvkkContentAsset);
       final kvkkJson = json.decode(kvkkString);
       setState(() {
         _kvkkContent = kvkkJson['content'] ?? '';

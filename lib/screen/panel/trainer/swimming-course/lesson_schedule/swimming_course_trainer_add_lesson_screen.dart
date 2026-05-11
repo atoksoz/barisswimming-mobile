@@ -16,7 +16,7 @@ import 'package:e_sport_life/core/widgets/top_appbar_widget.dart';
 import 'package:e_sport_life/core/widgets/warning_dialog_widget.dart';
 import 'package:e_sport_life/data/model/randevu_v2_group_lesson_location_model.dart';
 import 'package:e_sport_life/data/model/randevu_v2_service_model.dart';
-import 'package:e_sport_life/data/model/trainer_schedule_calendar_event_model.dart';
+import 'package:e_sport_life/data/model/common/trainer_schedule_calendar_event_model.dart';
 import 'package:e_sport_life/data/model/trainer_service_plan_detail_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

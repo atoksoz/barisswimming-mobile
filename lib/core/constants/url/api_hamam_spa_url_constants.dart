@@ -143,6 +143,12 @@ class ApiHamamSpaUrlConstants {
   static String getMyMuzikOkulumHomeDashboardUrl(String apiUrl) =>
       '${apiUrl.ensureApiPath().ensureTrailingSlash()}v2/me/muzik-okulum/home-dashboard';
 
+  // ─── Hamam Spa Merkezi — Explore (member dashboard çıktısı) ───
+
+  /// api-system `api_v2_member`: `GET /api/v2/me/hamam-spa-merkezi/home-dashboard`
+  static String getHamamSpaMerkeziMemberExploreDashboardUrl(String apiUrl) =>
+      '${apiUrl.ensureApiPath().ensureTrailingSlash()}v2/me/hamam-spa-merkezi/home-dashboard';
+
   static String getDecreaseQuantityUrl(String apiUrl, int memberRegisterId) =>
       '${apiUrl.ensureApiPath().ensureTrailingSlash()}v1/member-register/$memberRegisterId/decrease-remain-quantity';
 

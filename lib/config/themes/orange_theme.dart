@@ -121,7 +121,7 @@ class OrangeTheme extends BaseTheme {
   String get fitnessProgrameSvgPath =>
       "assets/images/svg/fitness_programe_orange.svg";
   @override
-  String get measurementSvgPath => "assets/images/svg/measurement_orange.svg"
+  String get measurementSvgPath => "assets/images/svg/measurement_orange.svg";
   @override
   String get personalTrainingSvgPath =>
       "assets/images/svg/personal_training_orange.svg";

@@ -24,12 +24,12 @@ class MobileAppSettingsCubit extends Cubit<MobileAppSettings?> {
     final currentPlatform = _getCurrentPlatform();
     final previousVersion = _cachedVersions[currentPlatform];
     final newVersion = settings.mobileAppVersions[currentPlatform] ?? '';
-    
-    // Update cached versions
+
     _cachedVersions = Map<String, String>.from(settings.mobileAppVersions);
-    
-    emit(settings);
+
+    // Önce disk; böylece paralelde çalışan loadFromCache eski prefs okuyup cubit’i ezemez.
     await saveMobileAppSettingsToSharedPref(settings);
+    emit(settings);
     
     // Check if version changed for current platform
     return previousVersion != null &&

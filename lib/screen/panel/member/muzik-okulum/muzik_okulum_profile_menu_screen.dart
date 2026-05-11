@@ -4,7 +4,7 @@ import 'package:e_sport_life/screen/aboutus-screen/about_us_screen.dart';
 import 'package:e_sport_life/screen/panel/common/content/content_screen.dart';
 import 'package:e_sport_life/screen/panel/common/content/kvkk_screen.dart';
 import 'package:e_sport_life/screen/panel/common/facility-details/facility_details_screen.dart';
-import 'package:e_sport_life/screen/panel/common/trainer-detail/trainer_list_screen.dart';
+import 'package:e_sport_life/screen/panel/common/trainer/trainer_list_screen.dart';
 import 'package:e_sport_life/screen/panel/member/muzik-okulum/guardian_list_screen.dart';
 import 'package:e_sport_life/screen/panel/member/muzik-okulum/invoice_list_screen.dart';
 import 'package:e_sport_life/screen/panel/member/muzik-okulum/lesson_schedule_screen.dart';

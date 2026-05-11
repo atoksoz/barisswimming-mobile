@@ -81,6 +81,16 @@ class RandevuAlTrainerUrlConstants {
   static String getMobileEmployeeLessonsUrl(String baseUrl, int id) =>
       '${_mobile(baseUrl)}employees/$id/lessons';
 
+  static String getMobileEmployeeStatsUrl(String baseUrl, int id) =>
+      '${_mobile(baseUrl)}employees/$id/stats';
+
+  /// Eğitmen JWT (`api_v2_trainer`) — oturumdaki çalışan; URL’de id yok.
+  static String getV2MeTrainerSelfEmployeeStatsUrl(String baseUrl) =>
+      '${_selfService(baseUrl)}employee/stats';
+
+  static String getV2MeTrainerSelfEmployeeLessonsUrl(String baseUrl) =>
+      '${_selfService(baseUrl)}employee/lessons';
+
   static String getMobileServicesUrl(String baseUrl) =>
       '${_mobile(baseUrl)}services';
 
@@ -152,6 +162,30 @@ class RandevuAlTrainerUrlConstants {
   /// Eğitmen self-service — tek plan: GET/PUT/DELETE …/api/v2/me/service-plans/{id}
   static String getV2ServicePlanByIdUrl(String baseUrl, int id) =>
       '${_selfService(baseUrl)}service-plans/$id';
+
+  /// Toplu / tekil yoklama — Fitiz `POST/DELETE …/service-plans/{id}/attendance`.
+  static String getV2ServicePlanAttendanceUrl(String baseUrl, int servicePlanId) =>
+      '${_selfService(baseUrl)}service-plans/$servicePlanId/attendance';
+
+  /// Hak yakma / iptal — Fitiz `POST/DELETE …/service-plans/{id}/burn`.
+  static String getV2ServicePlanBurnUrl(String baseUrl, int servicePlanId) =>
+      '${_selfService(baseUrl)}service-plans/$servicePlanId/burn';
+
+  /// Bu derse bağlı paket seçenekleri (api-system özetleri Randevu üzerinden).
+  static String getV2TrainerEnrollmentPackageOptionsUrl(
+    String baseUrl, {
+    required int planId,
+    required int enrollmentId,
+  }) =>
+      '${_selfService(baseUrl)}service-plans/$planId/enrollments/$enrollmentId/package-options';
+
+  /// Enrollment paket güncelleme (`member_register_id`).
+  static String getV2TrainerEnrollmentPackageUrl(
+    String baseUrl, {
+    required int planId,
+    required int enrollmentId,
+  }) =>
+      '${_selfService(baseUrl)}service-plans/$planId/enrollments/$enrollmentId/package';
 
   /// [applicationType]: örn. `ApplicationType.swimmingCourse.value`
   static String getV2ServicesUrl(String baseUrl, {String? applicationType}) {

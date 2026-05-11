@@ -3,6 +3,8 @@
   "welcome_message": "Hoş geldiniz!",
   "developer" : "Manasteknoloji",
   "use_static_content": true,
+  "use_static_facility_rules": false,
+  "kvkk_content_asset": "assets/config/kvkk.json",
   "security_code_header_mode": "curved",
   "security_code_header_image": "assets/images/application_images/verification_screen_bg.png",
   "security_code_wave_start_offset_bottom": 8,

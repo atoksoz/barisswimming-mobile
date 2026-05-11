@@ -15,6 +15,7 @@ import 'package:e_sport_life/data/model/member_detail_response_model.dart';
 import 'package:e_sport_life/data/model/member_register_chart_model.dart';
 import 'package:e_sport_life/screen/panel/common/dynamic_qr_screen.dart';
 import 'package:e_sport_life/screen/panel/common/tabs/tabs_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -145,17 +146,34 @@ class MemberQrScreen extends StatelessWidget {
     // ── Zaman Limiti ──
 
     bool timeLimitOk = false;
+    String? timeLimitApiBody;
     try {
       final hamamSpaUrl = HamamSpaUrlConstants.getTimeLimitRightNowUrl(
           externalConfig!.hamamspaApiUrl);
       final response = await RequestUtil.get(hamamSpaUrl,
           token: token, timeout: _timeLimitTimeout);
+      timeLimitApiBody = response?.body;
       final Map<String, dynamic> json = jsonDecode(response!.body);
-      timeLimitOk = json["output"] == true;
-    } catch (_) {}
+      // API: `output == true` → giriş saati dışı (QR oluşturulamaz);
+      // `output == false` → geçiş izni var.
+      timeLimitOk = json["output"] != true;
+    } catch (e, st) {
+      debugPrint(
+        'MemberQrScreen time-limit API error: $e\n$st',
+      );
+    }
 
     if (!timeLimitOk) {
-      await _showBlockDialog(context, labels.outsideEntryHoursWarning);
+      debugPrint(
+        'MemberQrScreen: giriş saati dışı / time-limit FAIL. '
+        'API ham cevap: $timeLimitApiBody',
+      );
+      await _showBlockDialog(
+        context,
+        labels.outsideEntryHoursWarning,
+        neutralTopGraphic: true,
+        replaceStackWithHome: true,
+      );
       return false;
     }
 
@@ -163,18 +181,40 @@ class MemberQrScreen extends StatelessWidget {
   }
 
   static Future<void> _showBlockDialog(
-      BuildContext context, String message) async {
+    BuildContext context,
+    String message, {
+    /// Üstteki hata SVG’si: `false` = dosyadaki renk (kırmızı); `true` = aynı grafik [default500Color] ile boyanır.
+    bool neutralTopGraphic = false,
+    /// Tamam/Kapat ile tüm navigasyon yığınını sıfırlayıp doğrudan [Tabs] anasayfa (indeks 0).
+    bool replaceStackWithHome = false,
+  }) async {
+    final theme = BlocTheme.theme;
     await warningDialog(
       context,
       message: message,
-      buttonColor: BlocTheme.theme.defaultRed700Color,
-      buttonTextColor: BlocTheme.theme.defaultWhiteColor,
-      path: BlocTheme.theme.errorSvgPath,
+      buttonColor: theme.defaultRed700Color,
+      buttonTextColor: theme.defaultWhiteColor,
+      path: theme.errorSvgPath,
+      leadingSvgColor:
+          neutralTopGraphic ? theme.default500Color : null,
       onPrimaryPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const Tabs(index: 0)),
-        );
+        void goHome() {
+          if (!context.mounted) return;
+          final route = MaterialPageRoute<void>(
+            builder: (_) => const Tabs(index: 0),
+          );
+          if (replaceStackWithHome) {
+            Navigator.of(context).pushAndRemoveUntil(route, (_) => false);
+          } else {
+            Navigator.of(context).push(route);
+          }
+        }
+
+        if (replaceStackWithHome) {
+          WidgetsBinding.instance.addPostFrameCallback((_) => goHome());
+        } else {
+          goHome();
+        }
       },
     );
   }

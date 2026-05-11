@@ -11,16 +11,18 @@ import 'config/app-config/app_config_cubit.dart';
 import 'config/app-content/app_content_cubit.dart';
 import 'config/external-applications-config/external_applications_config_cubit.dart';
 import 'config/themes/bloc_theme.dart';
+import 'unshared/theme/application_theme.dart';
 import 'config/user-config/user_config_cubit.dart';
 import 'config/mobile-app-settings/mobile_app_settings_cubit.dart';
 import 'config/announcement/announcement_cubit.dart';
+import 'core/widgets/mobile_ui_theme_sync.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: BlocTheme.theme.defaultAppBarColor,
+      statusBarColor: ApplicationTheme.initialBaseTheme.defaultAppBarColor,
       statusBarIconBrightness: Brightness.light,
       statusBarBrightness: Brightness.dark));
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
@@ -55,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<BlocTheme>(
-          create: (_) => BlocTheme(BlocTheme.theme.data),
+          create: (_) => BlocTheme(),
         ),
         BlocProvider<AppConfigCubit>(
           create: (_) => AppConfigCubit()..loadConfig(),
@@ -80,17 +82,18 @@ class _MyHomePageState extends State<MyHomePage> {
           create: (_) => AppContentCubit()..loadFromCache(),
         ),
       ],
-      child: BlocBuilder<BlocTheme, ThemeData>(
-        builder: (context, themeData) {
-          /*
+      child: MobileUiThemeSync(
+        child: BlocBuilder<BlocTheme, ThemeData>(
+          builder: (context, themeData) {
+            /*
           Future.microtask(() {
             context
                 .read<ExternalApplicationsConfigCubit>()
                 .loadExternalApplicationsConfig();
           });
 */
-          return MaterialApp(
-            title: 'Esport Life',
+            return MaterialApp(
+            title: 'Barış Swimming',
             debugShowCheckedModeBanner: false,
             locale: const Locale('tr', 'TR'),
             localizationsDelegates: const [
@@ -108,7 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
               MyHomePage.id: (context) => const SplashScreen(),
             },
           );
-        },
+          },
+        ),
       ),
     );
   }
